@@ -1,11 +1,12 @@
-import React from "react";
 import { useState, useEffect } from "react";
+import "./NavBar.css";
 
-const NavBar: React.FC = () => {
-  const [label, setLabel] = useState("Navigation");
+const NavBar = ({ title }: { title: string }) => {
+  const [label, setLabel] = useState(title);
 
   useEffect(() => {
-    alert("On page load");
+    console.log("Loaded");
+    localStorage.setItem("firstLoad", "title");
   }, []);
 
   const handleClick = () => {
@@ -13,12 +14,22 @@ const NavBar: React.FC = () => {
       setLabel("Navigation Clicked");
     } else if (label === "Navigation Clicked") {
       setLabel("Navigation");
+    } else {
+      setLabel("Navigation");
     }
   };
 
   return (
-    <nav>
-      <button onClick={handleClick}>{label}</button>
+    <nav className="navbar">
+      <button className="navbar-btn" onClick={handleClick}>
+        Button 1
+      </button>
+      <button className="navbar-btn" onClick={handleClick}>
+        Button 2
+      </button>
+      <button className="navbar-btn" onClick={handleClick}>
+        Button 3
+      </button>
     </nav>
   );
 };

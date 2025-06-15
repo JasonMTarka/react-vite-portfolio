@@ -1,0 +1,14 @@
+/* NavBar.css */
+
+.navbar {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  width: 100%; /* Changed from 300px to 100% */
+  gap: 1rem; /* Adds spacing between buttons
+}
+
+.navbar-btn {
+  /* padding: 8px 16px; */
+  font-size: 16px;
+}

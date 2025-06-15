@@ -4,7 +4,8 @@ import NavBar from "./NavBar";
 function App() {
   return (
     <>
-      <NavBar />
+      <NavBar title="First load"></NavBar>
+      <div className="body">My test content</div>
     </>
   );
 }
