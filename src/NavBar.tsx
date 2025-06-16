@@ -1,23 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./NavBar.css";
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const porfolioNavigate = (path: string) => {
-    navigate("/react-vite-portfolio/" + path);
-  };
+  const [path, setPath] = useState("home");
+
   useEffect(() => {
-    console.log("Loaded");
-    localStorage.setItem("firstLoad", "title");
-  }, []);
+    navigate("/react-vite-portfolio/" + path);
+  }, [path, navigate]);
 
   return (
     <nav className="navbar">
-      <button className="navbar-btn" onClick={() => porfolioNavigate("home")}>
+      <button className="navbar-btn" onClick={() => setPath("home")}>
         Home
       </button>
-      <button className="navbar-btn" onClick={() => porfolioNavigate("puzzle")}>
+      <button className="navbar-btn" onClick={() => setPath("puzzle")}>
         Manor Puzzle
       </button>
     </nav>
