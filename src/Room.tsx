@@ -5,11 +5,13 @@ const Room = ({
   row,
   status,
   updateStatus,
+  setMessage,
 }: {
   col: number;
   row: number;
   status: string;
   updateStatus: (roomId: string, status: string) => void;
+  setMessage: (message: string) => void;
 }) => {
   const roomId = "room_" + col.toString() + row.toString();
   const STATUSES = {
@@ -20,8 +22,9 @@ const Room = ({
 
   const handleClick = () => {
     if (status === STATUSES.inactive) {
-      updateStatus(roomId, STATUSES.active);
+      setMessage("That's an inactive room!");
     } else if (status === STATUSES.active) {
+      setMessage("Select another active room.");
       updateStatus(roomId, STATUSES.activated);
     }
   };

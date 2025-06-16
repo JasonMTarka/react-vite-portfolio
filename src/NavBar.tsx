@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const [path, setPath] = useState("home");
+  const [path, setPath] = useState("");
 
   useEffect(() => {
     navigate("/react-vite-portfolio/" + path);
@@ -12,7 +12,7 @@ const NavBar = () => {
 
   return (
     <nav className="navbar">
-      <button className="navbar-btn" onClick={() => setPath("home")}>
+      <button className="navbar-btn" onClick={() => setPath("")}>
         Home
       </button>
       <button className="navbar-btn" onClick={() => setPath("puzzle")}>

@@ -7,7 +7,7 @@ export default function Body() {
 
   return (
     <Routes>
-      <Route index path={basePath + "/home"} element={<Home />} />
+      <Route index path={basePath} element={<Home />} />
       <Route path={basePath + "/puzzle"} element={<Puzzle />} />
     </Routes>
   );

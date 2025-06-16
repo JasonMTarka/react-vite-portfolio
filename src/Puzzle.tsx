@@ -6,6 +6,7 @@ const ROWS = 9;
 const COLS = 5;
 
 const Puzzle: React.FC = () => {
+  const [message, setMessage] = useState("Click an active room.");
   const [manorState, setManorState] = useState<{ [key: string]: string }>({
     room_00: "inactive",
     room_01: "inactive",
@@ -54,10 +55,47 @@ const Puzzle: React.FC = () => {
     room_48: "inactive",
   });
 
+  const activateSurroundingRooms = (roomId: string) => {
+    const [colStr, rowStr] = roomId.replace("room_", "").split("");
+    const col = parseInt(colStr, 10);
+    const row = parseInt(rowStr, 10);
+    const directions = [
+      [0, 1], // down
+      [0, -1], // up
+      [1, 0], // right
+      [-1, 0], // left
+    ];
+    const newManorState = { ...manorState };
+    directions.forEach(([dc, dr]) => {
+      const nCol = col + dc;
+      const nRow = row + dr;
+      const neighborId = `room_${nCol}${nRow}`;
+      console.log(neighborId);
+      if (
+        nCol >= 0 &&
+        nCol < COLS &&
+        nRow >= 0 &&
+        nRow < ROWS &&
+        newManorState[neighborId] === "inactive"
+      ) {
+        newManorState[neighborId] = "active";
+      }
+    });
+    newManorState[roomId] = "activated";
+    setManorState(newManorState);
+  };
+
   const updateRoomStatus = (roomId: string, status: string) => {
     const newManorState = { ...manorState };
     newManorState[roomId] = status;
     setManorState(newManorState);
+    if (status === "activated") {
+      activateSurroundingRooms(roomId);
+    }
+  };
+
+  const updateMessage = (message: string) => {
+    setMessage(message);
   };
 
   return (
@@ -66,6 +104,7 @@ const Puzzle: React.FC = () => {
         Your uncle bestowed upon you his manor in his will, but only if you can
         reach the final room. Can you make your way through the maze?
       </div>
+      <div className="puzzle-explain">{message}</div>
       <div className="puzzle-grid">
         {Array.from({ length: ROWS }).map((_, rowIdx) => (
           <div className="puzzle-row" key={rowIdx}>
@@ -77,6 +116,7 @@ const Puzzle: React.FC = () => {
                 status={
                   manorState["room_" + colIdx.toString() + rowIdx.toString()]
                 }
+                setMessage={updateMessage}
                 updateStatus={updateRoomStatus}
               />
             ))}
