@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Puzzle.css";
 import Room from "./Room";
 
@@ -7,6 +7,7 @@ const COLS = 5;
 
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState("Click an active room.");
+  const [victory, setVictory] = useState(false);
   const [manorState, setManorState] = useState<{ [key: string]: string }>({
     room_00: "inactive",
     room_01: "inactive",
@@ -26,7 +27,7 @@ const Puzzle: React.FC = () => {
     room_16: "inactive",
     room_17: "inactive",
     room_18: "active",
-    room_20: "active",
+    room_20: "inactive",
     room_21: "inactive",
     room_22: "inactive",
     room_23: "inactive",
@@ -54,6 +55,12 @@ const Puzzle: React.FC = () => {
     room_47: "inactive",
     room_48: "inactive",
   });
+
+  useEffect(() => {
+    if (victory) {
+      alert("You inherited the manor!");
+    }
+  }, [victory]);
 
   const activateSurroundingRooms = (roomId: string) => {
     const [colStr, rowStr] = roomId.replace("room_", "").split("");
@@ -91,6 +98,9 @@ const Puzzle: React.FC = () => {
     setManorState(newManorState);
     if (status === "activated") {
       activateSurroundingRooms(roomId);
+    }
+    if (status === "activated" && roomId === "room_20") {
+      setVictory(true);
     }
   };
 
