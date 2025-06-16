@@ -1,12 +1,14 @@
 import "./App.css";
 import NavBar from "./NavBar";
+import Body from "./Body";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <NavBar title="First load"></NavBar>
-      <div className="body">My test content</div>
-    </>
+    <Router>
+      <NavBar />
+      <Body />
+    </Router>
   );
 }
 

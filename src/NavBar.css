@@ -5,7 +5,8 @@
   /* justify-content: space-between; */
   align-items: center;
   width: 100%; /* Changed from 300px to 100% */
-  gap: 1rem; /* Adds spacing between buttons
+  gap: 1rem; /* Adds spacing between buttons */
+  padding-bottom: 1.5rem; /* Added padding beneath the navbar */
 }
 
 .navbar-btn {

@@ -1,34 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "./NavBar.css";
+import { useNavigate } from "react-router-dom";
 
-const NavBar = ({ title }: { title: string }) => {
-  const [label, setLabel] = useState(title);
-
+const NavBar = () => {
+  const navigate = useNavigate();
+  const porfolioNavigate = (path: string) => {
+    navigate("/react-vite-portfolio/" + path);
+  };
   useEffect(() => {
     console.log("Loaded");
     localStorage.setItem("firstLoad", "title");
   }, []);
 
-  const handleClick = () => {
-    if (label === "Navigation") {
-      setLabel("Navigation Clicked");
-    } else if (label === "Navigation Clicked") {
-      setLabel("Navigation");
-    } else {
-      setLabel("Navigation");
-    }
-  };
-
   return (
     <nav className="navbar">
-      <button className="navbar-btn" onClick={handleClick}>
-        Button 1
+      <button className="navbar-btn" onClick={() => porfolioNavigate("home")}>
+        Home
       </button>
-      <button className="navbar-btn" onClick={handleClick}>
-        Button 2
-      </button>
-      <button className="navbar-btn" onClick={handleClick}>
-        Button 3
+      <button className="navbar-btn" onClick={() => porfolioNavigate("puzzle")}>
+        Manor Puzzle
       </button>
     </nav>
   );
