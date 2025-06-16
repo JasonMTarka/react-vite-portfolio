@@ -10,7 +10,6 @@
   display: flex;
   gap: 4px;
 }
-
 .puzzle-cell {
   width: 90px;
   height: 90px;
@@ -19,15 +18,27 @@
   box-sizing: border-box;
 }
 
-.puzzle-cell:hover {
-  background: lightsalmon;
+.active-puzzle-cell {
+  background: #00c431;
 }
 
-#cell_20 {
+.inactive-puzzle-cell {
+  background: #5f5f5f;
+}
+
+.activated-puzzle-cell {
+  background: #847bff;
+}
+
+.puzzle-cell:hover {
+  background: rgb(112, 112, 112);
+}
+
+#room_20 {
   background: blueviolet;
 }
 
-#cell_28 {
+#room_28 {
   background: #0aec7b;
 }
 
