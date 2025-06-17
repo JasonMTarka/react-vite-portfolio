@@ -13,6 +13,8 @@ const Puzzle: React.FC = () => {
   const [message, setMessage] = useState("Click an active room.");
   const [victory, setVictory] = useState(false);
   const [manorState, setManorState] = useState<ManorData>({ ...manorData });
+  const [gems, setGems] = useState(0);
+  const [keys, setKeys] = useState(0);
 
   useEffect(() => {
     if (victory) {
@@ -68,6 +70,12 @@ const Puzzle: React.FC = () => {
       setMessage("Select another active room.");
       updateRoomStatus(roomId, STATUSES.activated);
     }
+
+    const inventory = manorState[roomId].inventory;
+
+    setKeys(keys + inventory.keys);
+    setGems(gems + inventory.gems);
+
     localStorage.setItem("manorState", JSON.stringify(manorState));
   };
 
@@ -94,8 +102,14 @@ const Puzzle: React.FC = () => {
         Your uncle bestowed upon you his manor in his will, but only if you can
         reach the final room. Can you make your way through the maze?
       </div>
-      <div className="puzzle-explain">{message}</div>
-      <button onClick={reset}>Clear Grid</button>
+      <div>
+        <span className="message-display">{message}</span>
+        <span className="keys-display">Keys: {keys}</span>
+        <span className="gems-display">Gems: {gems}</span>
+      </div>
+      <button className="clear-grid-btn" onClick={reset}>
+        Clear Grid
+      </button>
       <div className="puzzle-grid">
         {Array.from({ length: ROWS }).map((_, rowIdx) => (
           <div className="puzzle-row" key={rowIdx}>
@@ -106,7 +120,12 @@ const Puzzle: React.FC = () => {
                 <Room
                   roomId={roomId}
                   key={roomId}
-                  text={[status, roomId]}
+                  text={[
+                    status,
+                    roomId,
+                    "keys: " + manorState[roomId].inventory.keys.toString(),
+                    "gems: " + manorState[roomId].inventory.gems.toString(),
+                  ]}
                   status={status}
                   handleClick={handleClick}
                 />

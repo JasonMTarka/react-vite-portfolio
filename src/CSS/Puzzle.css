@@ -69,3 +69,53 @@
 .puzzle-explain:hover {
   background: #282833;
 }
+
+.clear-grid-btn {
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: #3b3841;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clear-grid-btn:hover {
+  background: #5a28b5;
+}
+
+.keys-display {
+  display: inline-block;
+  margin: 0.5rem 1rem 0.5rem 0;
+  padding: 0.5rem 1.25rem;
+  background: #2e3a4d;
+  color: #ffe066;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.gems-display {
+  display: inline-block;
+  margin: 0.5rem 1rem 0.5rem 0;
+  padding: 0.5rem 1.25rem;
+  background: #3a2e4d;
+  color: #7cf0ff;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.message-display {
+  display: inline-block;
+  margin: 0.5rem 2rem 0.5rem 0;
+  padding: 0.5rem 1.25rem;
+  background: #2d2d3a;
+  color: #fff;
+  border-left: 6px solid #7c3aed;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
