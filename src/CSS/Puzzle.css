@@ -10,6 +10,7 @@
   display: flex;
   gap: 4px;
 }
+
 .puzzle-cell {
   width: 90px;
   height: 90px;
@@ -34,11 +35,11 @@
   background: rgb(112, 112, 112);
 }
 
-#room_20 {
+.antechamber {
   background: blueviolet;
 }
 
-#room_28 {
+.entrance-hall {
   background: #0aec7b;
 }
 

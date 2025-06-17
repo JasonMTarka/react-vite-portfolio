@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
-import "./Puzzle.css";
+import "../CSS/Puzzle.css";
 import Room from "./Room";
 
 const ROWS = 9;
 const COLS = 5;
+
+const STATUSES = {
+  inactive: "inactive",
+  active: "active",
+  activated: "activated",
+};
+
+const ROOMS = {
+  antechamber: "room_20",
+  entrance_hall: "room_28",
+};
 
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState("Click an active room.");
@@ -35,7 +46,7 @@ const Puzzle: React.FC = () => {
     room_25: "inactive",
     room_26: "inactive",
     room_27: "active",
-    room_28: "active",
+    room_28: "activated",
     room_30: "inactive",
     room_31: "inactive",
     room_32: "inactive",
@@ -58,7 +69,7 @@ const Puzzle: React.FC = () => {
 
   useEffect(() => {
     if (victory) {
-      alert("You inherited the manor!");
+      setMessage("You inherited the manor!");
     }
   }, [victory]);
 
@@ -99,13 +110,22 @@ const Puzzle: React.FC = () => {
     if (status === "activated") {
       activateSurroundingRooms(roomId);
     }
-    if (status === "activated" && roomId === "room_20") {
+    if (status === "activated" && roomId === ROOMS.antechamber) {
       setVictory(true);
     }
   };
 
-  const updateMessage = (message: string) => {
-    setMessage(message);
+  const handleClick = (roomId: string, status: string) => {
+    if (status === STATUSES.inactive) {
+      setMessage("That's an inactive room!");
+    } else if (status === STATUSES.active) {
+      setMessage("Select another active room.");
+      updateRoomStatus(roomId, STATUSES.activated);
+    }
+  };
+
+  const setRoomId = (col: number, row: number) => {
+    return "room_" + col.toString() + row.toString();
   };
 
   return (
@@ -118,18 +138,17 @@ const Puzzle: React.FC = () => {
       <div className="puzzle-grid">
         {Array.from({ length: ROWS }).map((_, rowIdx) => (
           <div className="puzzle-row" key={rowIdx}>
-            {Array.from({ length: COLS }).map((_, colIdx) => (
-              <Room
-                col={colIdx}
-                row={rowIdx}
-                key={"room_" + colIdx.toString() + rowIdx.toString()}
-                status={
-                  manorState["room_" + colIdx.toString() + rowIdx.toString()]
-                }
-                setMessage={updateMessage}
-                updateStatus={updateRoomStatus}
-              />
-            ))}
+            {Array.from({ length: COLS }).map((_, colIdx) => {
+              const roomId = setRoomId(colIdx, rowIdx);
+              return (
+                <Room
+                  roomId={roomId}
+                  key={roomId}
+                  status={manorState[roomId]}
+                  handleClick={handleClick}
+                />
+              );
+            })}
           </div>
         ))}
       </div>
