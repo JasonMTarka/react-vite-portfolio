@@ -1,10 +1,5 @@
 import "../CSS/Puzzle.css";
-
-const STATUSES = {
-  inactive: "inactive",
-  active: "active",
-  activated: "activated",
-};
+import { STATUSES, ROOMS } from "./constants";
 
 const Room = ({
   roomId,
@@ -18,7 +13,7 @@ const Room = ({
   handleClick: (roomId: string, status: string) => void;
 }) => {
   const setClass = (status: string, roomId: string) => {
-    if (roomId === "room_20") {
+    if (roomId === ROOMS.antechamber) {
       return "antechamber";
     } else if (status === STATUSES.inactive) {
       return "inactive-puzzle-cell";

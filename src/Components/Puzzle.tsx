@@ -1,22 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../CSS/Puzzle.css";
 import Room from "./Room";
-import { type ManorData } from "./ManorData";
-import manorData from "./ManorData";
+import manorData, { type ManorData } from "./ManorData";
+import { STATUSES, ROOMS } from "./constants";
 
 const ROWS = 9;
 const COLS = 5;
-
-const STATUSES = {
-  inactive: "inactive",
-  active: "active",
-  activated: "activated",
-};
-
-const ROOMS = {
-  antechamber: "room_20",
-  entrance_hall: "room_28",
-};
 
 const startingState = JSON.stringify(manorData);
 
@@ -51,12 +40,12 @@ const Puzzle: React.FC = () => {
         nCol < COLS &&
         nRow >= 0 &&
         nRow < ROWS &&
-        newManorState[neighborId].status === "inactive"
+        newManorState[neighborId].status === STATUSES.inactive
       ) {
-        newManorState[neighborId].status = "active";
+        newManorState[neighborId].status = STATUSES.active;
       }
     });
-    newManorState[roomId].status = "activated";
+    newManorState[roomId].status = STATUSES.activated;
     setManorState(newManorState);
   };
 
@@ -64,10 +53,10 @@ const Puzzle: React.FC = () => {
     const newManorState = { ...manorState };
     newManorState[roomId].status = status;
     setManorState(newManorState);
-    if (status === "activated") {
+    if (status === STATUSES.activated) {
       activateSurroundingRooms(roomId);
     }
-    if (status === "activated" && roomId === ROOMS.antechamber) {
+    if (status === STATUSES.activated && roomId === ROOMS.antechamber) {
       setVictory(true);
     }
   };
@@ -79,7 +68,7 @@ const Puzzle: React.FC = () => {
       setMessage("Select another active room.");
       updateRoomStatus(roomId, STATUSES.activated);
     }
-    sessionStorage.setItem("manorState", JSON.stringify(manorState));
+    localStorage.setItem("manorState", JSON.stringify(manorState));
   };
 
   const setRoomId = (col: number, row: number) => {
@@ -87,7 +76,7 @@ const Puzzle: React.FC = () => {
   };
 
   useEffect(() => {
-    const savedData = sessionStorage.getItem("manorState");
+    const savedData = localStorage.getItem("manorState");
     if (savedData) {
       setManorState(JSON.parse(savedData));
     }
@@ -95,7 +84,8 @@ const Puzzle: React.FC = () => {
 
   const reset = () => {
     setManorState(JSON.parse(startingState));
-    sessionStorage.clear();
+    setVictory(false);
+    localStorage.clear();
   };
 
   return (

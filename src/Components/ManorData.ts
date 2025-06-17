@@ -1,3 +1,5 @@
+import { STATUSES } from "./constants";
+
 export interface ManorData {
   [key: string]: {
     status: string;
@@ -10,13 +12,13 @@ const manorData: ManorData = {};
 
 Array.from({ length: 49 }).map((_, index) => {
   manorData["room_" + index.toString().padStart(2, "0")] = {
-    status: "inactive",
+    status: STATUSES.inactive,
   };
 });
 
-manorData["room_18"] = { status: "active" };
-manorData["room_27"] = { status: "active" };
-manorData["room_28"] = { status: "activated" };
-manorData["room_38"] = { status: "active" };
+["room_18", "room_27", "room_38"].map((room) => {
+  manorData[room] = { status: STATUSES.active };
+});
+manorData["room_28"] = { status: STATUSES.activated };
 
 export default manorData;
