@@ -31,6 +31,10 @@
   background: #847bff;
 }
 
+.locked-puzzle-cell {
+  background: #b83838;
+}
+
 .antechamber {
   background: blueviolet;
 }
@@ -41,6 +45,10 @@
 
 .activated-puzzle-cell:hover {
   background: #685dfa;
+}
+
+.locked-puzzle-cell:hover {
+  background: #a53232;
 }
 
 .active-puzzle-cell:hover {
@@ -71,7 +79,7 @@
 }
 
 .clear-grid-btn {
-  margin-top: 2rem;
+  margin-top: 4rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   background: #3b3841;
@@ -91,7 +99,7 @@
   margin: 0.5rem 1rem 0.5rem 0;
   padding: 0.5rem 1.25rem;
   background: #2e3a4d;
-  color: #ffe066;
+  color: #a1a0ff;
   border-radius: 6px;
   font-weight: bold;
   font-size: 1.1rem;
@@ -102,7 +110,7 @@
   margin: 0.5rem 1rem 0.5rem 0;
   padding: 0.5rem 1.25rem;
   background: #3a2e4d;
-  color: #7cf0ff;
+  color: #f04fff;
   border-radius: 6px;
   font-weight: bold;
   font-size: 1.1rem;
@@ -110,7 +118,7 @@
 
 .message-display {
   display: inline-block;
-  margin: 0.5rem 2rem 0.5rem 0;
+  margin: 4rem 2rem 0.5rem 0;
   padding: 0.5rem 1.25rem;
   background: #2d2d3a;
   color: #fff;
@@ -118,4 +126,46 @@
   border-radius: 6px;
   font-size: 1.1rem;
   font-weight: 500;
+}
+
+.side-row-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-width: 270px;
+  margin-right: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.side-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
+  margin-top: calc(90px * 1); /* Center with 5th row (0-based index) */
+}
+
+.side-cell {
+  display: flex;
+  flex-direction: column; /* Add this line */
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  background: #444444;
+  border: 1px solid #888;
+  box-sizing: border-box;
+  margin-right: 4px;
+}
+
+.inactive-side-cell {
+  background: #1b1b1b;
+}
+
+.side-cell:last-child {
+  margin-right: 0;
 }

@@ -15,12 +15,17 @@ const Room = ({
   const setClass = (status: string, roomId: string) => {
     if (roomId === ROOMS.antechamber) {
       return "antechamber";
-    } else if (status === STATUSES.inactive) {
+    } else if (
+      status === STATUSES.inactive ||
+      status === STATUSES.locked_hidden
+    ) {
       return "inactive-puzzle-cell";
     } else if (status === STATUSES.active) {
       return "active-puzzle-cell";
     } else if (status === STATUSES.activated) {
       return "activated-puzzle-cell";
+    } else if (status === STATUSES.locked) {
+      return "locked-puzzle-cell";
     }
   };
 
