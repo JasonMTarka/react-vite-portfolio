@@ -31,12 +31,24 @@
   background: #847bff;
 }
 
+.antechamber {
+  background: blueviolet;
+}
+
 .puzzle-cell:hover {
   background: rgb(112, 112, 112);
 }
 
-.antechamber {
-  background: blueviolet;
+.activated-puzzle-cell:hover {
+  background: #685dfa;
+}
+
+.active-puzzle-cell:hover {
+  background: #00af2c;
+}
+
+.antechamber:hover {
+  background: rgb(126, 17, 228);
 }
 
 .entrance-hall {

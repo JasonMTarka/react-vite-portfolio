@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../CSS/Puzzle.css";
 import Room from "./Room";
+import { type ManorData } from "./ManorData";
+import manorData from "./ManorData";
 
 const ROWS = 9;
 const COLS = 5;
@@ -19,53 +21,7 @@ const ROOMS = {
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState("Click an active room.");
   const [victory, setVictory] = useState(false);
-  const [manorState, setManorState] = useState<{ [key: string]: string }>({
-    room_00: "inactive",
-    room_01: "inactive",
-    room_02: "inactive",
-    room_03: "inactive",
-    room_04: "inactive",
-    room_05: "inactive",
-    room_06: "inactive",
-    room_07: "inactive",
-    room_08: "inactive",
-    room_10: "inactive",
-    room_11: "inactive",
-    room_12: "inactive",
-    room_13: "inactive",
-    room_14: "inactive",
-    room_15: "inactive",
-    room_16: "inactive",
-    room_17: "inactive",
-    room_18: "active",
-    room_20: "inactive",
-    room_21: "inactive",
-    room_22: "inactive",
-    room_23: "inactive",
-    room_24: "inactive",
-    room_25: "inactive",
-    room_26: "inactive",
-    room_27: "active",
-    room_28: "activated",
-    room_30: "inactive",
-    room_31: "inactive",
-    room_32: "inactive",
-    room_33: "inactive",
-    room_34: "inactive",
-    room_35: "inactive",
-    room_36: "inactive",
-    room_37: "inactive",
-    room_38: "active",
-    room_40: "inactive",
-    room_41: "inactive",
-    room_42: "inactive",
-    room_43: "inactive",
-    room_44: "inactive",
-    room_45: "inactive",
-    room_46: "inactive",
-    room_47: "inactive",
-    room_48: "inactive",
-  });
+  const [manorState, setManorState] = useState<ManorData>(manorData);
 
   useEffect(() => {
     if (victory) {
@@ -88,24 +44,23 @@ const Puzzle: React.FC = () => {
       const nCol = col + dc;
       const nRow = row + dr;
       const neighborId = `room_${nCol}${nRow}`;
-      console.log(neighborId);
       if (
         nCol >= 0 &&
         nCol < COLS &&
         nRow >= 0 &&
         nRow < ROWS &&
-        newManorState[neighborId] === "inactive"
+        newManorState[neighborId].status === "inactive"
       ) {
-        newManorState[neighborId] = "active";
+        newManorState[neighborId].status = "active";
       }
     });
-    newManorState[roomId] = "activated";
+    newManorState[roomId].status = "activated";
     setManorState(newManorState);
   };
 
   const updateRoomStatus = (roomId: string, status: string) => {
     const newManorState = { ...manorState };
-    newManorState[roomId] = status;
+    newManorState[roomId].status = status;
     setManorState(newManorState);
     if (status === "activated") {
       activateSurroundingRooms(roomId);
@@ -140,11 +95,13 @@ const Puzzle: React.FC = () => {
           <div className="puzzle-row" key={rowIdx}>
             {Array.from({ length: COLS }).map((_, colIdx) => {
               const roomId = setRoomId(colIdx, rowIdx);
+              const status = manorState[roomId].status;
               return (
                 <Room
                   roomId={roomId}
                   key={roomId}
-                  status={manorState[roomId]}
+                  text={[status, roomId]}
+                  status={status}
                   handleClick={handleClick}
                 />
               );

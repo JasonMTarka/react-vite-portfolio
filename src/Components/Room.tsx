@@ -8,10 +8,12 @@ const STATUSES = {
 
 const Room = ({
   roomId,
+  text,
   status,
   handleClick,
 }: {
   roomId: string;
+  text: string[];
   status: string;
   handleClick: (roomId: string, status: string) => void;
 }) => {
@@ -38,8 +40,9 @@ const Room = ({
       id={roomId}
       onClick={onClick}
     >
-      <div>{status}</div>
-      <div>{roomId}</div>
+      {text.map((line) => {
+        return <div>{line}</div>;
+      })}
     </div>
   );
 };
