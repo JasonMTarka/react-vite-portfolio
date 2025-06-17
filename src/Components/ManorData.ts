@@ -2,6 +2,7 @@ export interface ManorData {
   [key: string]: {
     status: string;
     roomType?: string;
+    inventory?: string[];
   };
 }
 

@@ -18,10 +18,12 @@ const ROOMS = {
   entrance_hall: "room_28",
 };
 
+const startingState = JSON.stringify(manorData);
+
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState("Click an active room.");
   const [victory, setVictory] = useState(false);
-  const [manorState, setManorState] = useState<ManorData>(manorData);
+  const [manorState, setManorState] = useState<ManorData>({ ...manorData });
 
   useEffect(() => {
     if (victory) {
@@ -77,10 +79,23 @@ const Puzzle: React.FC = () => {
       setMessage("Select another active room.");
       updateRoomStatus(roomId, STATUSES.activated);
     }
+    sessionStorage.setItem("manorState", JSON.stringify(manorState));
   };
 
   const setRoomId = (col: number, row: number) => {
     return "room_" + col.toString() + row.toString();
+  };
+
+  useEffect(() => {
+    const savedData = sessionStorage.getItem("manorState");
+    if (savedData) {
+      setManorState(JSON.parse(savedData));
+    }
+  }, []);
+
+  const reset = () => {
+    setManorState(JSON.parse(startingState));
+    sessionStorage.clear();
   };
 
   return (
@@ -90,6 +105,7 @@ const Puzzle: React.FC = () => {
         reach the final room. Can you make your way through the maze?
       </div>
       <div className="puzzle-explain">{message}</div>
+      <button onClick={reset}>Clear Grid</button>
       <div className="puzzle-grid">
         {Array.from({ length: ROWS }).map((_, rowIdx) => (
           <div className="puzzle-row" key={rowIdx}>
