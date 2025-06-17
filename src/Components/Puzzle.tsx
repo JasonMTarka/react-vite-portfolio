@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../CSS/Puzzle.css";
 import Room from "./Room";
-import manorData, { type Blueprint, type ManorData } from "./ManorData";
+import manorData, { type Blueprint, type ManorData } from "./manorData";
 import { STATUSES, ROOMS, BLUEPRINTS } from "./constants";
 import ChoiceBox from "./ChoiceBox";
 

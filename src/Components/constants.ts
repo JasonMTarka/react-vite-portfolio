@@ -1,4 +1,4 @@
-import type { Blueprint } from "./ManorData";
+import type { Blueprint } from "./manorData";
 
 export const STATUSES = {
   inactive: "inactive",
