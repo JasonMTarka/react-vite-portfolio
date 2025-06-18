@@ -1,4 +1,4 @@
-import type { Blueprint } from "./manorData";
+import type { Blueprint } from "./blueprints";
 
 const ChoiceBox = ({
   blueprint,

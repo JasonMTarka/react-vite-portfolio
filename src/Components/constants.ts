@@ -1,4 +1,4 @@
-import type { Blueprint } from "./manorData";
+import type { Resource, Operation } from "./blueprints";
 
 export const STATUSES = {
   inactive: "inactive",
@@ -8,15 +8,25 @@ export const STATUSES = {
   locked_hidden: "locked_hidden",
 };
 
+export const RESOURCES: Record<Resource, Resource> = {
+  steps: "steps",
+  gems: "gems",
+  keys: "keys",
+};
+
+export const OPERATIONS: Record<Operation, Operation> = {
+  add: "add",
+  subtract: "subtract",
+};
+
 export const ROOMS = {
   antechamber: "room_20",
   entrance_hall: "room_28",
 };
 
-export const BLUEPRINTS: Record<string, Blueprint> = {
-  parlor: { name: "Parlor", cost: 0 },
-  security: { name: "Security", cost: 1 },
-  hallway: { name: "Hallway", cost: 1 },
-  entrance_hall: { name: "Entrance Hall", cost: 0 },
-  antechamber: { name: "Antechamber", cost: 0 },
+export const LAYOUT = {
+  rows: 9,
+  cols: 5,
 };
+
+export const STARTING_STEPS = 20;

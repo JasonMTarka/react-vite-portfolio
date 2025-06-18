@@ -40,8 +40,8 @@ const Room = ({
       id={roomId}
       onClick={onClick}
     >
-      {text.map((line) => {
-        return <div>{line}</div>;
+      {text.map((line, index) => {
+        return <div key={index}>{line}</div>;
       })}
     </div>
   );

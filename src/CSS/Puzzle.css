@@ -94,47 +94,52 @@
   background: #5a28b5;
 }
 
-.keys-display {
+.resource-display {
   display: inline-block;
-  margin: 0.5rem 1rem 0.5rem 0;
+  margin: 0rem 1rem 1.5rem 1rem;
   padding: 0.5rem 1.25rem;
   background: #2e3a4d;
-  color: #a1a0ff;
+  color: #0a0913;
   border-radius: 6px;
   font-weight: bold;
   font-size: 1.1rem;
 }
 
+.steps-display {
+  color: #dfdfdf;
+}
+
+.keys-display {
+  color: #a1a0ff;
+}
+
 .gems-display {
-  display: inline-block;
-  margin: 0.5rem 1rem 0.5rem 0;
-  padding: 0.5rem 1.25rem;
-  background: #3a2e4d;
   color: #f04fff;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 1.1rem;
 }
 
 .message-display {
   display: inline-block;
+  min-height: 7.5rem; /* Reserve space for up to 4 lines of text */
   margin: 4rem 2rem 0.5rem 0;
   padding: 0.5rem 1.25rem;
   background: #2d2d3a;
   color: #fff;
-  border-left: 6px solid #7c3aed;
   border-radius: 6px;
   font-size: 1.1rem;
   font-weight: 500;
+  box-sizing: border-box;
+  width: 500px; /* Fixed width to prevent resizing */
+  overflow-wrap: break-word;
 }
 
 .side-row-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
   min-width: 270px;
+  margin-top: 1.5rem;
   margin-right: 2rem;
   margin-left: auto;
   margin-right: auto;
