@@ -18,6 +18,7 @@ const NavBar = () => {
       <button className="navbar-btn" onClick={() => setPath("puzzle")}>
         Manor Puzzle
       </button>
+      <button className="navbar-btn">Coming Soon</button>
     </nav>
   );
 };
