@@ -3,10 +3,19 @@ import "../CSS/Puzzle.css";
 import Room from "./Room";
 import manorData, { type ManorData } from "./manorData";
 import { STATUSES, ROOMS, LAYOUT, STARTING_STEPS } from "./constants";
-import { type Blueprint, getRandomBlueprints } from "./blueprints";
+import {
+  type Blueprint,
+  getRandomBlueprints,
+  resetBlueprints,
+} from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
 
 const startingState = JSON.stringify(manorData);
+
+const getRuns = () => {
+  const storedRuns = localStorage.getItem("runs");
+  return storedRuns ? parseInt(storedRuns, 10) : 0;
+};
 
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState(["Click an active room."]);
@@ -21,6 +30,8 @@ const Puzzle: React.FC = () => {
   const [choicesActive, setChoicesActive] = useState(false);
   const [isFrozen, setIsFrozen] = useState(false);
   const [victory, setVictory] = useState(false);
+
+  const [runs, setRuns] = useState(getRuns());
 
   const saveNewManorState = (
     roomId: string,
@@ -44,11 +55,28 @@ const Puzzle: React.FC = () => {
       [1, 0], // right
       [-1, 0], // left
     ];
+
     const newManorState = { ...manorState };
-    directions.forEach(([dc, dr]) => {
+    directions.forEach(([dc, dr], index) => {
       const nCol = col + dc;
       const nRow = row + dr;
       const neighborId = `room_${nCol}${nRow}`;
+      const directions = manorState[roomId]?.blueprint?.directions;
+      if (directions) {
+        if (index === 0 && !directions.includes("↓")) {
+          return;
+        }
+        if (index === 1 && !directions.includes("↑")) {
+          return;
+        }
+        if (index === 2 && !directions.includes("→")) {
+          return;
+        }
+        if (index === 3 && !directions.includes("←")) {
+          return;
+        }
+      }
+
       if (nCol >= 0 && nCol < LAYOUT.cols && nRow >= 0 && nRow < LAYOUT.rows) {
         const neighborStatus = newManorState[neighborId].status;
         if (neighborStatus === STATUSES.locked_hidden) {
@@ -103,6 +131,7 @@ const Puzzle: React.FC = () => {
       return;
     }
     if (status === STATUSES.active) {
+      saveNewManorState(roomId, "status", STATUSES.current);
       setMessage(["Select a room to place:"]);
       goToChoice();
       return;
@@ -117,7 +146,7 @@ const Puzzle: React.FC = () => {
         "Select a room to place:",
       ]);
       setKeys(keys - 1);
-      saveNewManorState(roomId, "status", STATUSES.active);
+      saveNewManorState(roomId, "status", STATUSES.current);
       // const newManorState = { ...manorState };
       // newManorState[roomId].status = STATUSES.active;
       // setManorState(newManorState);
@@ -149,11 +178,11 @@ const Puzzle: React.FC = () => {
     setSteps(steps - 1);
 
     const generateInventory = () => {
-      // Weighted random: 0 (60%), 1 (20%), 2 (10%), 3 (10%)
+      // Weighted random: 0 (80%), 1 (15%), 2 (5%)
       const weightedRandom = () => {
         const r = Math.random();
         if (r < 0.8) return 0;
-        if (r < 0.9) return 1;
+        if (r < 0.95) return 1;
         return 2;
       };
       return { genKeys: weightedRandom(), genGems: weightedRandom() };
@@ -194,9 +223,12 @@ const Puzzle: React.FC = () => {
     setChoicesActive(false);
     setGems(0);
     setKeys(0);
+    setRuns(runs + 1);
     setMessage(["Click an active room."]);
     setSteps(STARTING_STEPS);
-    localStorage.clear();
+    resetBlueprints();
+    localStorage.setItem("manorState", "");
+    localStorage.setItem("runs", (runs + 1).toString());
   };
 
   const createRoomId = (col: number, row: number) => {
@@ -240,6 +272,7 @@ const Puzzle: React.FC = () => {
         }}
       >
         <div className="side-row-container">
+          <div>{runs}</div>
           <div className="message-display">
             {message.map((val, i) => {
               return <div key={i}>{val}</div>;
@@ -273,18 +306,11 @@ const Puzzle: React.FC = () => {
             <div className="puzzle-row" key={rowIdx}>
               {Array.from({ length: LAYOUT.cols }).map((_, colIdx) => {
                 const roomId = createRoomId(colIdx, rowIdx);
-                const status = manorState[roomId].status;
-                const blueprint = manorState[roomId].blueprint;
-                let name = "";
-                if (blueprint) {
-                  name = blueprint.name;
-                }
                 return (
                   <Room
                     roomId={roomId}
                     key={roomId}
-                    text={[name, status]}
-                    status={status}
+                    state={manorState[roomId]}
                     handleClick={handleRoomClick}
                   />
                 );

@@ -4,6 +4,7 @@ export const STATUSES = {
   inactive: "inactive",
   active: "active",
   activated: "activated",
+  current: "current",
   locked: "locked",
   locked_hidden: "locked_hidden",
 };

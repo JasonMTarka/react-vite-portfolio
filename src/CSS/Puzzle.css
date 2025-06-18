@@ -17,10 +17,20 @@
   background: #e0e0e0;
   border: 1px solid #bdbdbd;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .active-puzzle-cell {
   background: #00c431;
+  color: #004912;
 }
 
 .inactive-puzzle-cell {
@@ -29,14 +39,23 @@
 
 .activated-puzzle-cell {
   background: #847bff;
+  color: #2b2186;
 }
 
 .locked-puzzle-cell {
   background: #b83838;
+  color: #470000;
+}
+
+.current-puzzle-cell {
+  background: #4138b8;
 }
 
 .antechamber {
-  background: blueviolet;
+  color: #000000;
+  background: rgb(219, 219, 219);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .puzzle-cell:hover {
@@ -44,19 +63,23 @@
 }
 
 .activated-puzzle-cell:hover {
-  background: #685dfa;
+  background: #928aff;
 }
 
 .locked-puzzle-cell:hover {
-  background: #a53232;
+  background: #c44646;
 }
 
 .active-puzzle-cell:hover {
-  background: #00af2c;
+  background: #00c431;
+}
+
+.current-puzzle-cell:hover {
+  background: #473eca;
 }
 
 .antechamber:hover {
-  background: rgb(126, 17, 228);
+  background: rgb(255, 255, 255);
 }
 
 .entrance-hall {
@@ -156,15 +179,28 @@
 
 .side-cell {
   display: flex;
-  flex-direction: column; /* Add this line */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 90px;
-  background: #444444;
-  border: 1px solid #888;
+  width: 180px;
+  height: 180px;
+  background: #27334b;
+  border: 3px double #7cb9ff;
+  box-shadow: 0 4px 24px #0008, 0 0 0 4px #2d3e5e inset;
   box-sizing: border-box;
   margin-right: 4px;
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.side-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px dashed #fff3;
+  border-radius: 14px;
+  pointer-events: none;
 }
 
 .inactive-side-cell {
@@ -173,4 +209,34 @@
 
 .side-cell:last-child {
   margin-right: 0;
+}
+
+.arrows {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 3rem;
+  color: #7cb9ff;
+  text-shadow: 1px 1px 2px #222, 0 0 8px #0000005d;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+.blueprint-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4394ff;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.gem-cost {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #f04fff;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.05em;
+  text-align: center;
 }

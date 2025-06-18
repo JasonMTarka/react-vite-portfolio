@@ -1,15 +1,14 @@
 import "../CSS/Puzzle.css";
 import { STATUSES, ROOMS } from "./constants";
+import { type Blueprint } from "./blueprints";
 
 const Room = ({
   roomId,
-  text,
-  status,
+  state,
   handleClick,
 }: {
   roomId: string;
-  text: string[];
-  status: string;
+  state: { status: string; blueprint?: Blueprint };
   handleClick: (roomId: string, status: string) => void;
 }) => {
   const setClass = (status: string, roomId: string) => {
@@ -26,21 +25,27 @@ const Room = ({
       return "activated-puzzle-cell";
     } else if (status === STATUSES.locked) {
       return "locked-puzzle-cell";
+    } else if (status === STATUSES.current) {
+      return "current-puzzle-cell";
     }
   };
 
   const onClick = () => {
-    handleClick(roomId, status);
+    handleClick(roomId, state.status);
   };
 
   return (
     <div
-      className={"puzzle-cell " + setClass(status, roomId)}
+      className={"puzzle-cell " + setClass(state.status, roomId)}
       key={roomId}
       id={roomId}
       onClick={onClick}
     >
-      {text.map((line, index) => {
+      {state.status === STATUSES.locked ? "Locked" : ""}
+      {state.status === STATUSES.active && roomId != ROOMS.antechamber
+        ? "Available"
+        : ""}
+      {[state.blueprint?.name].map((line, index) => {
         return <div key={index}>{line}</div>;
       })}
     </div>
