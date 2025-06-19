@@ -27,7 +27,7 @@ export interface Effect {
 
 export interface ManorData {
   [key: string]: {
-    status: string;
+    status: Status;
     blueprint?: Blueprint;
   };
 }

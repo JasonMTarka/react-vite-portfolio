@@ -37,11 +37,11 @@ const Room = ({
       id={roomId}
       onClick={() => handleClick(roomId, state.status)}
     >
-      {state.status === STATUSES.locked ? "Locked" : ""}
-      {state.status === STATUSES.active ? "Available" : ""}
       {[state.blueprint?.name].map((line, index) => {
         return <div key={index}>{line}</div>;
       })}
+      {state.status === STATUSES.locked ? "Locked" : ""}
+      {state.status === STATUSES.active ? "Available" : ""}
     </div>
   );
 };

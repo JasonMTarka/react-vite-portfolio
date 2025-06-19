@@ -16,6 +16,18 @@
   initial-value: #f15bff;
 }
 
+@property --room-size {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 90px;
+}
+
+@property --blueprint-size {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 160px;
+}
+
 .puzzle-grid {
   display: flex;
   flex-direction: column;
@@ -30,8 +42,8 @@
 }
 
 .puzzle-cell {
-  width: 90px;
-  height: 90px;
+  width: var(--room-size);
+  height: var(--room-size);
   background: #e0e0e0;
   border: 1px solid var(--blueprint-lightblue);
   box-sizing: border-box;
@@ -109,8 +121,8 @@
 .puzzle-explain {
   margin-bottom: 1.5rem;
   padding: 1rem 1.5rem;
-  background: #2d2d3a;
-  border-left: 6px solid #7c3aed;
+  background: var(--blueprint-blue);
+  border-left: 6px solid var(--blueprint-lightblue);
   border-radius: 6px;
   font-size: 1.15rem;
   color: #fff;
@@ -121,11 +133,11 @@
   background: #282833;
 }
 
-.clear-grid-btn {
+.reset-btn {
   margin-top: 4rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  background: #3b3841;
+  background: var(--blueprint-blue);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -133,7 +145,7 @@
   transition: background 0.2s;
 }
 
-.clear-grid-btn:hover {
+.reset-btn:hover {
   background: var(--blueprint-lightblue);
   color: black;
 }
@@ -166,7 +178,7 @@
   min-height: 7.5rem; /* Reserve space for up to 4 lines of text */
   margin: 4rem 2rem 0.5rem 0;
   padding: 0.5rem 1.25rem;
-  background: #2d2d3a;
+  background: var(--blueprint-blue);
   color: #fff;
   border-radius: 6px;
   font-size: 1.1rem;
@@ -203,8 +215,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 180px;
-  height: 180px;
+  width: var(--blueprint-size);
+  height: var(--blueprint-size);
   background: var(--blueprint-blue);
   border: 3px double var(--blueprint-lightblue);
   box-shadow: 0 4px 24px var(--blueprint-blue), 0 0 0 4px #2d3e5e inset;
@@ -261,3 +273,36 @@
   letter-spacing: 0.05em;
   text-align: center;
 }
+
+.room-name {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+}
+
+.day-display {
+  display: block;
+  margin: 0 0 1.5rem 0;
+  padding: 0.7rem 1.5rem;
+  background: var(--blueprint-blue);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: left;
+  box-shadow: 0 4px 16px rgba(60, 60, 100, 0.13);
+  border: 2px solid var(--blueprint-lightblue);
+  align-self: flex-start;
+}
+
+/* TODO
+@media (prefers-color-scheme: light) {
+
+} */

@@ -1,6 +1,6 @@
-import type { Resource, Operation, Color, Direction } from "./types";
+import type { Resource, Operation, Color, Direction, Status } from "./types";
 
-export const STATUSES = {
+export const STATUSES: Record<Status, Status> = {
   inactive: "inactive",
   active: "active",
   activated: "activated",

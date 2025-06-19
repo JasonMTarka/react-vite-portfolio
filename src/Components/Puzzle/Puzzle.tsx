@@ -9,9 +9,9 @@ import type { Blueprint, ManorData } from "./types";
 
 const startingState = JSON.stringify(manorData);
 
-const getRuns = () => {
-  const storedRuns = localStorage.getItem("runs");
-  return storedRuns ? parseInt(storedRuns, 10) : 0;
+const getDay = () => {
+  const storedRuns = localStorage.getItem("day");
+  return storedRuns ? parseInt(storedRuns, 10) : 1;
 };
 
 const Puzzle: React.FC = () => {
@@ -28,7 +28,7 @@ const Puzzle: React.FC = () => {
   const [isFrozen, setIsFrozen] = useState(false);
   const [victory, setVictory] = useState(false);
 
-  const [runs, setRuns] = useState(getRuns());
+  const [day, setDay] = useState(getDay());
 
   const saveNewManorState = (
     roomId: string,
@@ -89,9 +89,6 @@ const Puzzle: React.FC = () => {
 
   const updateRoomStatus = (roomId: string, newStatus: string) => {
     saveNewManorState(roomId, "status", newStatus);
-    // const newManorState = { ...manorState };
-    // newManorState[roomId].status = newStatus;
-    // setManorState(newManorState);
     if (newStatus === STATUSES.activated) {
       activateSurroundingRooms(roomId);
     }
@@ -144,9 +141,6 @@ const Puzzle: React.FC = () => {
       ]);
       setKeys(keys - 1);
       saveNewManorState(roomId, "status", STATUSES.current);
-      // const newManorState = { ...manorState };
-      // newManorState[roomId].status = STATUSES.active;
-      // setManorState(newManorState);
       goToChoice();
       return;
     }
@@ -161,7 +155,6 @@ const Puzzle: React.FC = () => {
       return;
     }
 
-    //saveNewManorState(currentRoom, "blueprint", blueprint);
     const newManorState = { ...manorState };
     newManorState[currentRoom].blueprint = blueprint;
     newManorState[currentRoom].blueprint.draftable = false;
@@ -220,12 +213,12 @@ const Puzzle: React.FC = () => {
     setChoicesActive(false);
     setGems(0);
     setKeys(0);
-    setRuns(runs + 1);
+    setDay(day + 1);
     setMessage(["Click an active room."]);
     setSteps(STARTING_STEPS);
     resetBlueprints();
     localStorage.setItem("manorState", "");
-    localStorage.setItem("runs", (runs + 1).toString());
+    localStorage.setItem("day", (day + 1).toString());
   };
 
   const createRoomId = (col: number, row: number) => {
@@ -269,13 +262,13 @@ const Puzzle: React.FC = () => {
         }}
       >
         <div className="side-row-container">
-          <div>{runs}</div>
+          <div className="day-display">Day {day}</div>
           <div className="message-display">
             {message.map((val, i) => {
               return <div key={i}>{val}</div>;
             })}
           </div>
-          <button className="clear-grid-btn" onClick={reset}>
+          <button className="reset-btn" onClick={reset}>
             Reset
           </button>
           <div className="side-row">
