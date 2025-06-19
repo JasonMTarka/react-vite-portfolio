@@ -261,7 +261,7 @@ const Puzzle: React.FC = () => {
           alignItems: "flex-start",
         }}
       >
-        <div className="side-row-container">
+        <div className="choice-row-container">
           <div className="day-display">Day {day}</div>
           <div className="message-display">
             {message.map((val, i) => {
@@ -271,7 +271,7 @@ const Puzzle: React.FC = () => {
           <button className="reset-btn" onClick={reset}>
             Reset
           </button>
-          <div className="side-row">
+          <div className="choice-row">
             {Array.from({ length: 3 }).map((_, index) => {
               return (
                 <ChoiceBox

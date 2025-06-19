@@ -1,31 +1,9 @@
-@property --blueprint-lightblue {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #7cb9ff;
-}
-
-@property --blueprint-blue {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #27334b;
-}
-
-@property --gem-purple {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #f15bff;
-}
-
-@property --room-size {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 90px;
-}
-
-@property --blueprint-size {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 160px;
+:root {
+  --blueprint-lightblue: #7cb9ff;
+  --blueprint-blue: #27334b;
+  --gem-purple: #f15bff;
+  --room-size: clamp(60px, 8vw, 90px);
+  --blueprint-size: clamp(120px, 15vw, 160px);
 }
 
 .puzzle-grid {
@@ -56,6 +34,7 @@
   letter-spacing: 0.03em;
   text-align: center;
   line-height: 1.2;
+  overflow: hidden;
 }
 
 .puzzle-cell:hover {
@@ -188,7 +167,7 @@
   overflow-wrap: break-word;
 }
 
-.side-row-container {
+.choice-row-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -201,16 +180,16 @@
   margin-right: auto;
 }
 
-.side-row {
+.choice-row {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 90px;
+  height: var(--blueprint-size);
   margin-top: calc(90px * 1); /* Center with 5th row (0-based index) */
 }
 
-.side-cell {
+.choice-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -227,7 +206,7 @@
   overflow: hidden;
 }
 
-.side-cell::before {
+.choice-cell::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -236,28 +215,16 @@
   pointer-events: none;
 }
 
-.inactive-side-cell {
+.inactive-choice-cell {
   background: #1b1b1b;
 }
 
-.side-cell:last-child {
+.choice-cell:last-child {
   margin-right: 0;
 }
 
-.arrows {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  font-size: 3rem;
-  color: #7cb9ff;
-  text-shadow: 1px 1px 2px #222, 0 0 8px #0000005d;
-  font-weight: bold;
-  letter-spacing: 0.2em;
-}
-
 .blueprint-title {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
   font-weight: bold;
   color: #4394ff;
   margin-bottom: 0.25rem;
@@ -266,12 +233,24 @@
 }
 
 .gem-cost {
-  font-size: 1rem;
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
   font-weight: bold;
   color: var(--gem-purple);
   margin-bottom: 0.25rem;
   letter-spacing: 0.05em;
   text-align: center;
+}
+
+.arrows {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: #7cb9ff;
+  text-shadow: 1px 1px 2px #222, 0 0 8px #0000005d;
+  font-weight: bold;
+  letter-spacing: 0.2em;
 }
 
 .room-name {

@@ -21,7 +21,7 @@ const ChoiceBox = ({
 
   return (
     <div
-      className={"side-cell " + (!active ? "inactive-side-cell" : "")}
+      className={"choice-cell " + (!active ? "inactive-choice-cell" : "")}
       onClick={onClick}
     >
       <div className="blueprint-title">{blueprint ? blueprint.name : ""}</div>
