@@ -1,14 +1,11 @@
-import { Routes, Route } from "react-router-dom";
-import Puzzle from "./Puzzle";
+import Puzzle from "./Puzzle/Puzzle";
 import Home from "./Home";
 
-export default function Body() {
-  const basePath = "/react-vite-portfolio";
-
+export default function Body({ currentPage }: { currentPage: string }) {
   return (
-    <Routes>
-      <Route index path={basePath} element={<Home />} />
-      <Route path={basePath + "/puzzle"} element={<Puzzle />} />
-    </Routes>
+    <>
+      {currentPage === "home" ? <Home /> : ""}
+      {currentPage === "puzzle" ? <Puzzle /> : ""}
+    </>
   );
 }

@@ -1,12 +1,6 @@
 import { ROOMS, STATUSES } from "./constants";
-import { type Blueprint, BLUEPRINTS } from "./blueprints";
-
-export interface ManorData {
-  [key: string]: {
-    status: string;
-    blueprint?: Blueprint;
-  };
-}
+import { BLUEPRINTS } from "./blueprints";
+import type { ManorData } from "./types";
 
 const setStatus = (roomId: string) => {
   // Bottom 3 rows (rows 6, 7, 8) are always inactive

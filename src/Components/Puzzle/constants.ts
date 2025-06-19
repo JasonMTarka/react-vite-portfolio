@@ -1,4 +1,4 @@
-import type { Resource, Operation } from "./blueprints";
+import type { Resource, Operation, Color, Direction } from "./types";
 
 export const STATUSES = {
   inactive: "inactive",
@@ -7,6 +7,16 @@ export const STATUSES = {
   current: "current",
   locked: "locked",
   locked_hidden: "locked_hidden",
+};
+
+export const COLORS: Record<Color, Color> = {
+  blue: "blue",
+  red: "red",
+  yellow: "yellow",
+  purple: "purple",
+  green: "green",
+  orange: "orange",
+  black: "black",
 };
 
 export const RESOURCES: Record<Resource, Resource> = {
@@ -23,6 +33,13 @@ export const OPERATIONS: Record<Operation, Operation> = {
 export const ROOMS = {
   antechamber: "room_20",
   entrance_hall: "room_28",
+};
+
+export const DIRECTIONS: Record<string, Direction> = {
+  up: "↑",
+  down: "↓",
+  left: "←",
+  right: "→",
 };
 
 export const LAYOUT = {

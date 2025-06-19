@@ -1,14 +1,11 @@
+import "../../CSS/Puzzle/Puzzle.css";
 import React, { useEffect, useState } from "react";
-import "../CSS/Puzzle.css";
 import Room from "./Room";
-import manorData, { type ManorData } from "./manorData";
+import manorData from "./manorData";
 import { STATUSES, ROOMS, LAYOUT, STARTING_STEPS } from "./constants";
-import {
-  type Blueprint,
-  getRandomBlueprints,
-  resetBlueprints,
-} from "./blueprints";
+import { getRandomBlueprints, resetBlueprints } from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
+import type { Blueprint, ManorData } from "./types";
 
 const startingState = JSON.stringify(manorData);
 

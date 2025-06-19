@@ -1,26 +1,5 @@
-// import { OPERATIONS, RESOURCES } from "./constants";
-
-export interface Blueprint {
-  name: string;
-  cost: number;
-  draftable: boolean;
-  keys?: number;
-  gems?: number;
-  effect?: Effect;
-  message: string;
-  doors: number;
-  directions: string[];
-}
-
-export type Resource = "steps" | "gems" | "keys";
-export type Operation = "add" | "subtract";
-
-export interface Effect {
-  resource: Resource;
-  operation: Operation;
-  amount: number;
-  message: string;
-}
+import { COLORS, DIRECTIONS } from "./constants";
+import type { Blueprint, Color, Direction } from "./types";
 
 export const getRandomBlueprints = (): Blueprint[] => {
   // Only include draftable blueprints
@@ -48,6 +27,7 @@ const addRoomProperties = (
   name: string,
   cost: number,
   draftable: boolean,
+  color: Color,
   message: string,
   keys = 0,
   gems = 0,
@@ -55,8 +35,13 @@ const addRoomProperties = (
 ) => {
   // Returns a random array of unique arrow directions up to the number of doors (max 4),
   // but the final array is always sorted as ["left", "up", "down", "right"]
-  function getArrowDirections(doors: number): string[] {
-    const allDirections = ["←", "↑", "↓", "→"];
+  function getArrowDirections(doors: number): Direction[] {
+    const allDirections: Direction[] = [
+      DIRECTIONS.left,
+      DIRECTIONS.up,
+      DIRECTIONS.down,
+      DIRECTIONS.right,
+    ];
     const count = Math.min(doors, 4);
     // Shuffle and pick random directions
     const shuffled = allDirections.slice().sort(() => 0.5 - Math.random());
@@ -65,12 +50,13 @@ const addRoomProperties = (
     return allDirections.filter((dir) => selected.includes(dir));
   }
 
-  const directions: string[] = getArrowDirections(doors);
+  const directions = getArrowDirections(doors);
 
   return {
     name: name,
     cost: cost,
     draftable: draftable,
+    color: color,
     message: message,
     keys: keys,
     gems: gems,
@@ -84,6 +70,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Parlor",
     0,
     true,
+    COLORS.blue,
     "You find a cozy parlor with three locked chests and a wind-up key.",
     0,
     3,
@@ -93,6 +80,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Security",
     1,
     true,
+    COLORS.blue,
     "You find a security room with a vast array of monitors.",
     0,
     0,
@@ -102,6 +90,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Hallway",
     0,
     true,
+    COLORS.orange,
     "You enter a non-descript hallway.",
     1,
     0,
@@ -111,6 +100,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Aquarium",
     1,
     true,
+    COLORS.blue,
     "You enter an aquarium with elaborately decorated tanks filled with colorful fish.",
     0,
     0,
@@ -120,6 +110,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Bedroom",
     0,
     true,
+    COLORS.purple,
     "You find a quiet bedroom with a soft bed and a postcard from a town called 'Reddington' on a desk.",
     0,
     0,
@@ -129,6 +120,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Billiard Room",
     0,
     true,
+    COLORS.blue,
     "You stumble upon a billiard room with an odd-looking dartboard in the corner.",
     2,
     0,
@@ -138,6 +130,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Boudoir",
     0,
     true,
+    COLORS.purple,
     "You enter a soothing boudoir with an out-of-place large, locked safe.",
     1,
     0,
@@ -147,6 +140,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Chapel",
     0,
     true,
+    COLORS.red,
     "You find yourself in a chapel with large stained glass windows of unfamiliar angels.",
     0,
     0,
@@ -156,6 +150,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Closet",
     0,
     true,
+    COLORS.blue,
     "You open a closet stuffed with coats and boxes full of miscellaneous items on the ground.",
     1,
     1,
@@ -165,6 +160,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Coat Check",
     0,
     true,
+    COLORS.blue,
     "You find yourself at a coat check, though peeking behind the counter you spy more than coats being kept here.",
     0,
     0,
@@ -174,6 +170,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Commissary",
     1,
     true,
+    COLORS.yellow,
     "You're surprised to find that the manor has it's own commissary for the staff.  Where are they anyway?",
     0,
     0,
@@ -183,6 +180,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Corridor",
     0,
     true,
+    COLORS.orange,
     "A long, narrow corridor.",
     0,
     0,
@@ -192,6 +190,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Courtyard",
     1,
     true,
+    COLORS.yellow,
     "You open the door to an open courtyard with two trees and piles of dirt on the ground.",
     0,
     0,
@@ -201,6 +200,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Darkroom",
     0,
     true,
+    COLORS.red,
     "As you enter the room, the red lights flicker out and you find yourself in utter darkness.",
     0,
     0,
@@ -210,6 +210,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Den",
     0,
     true,
+    COLORS.blue,
     "You feel relaxed as you enter a cozy den arrayed with clocks of all shapes and sizes with a lit fireplace. But who's keeping the fire lit?",
     0,
     1,
@@ -219,6 +220,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Dining Room",
     1,
     true,
+    COLORS.blue,
     "You enter a room with a sturdy dining room table.",
     0,
     0,
@@ -228,6 +230,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Drawing Room",
     1,
     true,
+    COLORS.blue,
     "You enter a room with a high-vaulted ceiling with walls covered in drawings.  An easel stands in the middle carrying the portrait of an grandfatherly-man.",
     0,
     0,
@@ -237,6 +240,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Greenhouse",
     1,
     true,
+    COLORS.green,
     "A lush greenhouse full of plants and mysterious flowers that sprout gems.",
     0,
     2,
@@ -246,6 +250,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Guest Bedroom",
     0,
     true,
+    COLORS.purple,
     "A bedroom for guests.",
     0,
     0,
@@ -255,6 +260,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Kitchen",
     1,
     true,
+    COLORS.yellow,
     "A kitchen with modern appliances.",
     0,
     0,
@@ -264,6 +270,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Laboratory",
     1,
     true,
+    COLORS.blue,
     "A laboratory with bubbling potions.",
     0,
     0,
@@ -273,6 +280,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Lavatory",
     0,
     true,
+    COLORS.red,
     "A small lavatory.",
     0,
     0,
@@ -282,6 +290,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Nook",
     0,
     true,
+    COLORS.blue,
     "A reading nook with a comfy chair.",
     1,
     0,
@@ -291,6 +300,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Nursery",
     1,
     true,
+    COLORS.purple,
     "A nursery with toys and a crib.",
     0,
     0,
@@ -300,6 +310,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Observatory",
     1,
     true,
+    COLORS.blue,
     "A room with a telescope for stargazing.",
     0,
     0,
@@ -309,6 +320,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Office",
     2,
     true,
+    COLORS.blue,
     "A quiet office with a large desk.",
     0,
     0,
@@ -318,6 +330,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Pantry",
     0,
     true,
+    COLORS.blue,
     "A pantry full of food supplies.",
     0,
     0,
@@ -327,7 +340,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Passageway",
     2,
     true,
-    "A secret passageway behind a bookshelf.",
+    COLORS.orange,
+    "You find yourself at a small room with a single bookcase and several conspicous brightly colored books.  Pulling one of them reveals a hidden door behind the bookcase, painted the same color as the book you chose.",
     0,
     0,
     4
@@ -336,16 +350,18 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Patio",
     1,
     true,
-    "A sunny patio with outdoor furniture.",
+    COLORS.green,
+    "You find a sunny patio with a grill and a small table with a gem on top.",
     0,
-    0,
+    1,
     2
   ),
   rumpus_room: addRoomProperties(
     "Rumpus Room",
     1,
     true,
-    "A room for games and fun.",
+    COLORS.blue,
+    "You enter a colorful room full of toys, games, and a mysterious fortune-telling machine named 'Alzara'.",
     0,
     0,
     2
@@ -354,7 +370,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Spare Room",
     0,
     true,
-    "An empty spare room.",
+    COLORS.blue,
+    "You smell paint as you enter the spare room.  It looks like they haven't decided which color to paint the walls yet.",
     0,
     0,
     2
@@ -363,7 +380,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Storeroom",
     0,
     true,
-    "A storeroom packed with boxes.",
+    COLORS.blue,
+    "You open the door and find a storeroom with a variety of odds-and-ends, including old paintings and a multitiude of boxes.  And also a shiny gem and a key.",
     1,
     1,
     1
@@ -372,7 +390,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Terrace",
     1,
     true,
-    "A terrace with a beautiful view.",
+    COLORS.green,
+    "You open the door and find yourself at a terrace overlooking the exterior of the manor.",
     0,
     0,
     2
@@ -381,7 +400,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "The Pool",
     1,
     true,
-    "An indoor pool with clear water.",
+    COLORS.blue,
+    "You find a room with a small pool inside.  Are those coins at the bottom?",
     0,
     0,
     3
@@ -390,7 +410,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Utility Closet",
     0,
     true,
-    "A closet with cleaning supplies.",
+    COLORS.blue,
+    "You find a small room with a single breaker box.  Opening it, you find switches for the Darkroom, the Garage, the Gymnasium.",
     0,
     0,
     1
@@ -399,7 +420,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Walk-in Closet",
     1,
     true,
-    "A spacious walk-in closet.",
+    COLORS.blue,
+    "You enter a walk-in closet that looks frozen in time, a deep layer of dust coating a set of keys and gems on a desk.",
     2,
     2,
     1
@@ -408,7 +430,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "East Wing Hall",
     0,
     false,
-    "A hallway in the east wing.",
+    COLORS.orange,
+    "You enter a brightly-lit hall along the east side of the house.",
     0,
     0,
     3
@@ -417,7 +440,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "West Wing Hall",
     0,
     false,
-    "A hallway in the west wing.",
+    COLORS.orange,
+    "You enter a musky hall along the western side of the manor.  It seems like no one has been here for years.",
     0,
     0,
     3
@@ -426,7 +450,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Entrance Hall",
     0,
     false,
-    "The grand entrance hall.",
+    COLORS.blue,
+    "You've landed at a grand entrance hall with highly polished floors and three awaiting doors.",
     0,
     0,
     4
@@ -435,7 +460,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "Antechamber",
     0,
     false,
-    "The final antechamber.",
+    COLORS.blue,
+    "You've reached the fabled antechamber, a room with stark marble walls and featureless barring a single pedastal in the center with a letter: you've inherited the manor!  But looking to the north, you see a final locked door.  Is there more to come?",
     0,
     0,
     4

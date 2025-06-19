@@ -1,6 +1,6 @@
-import "../CSS/Puzzle.css";
+import "../../CSS/Puzzle/Puzzle.css";
 import { STATUSES, ROOMS } from "./constants";
-import { type Blueprint } from "./blueprints";
+import type { Blueprint, Status } from "./types";
 
 const Room = ({
   roomId,
@@ -8,8 +8,8 @@ const Room = ({
   handleClick,
 }: {
   roomId: string;
-  state: { status: string; blueprint?: Blueprint };
-  handleClick: (roomId: string, status: string) => void;
+  state: { status: Status; blueprint?: Blueprint };
+  handleClick: (roomId: string, status: Status) => void;
 }) => {
   const setClass = (status: string, roomId: string) => {
     if (roomId === ROOMS.antechamber) {
@@ -30,21 +30,15 @@ const Room = ({
     }
   };
 
-  const onClick = () => {
-    handleClick(roomId, state.status);
-  };
-
   return (
     <div
       className={"puzzle-cell " + setClass(state.status, roomId)}
       key={roomId}
       id={roomId}
-      onClick={onClick}
+      onClick={() => handleClick(roomId, state.status)}
     >
       {state.status === STATUSES.locked ? "Locked" : ""}
-      {state.status === STATUSES.active && roomId != ROOMS.antechamber
-        ? "Available"
-        : ""}
+      {state.status === STATUSES.active ? "Available" : ""}
       {[state.blueprint?.name].map((line, index) => {
         return <div key={index}>{line}</div>;
       })}

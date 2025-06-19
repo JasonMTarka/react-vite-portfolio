@@ -1,3 +1,21 @@
+@property --blueprint-lightblue {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #7cb9ff;
+}
+
+@property --blueprint-blue {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #27334b;
+}
+
+@property --gem-purple {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #f15bff;
+}
+
 .puzzle-grid {
   display: flex;
   flex-direction: column;
@@ -15,7 +33,7 @@
   width: 90px;
   height: 90px;
   background: #e0e0e0;
-  border: 1px solid #bdbdbd;
+  border: 1px solid var(--blueprint-lightblue);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -28,13 +46,25 @@
   line-height: 1.2;
 }
 
+.puzzle-cell:hover {
+  background: rgb(112, 112, 112);
+}
+
 .active-puzzle-cell {
   background: #00c431;
   color: #004912;
 }
 
+.active-puzzle-cell:hover {
+  background: #16e74b;
+}
+
 .inactive-puzzle-cell {
-  background: #5f5f5f;
+  background: var(--blueprint-blue);
+}
+
+.inactive-puzzle-cell:hover {
+  background: #374869;
 }
 
 .activated-puzzle-cell {
@@ -42,48 +72,38 @@
   color: #2b2186;
 }
 
+.activated-puzzle-cell:hover {
+  background: #928aff;
+}
+
 .locked-puzzle-cell {
   background: #b83838;
   color: #470000;
-}
-
-.current-puzzle-cell {
-  background: #4138b8;
-}
-
-.antechamber {
-  color: #000000;
-  background: rgb(219, 219, 219);
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.puzzle-cell:hover {
-  background: rgb(112, 112, 112);
-}
-
-.activated-puzzle-cell:hover {
-  background: #928aff;
 }
 
 .locked-puzzle-cell:hover {
   background: #c44646;
 }
 
-.active-puzzle-cell:hover {
-  background: #16e74b;
+.current-puzzle-cell {
+  background: #4138b8;
 }
 
 .current-puzzle-cell:hover {
   background: #473eca;
 }
 
-.antechamber:hover {
-  background: rgb(255, 255, 255);
+/* Antechamber */
+#room_20 {
+  color: #000000;
+  background: rgb(219, 219, 219);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
-.entrance-hall {
-  background: #0aec7b;
+/* Antechamber */
+#room_20:hover {
+  background: rgb(255, 255, 255);
 }
 
 .puzzle-explain {
@@ -114,7 +134,8 @@
 }
 
 .clear-grid-btn:hover {
-  background: #5a28b5;
+  background: var(--blueprint-lightblue);
+  color: black;
 }
 
 .resource-display {
@@ -124,7 +145,7 @@
   background: #2e3a4d;
   color: #0a0913;
   border-radius: 6px;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1.1rem;
 }
 
@@ -133,11 +154,11 @@
 }
 
 .keys-display {
-  color: #a1a0ff;
+  color: var(--blueprint-lightblue);
 }
 
 .gems-display {
-  color: #f04fff;
+  color: var(--gem-purple);
 }
 
 .message-display {
@@ -184,9 +205,9 @@
   justify-content: center;
   width: 180px;
   height: 180px;
-  background: #27334b;
-  border: 3px double #7cb9ff;
-  box-shadow: 0 4px 24px #0008, 0 0 0 4px #2d3e5e inset;
+  background: var(--blueprint-blue);
+  border: 3px double var(--blueprint-lightblue);
+  box-shadow: 0 4px 24px var(--blueprint-blue), 0 0 0 4px #2d3e5e inset;
   box-sizing: border-box;
   margin-right: 4px;
   border-radius: 18px;
@@ -235,7 +256,7 @@
 .gem-cost {
   font-size: 1rem;
   font-weight: bold;
-  color: #f04fff;
+  color: var(--gem-purple);
   margin-bottom: 0.25rem;
   letter-spacing: 0.05em;
   text-align: center;

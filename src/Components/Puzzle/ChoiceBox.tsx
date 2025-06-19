@@ -1,4 +1,4 @@
-import type { Blueprint } from "./blueprints";
+import type { Blueprint } from "./types";
 
 const convertDirectionsToArrows = (directions: string[]) => {
   return directions.map((direction) => {
