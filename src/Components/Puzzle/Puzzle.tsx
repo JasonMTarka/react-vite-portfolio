@@ -53,7 +53,8 @@ const Puzzle: React.FC = () => {
   useEffect(() => {
     if (victory) {
       setMessage([
-        "You inherited the manor!",
+        "You've reached the fabled Antechamber, a room with stark marble walls and featureless barring a single pedastal in the center with a letter: you've inherited the manor!  But looking to the north, you see a final locked door.  Is there more to come?",
+        "　",
         "Press the 'Reset Manor' button to play again.",
       ]);
       setResetActive(true);
