@@ -1,14 +1,14 @@
 const ResetButton = ({
-  victory,
+  resetActive,
   onClick,
 }: {
-  victory: boolean;
+  resetActive: boolean;
   onClick: () => void;
 }) => {
   return (
     <>
       <button
-        className={`reset-btn ${victory ? "reset-btn-victory" : ""}`}
+        className={`reset-btn ${resetActive ? "reset-btn-active" : ""}`}
         onClick={onClick}
       >
         Reset Manor

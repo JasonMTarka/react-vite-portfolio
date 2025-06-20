@@ -127,7 +127,7 @@
   color: black;
 }
 
-.reset-btn-victory {
+.reset-btn-active {
   position: relative;
   z-index: 1;
   background: var(--blueprint-blue);
@@ -138,7 +138,7 @@
   overflow: visible;
 }
 
-.reset-btn-victory::after {
+.reset-btn-active::after {
   content: "";
   position: absolute;
   inset: -4px;

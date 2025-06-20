@@ -47,4 +47,4 @@ export const LAYOUT = {
   cols: 5,
 };
 
-export const STARTING_STEPS = 30;
+export const STARTING_STEPS = 20;

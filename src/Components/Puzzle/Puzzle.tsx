@@ -39,6 +39,7 @@ const Puzzle: React.FC = () => {
   const [currentRoom, setCurrentRoom] = useState("");
   const [isFrozen, setIsFrozen] = useState(false);
   const [victory, setVictory] = useState(false);
+  const [resetActive, setResetActive] = useState(false);
 
   const [day, setDay] = useState(getDay());
 
@@ -55,6 +56,7 @@ const Puzzle: React.FC = () => {
         "You inherited the manor!",
         "Press the 'Reset Manor' button to play again.",
       ]);
+      setResetActive(true);
     }
   }, [victory]);
 
@@ -65,6 +67,7 @@ const Puzzle: React.FC = () => {
         "Press the clear button to try again.",
       ]);
       setIsFrozen(true);
+      setResetActive(true);
     }
   }, [steps]);
 
@@ -322,6 +325,7 @@ const Puzzle: React.FC = () => {
   const reset = () => {
     setManorState(JSON.parse(startingState));
     setVictory(false);
+    setResetActive(false);
     setIsFrozen(false);
     setChoices([]);
     setChoicesActive(false);
@@ -386,7 +390,7 @@ const Puzzle: React.FC = () => {
               );
             })}
           </div>
-          <ResetButton victory={victory} onClick={reset} />
+          <ResetButton resetActive={resetActive} onClick={reset} />
           {Array.from({ length: LAYOUT.rows }).map((_, rowIdx) => (
             <div className="room-row" key={rowIdx}>
               {Array.from({ length: LAYOUT.cols }).map((_, colIdx) => {
