@@ -8,10 +8,11 @@ import {
   LAYOUT,
   STARTING_STEPS,
   RESOURCES,
+  DIRECTIONS,
 } from "./constants";
 import { getRandomBlueprints, resetBlueprints } from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
-import type { Blueprint, ManorData, Resource } from "./types";
+import type { Blueprint, ManorData, Resource, Direction } from "./types";
 import {
   getDay,
   getExtraResourcesMessage,
@@ -41,6 +42,34 @@ const Puzzle: React.FC = () => {
 
   const [day, setDay] = useState(getDay());
 
+  useEffect(() => {
+    const savedData = localStorage.getItem("manorState");
+    if (savedData) {
+      setManorState(JSON.parse(savedData));
+    }
+    setGems(50);
+    setKeys(50);
+  }, []);
+
+  useEffect(() => {
+    if (victory) {
+      setMessage([
+        "You inherited the manor!",
+        "Press the 'Reset Manor' button to play again.",
+      ]);
+    }
+  }, [victory]);
+
+  useEffect(() => {
+    if (!steps) {
+      setMessage([
+        "You ran out of steps!",
+        "Press the clear button to try again.",
+      ]);
+      setIsFrozen(true);
+    }
+  }, [steps]);
+
   const saveNewManorState = (
     roomId: string,
     property: string,
@@ -53,7 +82,7 @@ const Puzzle: React.FC = () => {
     setManorState(newManorState);
   };
 
-  const setResources = (
+  const updateResources = (
     resource: Resource,
     sources: (number | undefined)[]
   ) => {
@@ -81,6 +110,32 @@ const Puzzle: React.FC = () => {
   };
 
   const activateSurroundingRooms = (roomId: string) => {
+    const newManorState = { ...manorState };
+    const directions = manorState[roomId].blueprint?.directions;
+    const neighbors = getSurroundingRooms(roomId);
+    if (!neighbors || !directions) {
+      return;
+    }
+    for (const direction of directions) {
+      const neighborId = neighbors[direction];
+      if (!neighborId) {
+        continue;
+      }
+      const neighborStatus = newManorState[neighborId].status;
+      if (neighborStatus === STATUSES.locked_hidden) {
+        newManorState[neighborId].status = STATUSES.locked;
+      } else if (neighborStatus === STATUSES.inactive) {
+        newManorState[neighborId].status = STATUSES.active;
+      }
+    }
+    newManorState[roomId].status = STATUSES.activated;
+    setManorState(newManorState);
+  };
+
+  const getSurroundingRooms = (roomId: string) => {
+    if (!roomId) {
+      return;
+    }
     const [colStr, rowStr] = roomId.replace("room_", "").split("");
     const col = parseInt(colStr, 10);
     const row = parseInt(rowStr, 10);
@@ -90,38 +145,72 @@ const Puzzle: React.FC = () => {
       [1, 0], // right
       [-1, 0], // left
     ];
-
-    const newManorState = { ...manorState };
+    const neighbors: Partial<Record<Direction, string>> = {};
     directions.forEach(([dc, dr], index) => {
       const nCol = col + dc;
       const nRow = row + dr;
-      const neighborId = `room_${nCol}${nRow}`;
-      const directions = manorState[roomId]?.blueprint?.directions;
-      if (directions) {
-        if (index === 0 && !directions.includes("↓")) {
-          return;
-        }
-        if (index === 1 && !directions.includes("↑")) {
-          return;
-        }
-        if (index === 2 && !directions.includes("→")) {
-          return;
-        }
-        if (index === 3 && !directions.includes("←")) {
-          return;
-        }
+
+      // Remove invalid rooms
+      if (nCol < 0 || nCol >= 5) {
+        return;
+      }
+      if (nRow >= 9 || nRow < 0) {
+        return;
       }
 
-      if (nCol >= 0 && nCol < LAYOUT.cols && nRow >= 0 && nRow < LAYOUT.rows) {
-        const neighborStatus = newManorState[neighborId].status;
-        if (neighborStatus === STATUSES.locked_hidden) {
-          newManorState[neighborId].status = STATUSES.locked;
-        } else if (neighborStatus === STATUSES.inactive) {
-          newManorState[neighborId].status = STATUSES.active;
-        }
+      const neighborId = `room_${nCol}${nRow}`;
+      if (index === 0) {
+        neighbors[DIRECTIONS.down] = neighborId;
+      }
+      if (index === 1) {
+        neighbors[DIRECTIONS.up] = neighborId;
+      }
+      if (index === 2) {
+        neighbors[DIRECTIONS.right] = neighborId;
+      }
+      if (index === 3) {
+        neighbors[DIRECTIONS.left] = neighborId;
       }
     });
-    newManorState[roomId].status = STATUSES.activated;
+    return neighbors;
+  };
+
+  const highlightSurroundingRooms = (
+    roomId: string,
+    choiceBlueprint: Blueprint
+  ) => {
+    const neighbors = getSurroundingRooms(roomId);
+    if (!neighbors) {
+      return;
+    }
+    const newManorState = { ...manorState };
+    const directions = choiceBlueprint.directions;
+    if (directions) {
+      directions.map((direction) => {
+        if (!neighbors[direction]) {
+          return;
+        }
+        const neighborStatus = newManorState[neighbors[direction]].status;
+        if (
+          neighborStatus === STATUSES.inactive ||
+          neighborStatus === STATUSES.locked_hidden
+        ) {
+          newManorState[neighbors[direction]].arrow = direction;
+        }
+      });
+    }
+    setManorState(newManorState);
+  };
+
+  const removeArrows = (roomId: string) => {
+    const neighbors = getSurroundingRooms(roomId);
+    if (!neighbors) {
+      return;
+    }
+    const newManorState = { ...manorState };
+    for (const value of Object.values(neighbors)) {
+      newManorState[value].arrow = undefined;
+    }
     setManorState(newManorState);
   };
 
@@ -177,7 +266,7 @@ const Puzzle: React.FC = () => {
         "You used a key to unlock this room.",
         "Select a room to place:",
       ]);
-      setResources(RESOURCES.keys, [-1]);
+      updateResources(RESOURCES.keys, [-1]);
       saveNewManorState(roomId, "status", STATUSES.current);
       goToChoice();
       return;
@@ -198,6 +287,7 @@ const Puzzle: React.FC = () => {
     newManorState[currentRoom].blueprint.draftable = false;
     setManorState(newManorState);
     updateRoomStatus(currentRoom, STATUSES.activated);
+    removeArrows(currentRoom);
 
     setChoices([]);
     setIsFrozen(false);
@@ -221,8 +311,8 @@ const Puzzle: React.FC = () => {
     });
     setMessage(message);
 
-    setResources(RESOURCES.keys, [genKeys, blueprint.keys]);
-    setResources(RESOURCES.gems, [
+    updateResources(RESOURCES.keys, [genKeys, blueprint.keys]);
+    updateResources(RESOURCES.gems, [
       genGems,
       blueprint.gems,
       blueprint.cost * -1,
@@ -246,32 +336,6 @@ const Puzzle: React.FC = () => {
     localStorage.setItem("manorState", "");
     localStorage.setItem("day", (day + 1).toString());
   };
-
-  useEffect(() => {
-    const savedData = localStorage.getItem("manorState");
-    if (savedData) {
-      setManorState(JSON.parse(savedData));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (victory) {
-      setMessage([
-        "You inherited the manor!",
-        "Press the 'Reset Manor' button to play again.",
-      ]);
-    }
-  }, [victory]);
-
-  useEffect(() => {
-    if (!steps) {
-      setMessage([
-        "You ran out of steps!",
-        "Press the clear button to try again.",
-      ]);
-      setIsFrozen(true);
-    }
-  }, [steps]);
 
   return (
     <>
@@ -297,6 +361,12 @@ const Puzzle: React.FC = () => {
                   blueprint={choices[index]}
                   handleClick={handleChoiceClick}
                   active={choicesActive}
+                  highlightSurroundingRooms={() => {
+                    highlightSurroundingRooms(currentRoom, choices[index]);
+                  }}
+                  removeArrows={() => {
+                    removeArrows(currentRoom);
+                  }}
                 ></ChoiceBox>
               );
             })}

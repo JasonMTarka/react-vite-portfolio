@@ -1,6 +1,6 @@
 import "../../CSS/Puzzle/Puzzle.css";
 import { STATUSES, ROOMS } from "./constants";
-import type { Blueprint, Status } from "./types";
+import type { RoomData, Status } from "./types";
 
 const Room = ({
   roomId,
@@ -8,7 +8,7 @@ const Room = ({
   handleClick,
 }: {
   roomId: string;
-  state: { status: Status; blueprint?: Blueprint };
+  state: RoomData;
   handleClick: (roomId: string, status: Status) => void;
 }) => {
   const setClass = (status: string, roomId: string) => {
@@ -39,8 +39,11 @@ const Room = ({
       {[state.blueprint?.name].map((line, index) => {
         return <div key={index}>{line}</div>;
       })}
-      {state.status === STATUSES.locked ? "Locked" : ""}
-      {state.status === STATUSES.active ? "Available" : ""}
+      <div>
+        {state.status === STATUSES.locked ? "Locked" : ""}
+        {state.status === STATUSES.active ? "Available" : ""}
+      </div>
+      {state.arrow ? <div className="room-arrow">{state.arrow}</div> : ""}
     </div>
   );
 };

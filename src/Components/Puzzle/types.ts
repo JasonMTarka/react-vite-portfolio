@@ -26,10 +26,13 @@ export interface Effect {
 }
 
 export interface ManorData {
-  [key: string]: {
-    status: Status;
-    blueprint?: Blueprint;
-  };
+  [key: string]: RoomData;
+}
+
+export interface RoomData {
+  status: Status;
+  blueprint?: Blueprint;
+  arrow?: Direction;
 }
 
 export interface Blueprint {

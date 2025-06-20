@@ -313,6 +313,21 @@
   align-self: flex-start;
 }
 
+.room-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(3rem, 2vw, 6rem);
+  color: var(--blueprint-lightblue);
+  text-shadow: 1px 1px 4px #222, 0 0 8px #0000005d;
+  font-weight: bold;
+  height: 1.8em;
+  min-height: 1.2em;
+  margin-top: 0.1em;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* TODO
 @media (prefers-color-scheme: light) {
 

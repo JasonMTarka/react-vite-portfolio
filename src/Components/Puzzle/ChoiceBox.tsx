@@ -4,10 +4,14 @@ const ChoiceBox = ({
   blueprint,
   handleClick,
   active,
+  highlightSurroundingRooms,
+  removeArrows,
 }: {
   blueprint: Blueprint;
   handleClick: (blueprint: Blueprint) => void;
   active: boolean;
+  highlightSurroundingRooms: () => void;
+  removeArrows: () => void;
 }) => {
   const onClick = () => {
     handleClick(blueprint);
@@ -17,6 +21,8 @@ const ChoiceBox = ({
     <div
       className={"choice-cell " + (!active ? "inactive-choice-cell" : "")}
       onClick={onClick}
+      onMouseEnter={highlightSurroundingRooms}
+      onMouseLeave={removeArrows}
     >
       <div className="blueprint-title">{blueprint ? blueprint.name : ""}</div>
       <div className="gem-cost">
