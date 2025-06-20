@@ -47,8 +47,6 @@ const Puzzle: React.FC = () => {
     if (savedData) {
       setManorState(JSON.parse(savedData));
     }
-    setGems(50);
-    setKeys(50);
   }, []);
 
   useEffect(() => {
