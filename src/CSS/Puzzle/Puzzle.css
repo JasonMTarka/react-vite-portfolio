@@ -6,20 +6,33 @@
   --blueprint-size: clamp(120px, 15vw, 160px);
 }
 
-.puzzle-grid {
+.puzzle-explain {
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--blueprint-blue);
+  border-left: 6px solid var(--blueprint-lightblue);
+  border-radius: 6px;
+  font-size: 1.15rem;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(60, 60, 100, 0.06);
+}
+
+.room-grid {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin: 2rem auto;
+  margin-top: 0rem;
   width: fit-content;
 }
 
-.puzzle-row {
+.room-row {
   display: flex;
   gap: 4px;
 }
 
-.puzzle-cell {
+.room {
   width: var(--room-size);
   height: var(--room-size);
   background: #e0e0e0;
@@ -37,50 +50,50 @@
   overflow: hidden;
 }
 
-.puzzle-cell:hover {
+.room:hover {
   background: rgb(112, 112, 112);
 }
 
-.active-puzzle-cell {
+.active-room {
   background: #00c431;
   color: #004912;
 }
 
-.active-puzzle-cell:hover {
+.active-room:hover {
   background: #16e74b;
 }
 
-.inactive-puzzle-cell {
+.inactive-room {
   background: var(--blueprint-blue);
 }
 
-.inactive-puzzle-cell:hover {
+.inactive-room:hover {
   background: #374869;
 }
 
-.activated-puzzle-cell {
+.activated-room {
   background: #847bff;
   color: #2b2186;
 }
 
-.activated-puzzle-cell:hover {
+.activated-room:hover {
   background: #928aff;
 }
 
-.locked-puzzle-cell {
+.locked-room {
   background: #b83838;
   color: #470000;
 }
 
-.locked-puzzle-cell:hover {
+.locked-room:hover {
   background: #c44646;
 }
 
-.current-puzzle-cell {
+.current-room {
   background: #4138b8;
 }
 
-.current-puzzle-cell:hover {
+.current-room:hover {
   background: #473eca;
 }
 
@@ -97,23 +110,8 @@
   background: rgb(255, 255, 255);
 }
 
-.puzzle-explain {
-  margin-bottom: 1.5rem;
-  padding: 1rem 1.5rem;
-  background: var(--blueprint-blue);
-  border-left: 6px solid var(--blueprint-lightblue);
-  border-radius: 6px;
-  font-size: 1.15rem;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(60, 60, 100, 0.06);
-}
-
-.puzzle-explain:hover {
-  background: #282833;
-}
-
 .reset-btn {
-  margin-top: 4rem;
+  margin-bottom: 1rem;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   background: var(--blueprint-blue);
@@ -121,7 +119,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: 0.4s;
 }
 
 .reset-btn:hover {
@@ -129,9 +127,42 @@
   color: black;
 }
 
+.reset-btn-victory {
+  position: relative;
+  z-index: 1;
+  background: var(--blueprint-blue);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 0 0 0 var(--blueprint-lightblue);
+  overflow: visible;
+}
+
+.reset-btn-victory::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 10px;
+  border: 3px solid var(--blueprint-lightblue);
+  pointer-events: none;
+  z-index: -1;
+  animation: border-glow 1.2s linear infinite alternate;
+}
+
+@keyframes border-glow {
+  0% {
+    box-shadow: 0 0 0 0 var(--blueprint-lightblue);
+    opacity: 0.7;
+  }
+  100% {
+    box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
+    opacity: 1;
+  }
+}
+
 .resource-display {
   display: inline-block;
-  margin: 0rem 1rem 1.5rem 1rem;
+  margin: 1rem;
   padding: 0.5rem 1.25rem;
   background: #2e3a4d;
   color: #0a0913;
@@ -155,16 +186,17 @@
 .message-display {
   display: inline-block;
   min-height: 7.5rem; /* Reserve space for up to 4 lines of text */
-  margin: 4rem 2rem 0.5rem 0;
   padding: 0.5rem 1.25rem;
+  margin-top: 4rem;
   background: var(--blueprint-blue);
   color: #fff;
   border-radius: 6px;
   font-size: 1.1rem;
   font-weight: 500;
   box-sizing: border-box;
-  width: 500px; /* Fixed width to prevent resizing */
+  width: clamp(100px, 30vw, 400px); /* Fixed width to prevent resizing */
   overflow-wrap: break-word;
+  text-wrap: pretty;
 }
 
 .choice-row-container {
@@ -186,7 +218,7 @@
   justify-content: center;
   align-items: center;
   height: var(--blueprint-size);
-  margin-top: calc(90px * 1); /* Center with 5th row (0-based index) */
+  margin-top: calc(50px * 1); /* Center with 5th row (0-based index) */
 }
 
 .choice-cell {
@@ -224,7 +256,7 @@
 }
 
 .blueprint-title {
-  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  font-size: clamp(0.8rem, 2.2vw, 1.2rem);
   font-weight: bold;
   color: #4394ff;
   margin-bottom: 0.25rem;
@@ -268,16 +300,16 @@
 .day-display {
   display: block;
   margin: 0 0 1.5rem 0;
-  padding: 0.7rem 1.5rem;
+  padding: 0.5rem 1rem;
   background: var(--blueprint-blue);
   color: #fff;
   border-radius: 10px;
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 500;
   letter-spacing: 0.06em;
   text-align: left;
   box-shadow: 0 4px 16px rgba(60, 60, 100, 0.13);
-  border: 2px solid var(--blueprint-lightblue);
+  border: 1px solid var(--blueprint-lightblue);
   align-self: flex-start;
 }
 

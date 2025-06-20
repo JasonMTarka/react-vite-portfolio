@@ -18,22 +18,21 @@ const Room = ({
       status === STATUSES.inactive ||
       status === STATUSES.locked_hidden
     ) {
-      return "inactive-puzzle-cell";
+      return "inactive-room";
     } else if (status === STATUSES.active) {
-      return "active-puzzle-cell";
+      return "active-room";
     } else if (status === STATUSES.activated) {
-      return "activated-puzzle-cell";
+      return "activated-room";
     } else if (status === STATUSES.locked) {
-      return "locked-puzzle-cell";
+      return "locked-room";
     } else if (status === STATUSES.current) {
-      return "current-puzzle-cell";
+      return "current-room";
     }
   };
 
   return (
     <div
-      className={"puzzle-cell " + setClass(state.status, roomId)}
-      key={roomId}
+      className={"room " + setClass(state.status, roomId)}
       id={roomId}
       onClick={() => handleClick(roomId, state.status)}
     >

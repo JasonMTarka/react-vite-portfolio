@@ -161,7 +161,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     true,
     COLORS.blue,
-    "You find yourself at a coat check, though peeking behind the counter you spy more than coats being kept here.",
+    "You find yourself at a coat check, though peeking behind the counter you suspect that more than coats being kept here.",
     0,
     0,
     1
@@ -241,7 +241,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     1,
     true,
     COLORS.green,
-    "A lush greenhouse full of plants and mysterious flowers that sprout gems.",
+    "You feel a rush of warm, humid air as you enter a lush greenhouse full of plants and mysterious flowers that sprout gems.",
     0,
     2,
     1
@@ -341,7 +341,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     2,
     true,
     COLORS.orange,
-    "You find yourself at a small room with a single bookcase and several conspicous brightly colored books.  Pulling one of them reveals a hidden door behind the bookcase, painted the same color as the book you chose.",
+    "You find yourself at a small room with a single bookcase and several conspicously brightly colored books.  Pulling one of them reveals a hidden door behind the bookcase, painted the same color as the book you chose.",
     0,
     0,
     4

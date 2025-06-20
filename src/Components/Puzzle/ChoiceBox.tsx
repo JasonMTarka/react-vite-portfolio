@@ -1,11 +1,5 @@
 import type { Blueprint } from "./types";
 
-const convertDirectionsToArrows = (directions: string[]) => {
-  return directions.map((direction) => {
-    return direction.replace("left", "←");
-  });
-};
-
 const ChoiceBox = ({
   blueprint,
   handleClick,
@@ -28,9 +22,7 @@ const ChoiceBox = ({
       <div className="gem-cost">
         {blueprint?.cost ? "Gem cost: " + blueprint.cost : ""}
       </div>
-      <div className="arrows">
-        {blueprint ? convertDirectionsToArrows(blueprint.directions) : ""}
-      </div>
+      <div className="arrows">{blueprint?.directions}</div>
     </div>
   );
 };

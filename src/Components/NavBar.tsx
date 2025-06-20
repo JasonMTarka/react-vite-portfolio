@@ -1,4 +1,4 @@
-import "../../CSS/NavBar.css";
+import "../CSS/NavBar.css";
 
 const NavBar = ({ updatePage }: { updatePage: (newPage: string) => void }) => {
   return (

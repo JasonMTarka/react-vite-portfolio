@@ -2,17 +2,28 @@ import "../../CSS/Puzzle/Puzzle.css";
 import React, { useEffect, useState } from "react";
 import Room from "./Room";
 import manorData from "./manorData";
-import { STATUSES, ROOMS, LAYOUT, STARTING_STEPS } from "./constants";
+import {
+  STATUSES,
+  ROOMS,
+  LAYOUT,
+  STARTING_STEPS,
+  RESOURCES,
+} from "./constants";
 import { getRandomBlueprints, resetBlueprints } from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
-import type { Blueprint, ManorData } from "./types";
+import type { Blueprint, ManorData, Resource } from "./types";
+import {
+  getDay,
+  getExtraResourcesMessage,
+  getFoundResourcesMessage,
+  createRoomId,
+  generateInventory,
+} from "./puzzleUtil";
+import ResourceDisplay from "./ResourceDisplay";
+import ResetButton from "./ResetButton";
+import MessageDisplay from "./MessageDisplay";
 
 const startingState = JSON.stringify(manorData);
-
-const getDay = () => {
-  const storedRuns = localStorage.getItem("day");
-  return storedRuns ? parseInt(storedRuns, 10) : 1;
-};
 
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState(["Click an active room."]);
@@ -23,8 +34,8 @@ const Puzzle: React.FC = () => {
   const [steps, setSteps] = useState(STARTING_STEPS);
 
   const [choices, setChoices] = useState<Blueprint[]>([]);
-  const [currentRoom, setCurrentRoom] = useState("");
   const [choicesActive, setChoicesActive] = useState(false);
+  const [currentRoom, setCurrentRoom] = useState("");
   const [isFrozen, setIsFrozen] = useState(false);
   const [victory, setVictory] = useState(false);
 
@@ -40,6 +51,33 @@ const Puzzle: React.FC = () => {
     // @ts-expect-error: Used to help avoid repetition when saving state
     newManorState[roomId][property] = newVal;
     setManorState(newManorState);
+  };
+
+  const setResources = (
+    resource: Resource,
+    sources: (number | undefined)[]
+  ) => {
+    let sum = sources.reduce((prev, curr) => {
+      if (!curr) {
+        curr = 0;
+      }
+      if (!prev) {
+        prev = 0;
+      }
+      return prev + curr;
+    });
+
+    if (!sum) {
+      return;
+    }
+
+    if (resource === RESOURCES.gems) {
+      sum += gems;
+      setGems(sum);
+    } else if (resource === RESOURCES.keys) {
+      sum += keys;
+      setKeys(sum);
+    }
   };
 
   const activateSurroundingRooms = (roomId: string) => {
@@ -139,7 +177,7 @@ const Puzzle: React.FC = () => {
         "You used a key to unlock this room.",
         "Select a room to place:",
       ]);
-      setKeys(keys - 1);
+      setResources(RESOURCES.keys, [-1]);
       saveNewManorState(roomId, "status", STATUSES.current);
       goToChoice();
       return;
@@ -167,40 +205,28 @@ const Puzzle: React.FC = () => {
     setCurrentRoom("");
     setSteps(steps - 1);
 
-    const generateInventory = () => {
-      // Weighted random: 0 (80%), 1 (15%), 2 (5%)
-      const weightedRandom = () => {
-        const r = Math.random();
-        if (r < 0.8) return 0;
-        if (r < 0.95) return 1;
-        return 2;
-      };
-      return { genKeys: weightedRandom(), genGems: weightedRandom() };
-    };
-
-    const { genKeys, genGems } = generateInventory();
-
     const message: string[] = [];
     message.push(blueprint.message);
     message.push("　");
-    message.push(
-      blueprint.gems
-        ? `\nThere were ${blueprint.gems} gems inside the ${blueprint.name}.`
-        : ""
-    );
-    message.push(
-      blueprint.keys
-        ? `\nThere were ${blueprint.keys} keys inside the ${blueprint.name}.`
-        : ""
-    );
-    message.push(genKeys ? `\nYou found ${genKeys} extra keys!` : "");
-    message.push(genGems ? `\nYou found ${genGems} extra gems!` : "");
+    [RESOURCES.keys, RESOURCES.gems].map((resource) => {
+      message.push(getFoundResourcesMessage(resource, blueprint));
+    });
+
+    const { genKeys, genGems } = generateInventory();
+    [
+      { type: RESOURCES.keys, count: genKeys },
+      { type: RESOURCES.gems, count: genGems },
+    ].map((resource) => {
+      message.push(getExtraResourcesMessage(resource.type, resource.count));
+    });
     setMessage(message);
 
-    setKeys(keys + genKeys + (blueprint.keys ? blueprint.keys : 0));
-    setGems(
-      gems + genGems - blueprint.cost + (blueprint.gems ? blueprint.gems : 0)
-    );
+    setResources(RESOURCES.keys, [genKeys, blueprint.keys]);
+    setResources(RESOURCES.gems, [
+      genGems,
+      blueprint.gems,
+      blueprint.cost * -1,
+    ]);
 
     localStorage.setItem("manorState", JSON.stringify(manorState));
   };
@@ -221,10 +247,6 @@ const Puzzle: React.FC = () => {
     localStorage.setItem("day", (day + 1).toString());
   };
 
-  const createRoomId = (col: number, row: number) => {
-    return "room_" + col.toString() + row.toString();
-  };
-
   useEffect(() => {
     const savedData = localStorage.getItem("manorState");
     if (savedData) {
@@ -234,7 +256,10 @@ const Puzzle: React.FC = () => {
 
   useEffect(() => {
     if (victory) {
-      setMessage(["You inherited the manor!"]);
+      setMessage([
+        "You inherited the manor!",
+        "Press the 'Reset Manor' button to play again.",
+      ]);
     }
   }, [victory]);
 
@@ -263,14 +288,7 @@ const Puzzle: React.FC = () => {
       >
         <div className="choice-row-container">
           <div className="day-display">Day {day}</div>
-          <div className="message-display">
-            {message.map((val, i) => {
-              return <div key={i}>{val}</div>;
-            })}
-          </div>
-          <button className="reset-btn" onClick={reset}>
-            Reset
-          </button>
+          <MessageDisplay message={message} />
           <div className="choice-row">
             {Array.from({ length: 3 }).map((_, index) => {
               return (
@@ -284,16 +302,25 @@ const Puzzle: React.FC = () => {
             })}
           </div>
         </div>
-        <div className="puzzle-grid">
+        <div className="room-grid">
           <div>
-            <span className="resource-display steps-display">
-              Steps: {steps}
-            </span>
-            <span className="resource-display keys-display">Keys: {keys}</span>
-            <span className="resource-display gems-display">Gems: {gems}</span>
+            {[
+              { type: RESOURCES.steps, count: steps },
+              { type: RESOURCES.keys, count: keys },
+              { type: RESOURCES.gems, count: gems },
+            ].map((resource, idx) => {
+              return (
+                <ResourceDisplay
+                  key={idx}
+                  resource={resource.type}
+                  count={resource.count}
+                />
+              );
+            })}
           </div>
+          <ResetButton victory={victory} onClick={reset} />
           {Array.from({ length: LAYOUT.rows }).map((_, rowIdx) => (
-            <div className="puzzle-row" key={rowIdx}>
+            <div className="room-row" key={rowIdx}>
               {Array.from({ length: LAYOUT.cols }).map((_, colIdx) => {
                 const roomId = createRoomId(colIdx, rowIdx);
                 return (

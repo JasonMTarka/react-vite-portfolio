@@ -19,10 +19,10 @@ export const COLORS: Record<Color, Color> = {
   black: "black",
 };
 
-export const RESOURCES: Record<Resource, Resource> = {
-  steps: "steps",
-  gems: "gems",
-  keys: "keys",
+export const RESOURCES: Record<string, Resource> = {
+  steps: "step",
+  gems: "gem",
+  keys: "key",
 };
 
 export const OPERATIONS: Record<Operation, Operation> = {
@@ -47,4 +47,4 @@ export const LAYOUT = {
   cols: 5,
 };
 
-export const STARTING_STEPS = 20;
+export const STARTING_STEPS = 30;

@@ -1,5 +1,5 @@
 import "../CSS/App.css";
-import NavBar from "./Puzzle/NavBar";
+import NavBar from "./NavBar";
 import Body from "./Body";
 import { BrowserRouter as Router } from "react-router-dom";
 import { useState } from "react";

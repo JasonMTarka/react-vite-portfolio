@@ -1,4 +1,4 @@
-export type Resource = "steps" | "gems" | "keys";
+export type Resource = "step" | "gem" | "key";
 export type Operation = "add" | "subtract";
 export type Color =
   | "blue"
