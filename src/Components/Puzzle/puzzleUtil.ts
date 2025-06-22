@@ -1,5 +1,5 @@
-import type { Resource, Blueprint } from "./types";
-import { RESOURCES } from "./constants";
+import type { Resource, Blueprint, Direction } from "./types";
+import { DIRECTIONS, RESOURCES } from "./constants";
 
 export const getDay = () => {
   const storedRuns = localStorage.getItem("day");
@@ -40,6 +40,15 @@ export const createRoomId = (col: number, row: number) => {
   return "room_" + col.toString() + row.toString();
 };
 
+export const deconstructRoomId = (roomId: string) => {
+  return roomId
+    .replace("room_", "")
+    .split("")
+    .map((val) => {
+      return parseInt(val, 10);
+    });
+};
+
 export const generateInventory = () => {
   // Weighted random: 0 (80%), 1 (15%), 2 (5%)
   const weightedRandom = () => {
@@ -49,4 +58,49 @@ export const generateInventory = () => {
     return 2;
   };
   return { genKeys: weightedRandom(), genGems: weightedRandom() };
+};
+
+const _calcColRows = (roomId: string, direction: Direction) => {
+  const [originCol, originRow] = deconstructRoomId(roomId);
+  let newCol = originCol;
+  let newRow = originRow;
+  if (direction === DIRECTIONS.up) {
+    newRow -= 1;
+  } else if (direction === DIRECTIONS.down) {
+    newRow += 1;
+  } else if (direction === DIRECTIONS.left) {
+    newCol -= 1;
+  } else if (direction === DIRECTIONS.right) {
+    newCol += 1;
+  }
+  if (newCol < 0 || newCol > 4 || newRow < 0 || newRow > 8) {
+    return [originCol, originRow];
+  }
+  return [newCol, newRow];
+};
+
+export const moveRooms = {
+  up: (currentRoom: string) => {
+    const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.up);
+    return createRoomId(newCol, newRow);
+  },
+  down: (currentRoom: string) => {
+    const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.down);
+    return createRoomId(newCol, newRow);
+  },
+  left: (currentRoom: string) => {
+    const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.left);
+    return createRoomId(newCol, newRow);
+  },
+  right: (currentRoom: string) => {
+    const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.right);
+    return createRoomId(newCol, newRow);
+  },
+};
+
+export const arrowDisplay = {
+  up: "↑",
+  down: "↓",
+  left: "←",
+  right: "→",
 };

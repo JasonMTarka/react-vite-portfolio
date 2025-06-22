@@ -90,11 +90,32 @@
 }
 
 .current-room {
-  background: #4138b8;
+  border: 3px solid var(--blueprint-lightblue);
+  position: relative;
+  z-index: 1;
+  animation: current-room-glow 1.2s linear infinite alternate;
 }
 
-.current-room:hover {
-  background: #473eca;
+.current-room::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  border: 3px solid var(--blueprint-lightblue);
+  pointer-events: none;
+  z-index: -1;
+  animation: border-glow 1.2s linear infinite alternate;
+}
+
+@keyframes current-room-glow {
+  0% {
+    box-shadow: 0 0 0 0 var(--blueprint-lightblue);
+    opacity: 0.7;
+  }
+  100% {
+    box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
+    opacity: 1;
+  }
 }
 
 /* Antechamber */

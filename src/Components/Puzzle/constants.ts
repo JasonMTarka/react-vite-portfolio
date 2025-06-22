@@ -35,11 +35,11 @@ export const ROOMS = {
   entrance_hall: "room_28",
 };
 
-export const DIRECTIONS: Record<string, Direction> = {
-  up: "↑",
-  down: "↓",
-  left: "←",
-  right: "→",
+export const DIRECTIONS: Record<Direction, Direction> = {
+  up: "up",
+  down: "down",
+  left: "left",
+  right: "right",
 };
 
 export const LAYOUT = {
@@ -47,4 +47,4 @@ export const LAYOUT = {
   cols: 5,
 };
 
-export const STARTING_STEPS = 20;
+export const STARTING_STEPS = 50;

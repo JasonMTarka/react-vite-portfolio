@@ -21,6 +21,10 @@ const setStatus = (roomId: string) => {
 const manorData: ManorData = {};
 
 Array.from({ length: 49 }).map((_, index) => {
+  if (index.toString().endsWith("9")) {
+    // Don't create rooms below the 1st row
+    return;
+  }
   const roomId = "room_" + index.toString().padStart(2, "0");
   manorData[roomId] = {
     status: setStatus(roomId),
@@ -42,5 +46,46 @@ manorData[ROOMS.antechamber] = {
   status: STATUSES.inactive,
   blueprint: BLUEPRINTS.antechamber,
 };
+
+for (const roomId in manorData) {
+  const room = manorData[roomId];
+
+  const [colStr, rowStr] = roomId.replace("room_", "").split("");
+  const col = parseInt(colStr, 10);
+  const row = parseInt(rowStr, 10);
+  const directions = [
+    [0, 1], // down
+    [0, -1], // up
+    [1, 0], // right
+    [-1, 0], // left
+  ];
+
+  directions.forEach(([dc, dr], index) => {
+    const nCol = col + dc;
+    const nRow = row + dr;
+
+    // Remove invalid rooms
+    if (nCol < 0 || nCol >= 5) {
+      return;
+    }
+    if (nRow >= 9 || nRow < 0) {
+      return;
+    }
+
+    const neighborId = `room_${nCol}${nRow}`;
+    if (index === 0) {
+      room.down = neighborId;
+    }
+    if (index === 1) {
+      room.up = neighborId;
+    }
+    if (index === 2) {
+      room.right = neighborId;
+    }
+    if (index === 3) {
+      room.left = neighborId;
+    }
+  });
+}
 
 export default manorData;

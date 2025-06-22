@@ -1,17 +1,18 @@
 import "../../CSS/Puzzle/Puzzle.css";
 import { STATUSES, ROOMS } from "./constants";
-import type { RoomData, Status } from "./types";
+import type { RoomData } from "./types";
+import { arrowDisplay } from "./puzzleUtil";
 
 const Room = ({
   roomId,
   state,
-  handleClick,
+  current,
 }: {
   roomId: string;
   state: RoomData;
-  handleClick: (roomId: string, status: Status) => void;
+  current: boolean;
 }) => {
-  const setClass = (status: string, roomId: string) => {
+  const setBaseClass = (status: string, roomId: string) => {
     if (roomId === ROOMS.antechamber) {
       return "antechamber";
     } else if (
@@ -30,11 +31,16 @@ const Room = ({
     }
   };
 
+  const setCurrentClass = () => {
+    return current ? " current-room" : "";
+  };
+
   return (
     <div
-      className={"room " + setClass(state.status, roomId)}
+      className={
+        "room " + setBaseClass(state.status, roomId) + setCurrentClass()
+      }
       id={roomId}
-      onClick={() => handleClick(roomId, state.status)}
     >
       {[state.blueprint?.name].map((line, index) => {
         return <div key={index}>{line}</div>;
@@ -42,8 +48,13 @@ const Room = ({
       <div>
         {state.status === STATUSES.locked ? "Locked" : ""}
         {state.status === STATUSES.active ? "Available" : ""}
+        {roomId}
       </div>
-      {state.arrow ? <div className="room-arrow">{state.arrow}</div> : ""}
+      {state.arrow ? (
+        <div className="room-arrow">{arrowDisplay[state.arrow]}</div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

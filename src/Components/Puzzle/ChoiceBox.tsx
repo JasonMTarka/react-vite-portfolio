@@ -1,4 +1,5 @@
 import type { Blueprint } from "./types";
+import { arrowDisplay } from "./puzzleUtil";
 
 const ChoiceBox = ({
   blueprint,
@@ -28,7 +29,11 @@ const ChoiceBox = ({
       <div className="gem-cost">
         {blueprint?.cost ? "Gem cost: " + blueprint.cost : ""}
       </div>
-      <div className="arrows">{blueprint?.directions}</div>
+      <div className="arrows">
+        {blueprint?.directions.map((dir) => {
+          return arrowDisplay[dir];
+        })}
+      </div>
     </div>
   );
 };

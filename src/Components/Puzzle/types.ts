@@ -16,7 +16,7 @@ export type Status =
   | "locked"
   | "locked_hidden";
 
-export type Direction = "←" | "→" | "↑" | "↓";
+export type Direction = "left" | "right" | "up" | "down";
 
 export interface Effect {
   resource: Resource;
@@ -33,6 +33,10 @@ export interface RoomData {
   status: Status;
   blueprint?: Blueprint;
   arrow?: Direction;
+  up?: string;
+  down?: string;
+  left?: string;
+  right?: string;
 }
 
 export interface Blueprint {
