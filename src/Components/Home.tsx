@@ -1,8 +1,10 @@
 import React from "react";
+import Sidebar from "./Sidebar";
 
 const Home: React.FC = () => {
   return (
-    <div className="home-container">
+    <div className="home-container" style={{ position: "relative" }}>
+      <Sidebar />
       <h1 style={{ textAlign: "center" }}>Jason Tarka's Portfolio</h1>
       <p>This is a new portfolio website I've created using Vite React.</p>
       <p>
