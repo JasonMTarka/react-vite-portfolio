@@ -11,7 +11,11 @@ import {
   STARTING_RESOURCES,
   REVERSED_DIRECTIONS,
 } from "./constants";
-import { getRandomBlueprints, resetBlueprints } from "./blueprints";
+import {
+  getDoorDirections,
+  getRandomBlueprints,
+  resetBlueprints,
+} from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
 import type { Blueprint, Direction, ManorData, RoomId } from "./types";
 import {
@@ -118,7 +122,11 @@ const Puzzle: React.FC = () => {
         setChoicesActive(true);
         setDraftingDir(direction);
         setOpeningRoom(roomId);
-        setChoices(getRandomBlueprints());
+        const randomBlueprints = getRandomBlueprints();
+        randomBlueprints.forEach((blueprint) => {
+          blueprint.directions = getDoorDirections(blueprint.doors, direction);
+        });
+        setChoices(randomBlueprints);
       };
 
       const status = manorState[roomId].status;

@@ -3,8 +3,8 @@
   --blueprint-blue: #27334b;
   --gem-purple: #f15bff;
   --room-size: clamp(60px, 8vw, 90px);
-  --blueprint-size: clamp(120px, 15vw, 160px);
-  --door-style: 8px solid #10002b !important;
+  --blueprint-size: clamp(160px, 16vw, 210px);
+  --door-style: 8px solid #16003b !important;
 }
 
 .puzzle-explain {
@@ -259,7 +259,7 @@
   justify-content: center;
   align-items: center;
   height: var(--blueprint-size);
-  margin-top: calc(50px * 1); /* Center with 5th row (0-based index) */
+  margin-top: calc(50px * 1);
 }
 
 .choice-cell {
@@ -273,10 +273,11 @@
   border: 3px double var(--blueprint-lightblue);
   box-shadow: 0 4px 24px var(--blueprint-blue), 0 0 0 4px #2d3e5e inset;
   box-sizing: border-box;
-  margin-right: 4px;
+  margin-right: 1rem;
   border-radius: 18px;
   position: relative;
   overflow: hidden;
+  padding-top: 2.2em;
 }
 
 .choice-cell::before {
@@ -296,17 +297,25 @@
   margin-right: 0;
 }
 
+.choice-cell:hover {
+  background: #30405f;
+}
+
 .blueprint-title {
-  font-size: clamp(0.8rem, 2.2vw, 1.2rem);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-top: 0.2rem;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
   font-weight: bold;
   color: #4394ff;
-  margin-bottom: 0.25rem;
   letter-spacing: 0.05em;
   text-align: center;
 }
 
 .gem-cost {
-  font-size: clamp(0.75rem, 1.5vw, 1rem);
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
   font-weight: bold;
   color: var(--gem-purple);
   margin-bottom: 0.25rem;
@@ -318,12 +327,23 @@
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 0.5rem;
   font-size: clamp(2rem, 5vw, 3rem);
   color: #7cb9ff;
   text-shadow: 1px 1px 2px #222, 0 0 8px #0000005d;
   font-weight: bold;
   letter-spacing: 0.2em;
+}
+
+.blueprint-keys {
+  color: var(--blueprint-lightblue);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+}
+
+.blueprint-gems {
+  color: var(--gem-purple);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
 }
 
 .room-name {
@@ -364,24 +384,9 @@
   font-weight: bold;
   height: 1.8em;
   min-height: 1.2em;
-  margin-top: 0.1em;
   pointer-events: none;
   user-select: none;
 }
-
-/* 
-.door-up {
-  border-top: var(--door-style);
-}
-.door-down {
-  border-bottom: var(--door-style);
-}
-.door-left {
-  border-left: var(--door-style);
-}
-.door-right {
-  border-right: var(--door-style);
-} */
 
 /* TODO
 @media (prefers-color-scheme: light) {

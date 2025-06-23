@@ -1,4 +1,4 @@
-import { COLORS, DIRECTIONS } from "./constants";
+import { COLORS, DIRECTIONS, REVERSED_DIRECTIONS } from "./constants";
 import type { Blueprint, Color, Direction } from "./types";
 
 export const getRandomBlueprints = (): Blueprint[] => {
@@ -23,6 +23,42 @@ export const getRandomBlueprints = (): Blueprint[] => {
   return [selectedZero, ...rest.slice(0, 2)];
 };
 
+// Returns a random array of unique arrow directions up to the number of doors (max 4),
+// but the final array is always sorted as ["left", "up", "down", "right"]
+export const getDoorDirections = (
+  doors: number,
+  draftingDir: Direction
+): Direction[] => {
+  // Filter out the opposite of drafting direction so door does not loop back into itself
+  const allDirections: Direction[] = [
+    DIRECTIONS.left,
+    DIRECTIONS.left,
+    DIRECTIONS.up,
+    DIRECTIONS.up,
+    DIRECTIONS.up,
+    DIRECTIONS.down,
+    DIRECTIONS.right,
+    DIRECTIONS.right,
+  ].filter((dir) => dir !== REVERSED_DIRECTIONS[draftingDir]);
+  const count = Math.min(doors, 4);
+  // Shuffle and pick random directions
+  const shuffled = allDirections.slice().sort(() => 0.5 - Math.random());
+  // Remove duplicates while preserving order
+  const selected: Direction[] = [];
+  for (const dir of shuffled) {
+    if (!selected.includes(dir) && selected.length < count) {
+      selected.push(dir);
+    }
+  }
+  // Sort the selected directions in the required order
+  return [
+    DIRECTIONS.left,
+    DIRECTIONS.up,
+    DIRECTIONS.down,
+    DIRECTIONS.right,
+  ].filter((dir) => selected.includes(dir));
+};
+
 const addBlueprintProperties = (
   name: string,
   cost: number,
@@ -31,42 +67,9 @@ const addBlueprintProperties = (
   message: string,
   keys = 0,
   gems = 0,
-  doors = 0
+  doors = 0,
+  directions: Direction[] = []
 ) => {
-  // Returns a random array of unique arrow directions up to the number of doors (max 4),
-  // but the final array is always sorted as ["left", "up", "down", "right"]
-  function getArrowDirections(doors: number): Direction[] {
-    const allDirections: Direction[] = [
-      DIRECTIONS.left,
-      DIRECTIONS.left,
-      DIRECTIONS.up,
-      DIRECTIONS.up,
-      DIRECTIONS.up,
-      DIRECTIONS.down,
-      DIRECTIONS.right,
-      DIRECTIONS.right,
-    ];
-    const count = Math.min(doors, 4);
-    // Shuffle and pick random directions
-    const shuffled = allDirections.slice().sort(() => 0.5 - Math.random());
-    // Remove duplicates while preserving order
-    const selected: Direction[] = [];
-    for (const dir of shuffled) {
-      if (!selected.includes(dir) && selected.length < count) {
-        selected.push(dir);
-      }
-    }
-    // Sort the selected directions in the required order
-    return [
-      DIRECTIONS.left,
-      DIRECTIONS.up,
-      DIRECTIONS.down,
-      DIRECTIONS.right,
-    ].filter((dir) => selected.includes(dir));
-  }
-
-  const directions = getArrowDirections(doors);
-
   return {
     name: name,
     cost: cost,
@@ -88,7 +91,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.blue,
     "You find a cozy parlor with three locked chests and a wind-up key.",
     0,
-    3,
+    2,
     1
   ),
   security: addBlueprintProperties(
@@ -97,7 +100,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.blue,
     "You find a security room with a vast array of monitors.",
-    0,
+    1,
     0,
     2
   ),
@@ -128,7 +131,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.purple,
     "You find a quiet bedroom with a soft bed and a postcard from a town called 'Reddington' on a desk.",
     0,
-    0,
+    1,
     1
   ),
   billiard_room: addBlueprintProperties(
@@ -137,7 +140,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.blue,
     "You stumble upon a billiard room with an odd-looking dartboard in the corner.",
-    2,
+    1,
     0,
     1
   ),
@@ -147,8 +150,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.purple,
     "You enter a soothing boudoir with an out-of-place large, locked safe.",
-    1,
     0,
+    1,
     1
   ),
   chapel: addBlueprintProperties(
@@ -177,7 +180,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.blue,
     "You find yourself at a coat check, though peeking behind the counter you suspect that more than coats being kept here.",
-    0,
+    2,
     0,
     0
   ),
@@ -188,7 +191,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.yellow,
     "You're surprised to find that the manor has it's own commissary for the staff.  Where are they anyway?",
     0,
-    0,
+    2,
     1
   ),
   corridor: addBlueprintProperties(
@@ -197,7 +200,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.orange,
     "A long, narrow corridor.",
-    0,
+    1,
     0,
     1
   ),
@@ -268,7 +271,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.purple,
     "A bedroom for guests.",
     0,
-    0,
+    1,
     0
   ),
   kitchen: addBlueprintProperties(
@@ -277,7 +280,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.yellow,
     "A kitchen with modern appliances.",
-    0,
+    1,
     0,
     1
   ),
@@ -288,7 +291,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.blue,
     "A laboratory with bubbling potions.",
     0,
-    0,
+    1,
     1
   ),
   lavatory: addBlueprintProperties(
@@ -318,7 +321,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.purple,
     "A nursery with toys and a crib.",
     0,
-    0,
+    2,
     0
   ),
   observatory: addBlueprintProperties(
@@ -328,7 +331,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.blue,
     "A room with a telescope for stargazing.",
     0,
-    0,
+    1,
     1
   ),
   office: addBlueprintProperties(
@@ -337,7 +340,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.blue,
     "A quiet office with a large desk.",
-    0,
+    1,
     0,
     1
   ),
@@ -347,7 +350,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.blue,
     "A pantry full of food supplies.",
-    0,
+    1,
     0,
     1
   ),
@@ -356,10 +359,20 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     2,
     true,
     COLORS.orange,
-    "You find yourself at a small room with a single bookcase and several conspicously brightly colored books.  Pulling one of them reveals a hidden door behind the bookcase, painted the same color as the book you chose.",
+    "You find yourself at a central passageway used by manor staff to move around quickly.  You find doors in all directions.",
     0,
     0,
     3
+  ),
+  secretPassage: addBlueprintProperties(
+    "Secret Passage",
+    1,
+    true,
+    COLORS.orange,
+    "You find yourself at a small room with a single bookcase and several conspicously brightly colored books.  Pulling one of them reveals a hidden door behind the bookcase, painted the same color as the book you chose.",
+    1,
+    0,
+    1
   ),
   patio: addBlueprintProperties(
     "Patio",
@@ -378,7 +391,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.blue,
     "You enter a colorful room full of toys, games, and a mysterious fortune-telling machine named 'Alzara'.",
     0,
-    0,
+    1,
     1
   ),
   spare_room: addBlueprintProperties(
@@ -408,7 +421,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     COLORS.green,
     "You open the door and find yourself at a terrace overlooking the exterior of the manor.",
     0,
-    0,
+    1,
     1
   ),
   the_pool: addBlueprintProperties(
@@ -427,7 +440,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     true,
     COLORS.blue,
     "You find a small room with a single breaker box.  Opening it, you find switches for the Darkroom, the Garage, the Gymnasium.",
-    0,
+    1,
     0,
     0
   ),
@@ -469,7 +482,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You've landed at a grand entrance hall with highly polished floors and three awaiting doors.",
     0,
     0,
-    4
+    4,
+    Object.keys(DIRECTIONS) as Direction[]
   ),
   antechamber: addBlueprintProperties(
     "Antechamber",
@@ -479,7 +493,8 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You've reached the fabled antechamber, a room with stark marble walls and featureless barring a single pedastal in the center with a letter: you've inherited the manor!  But looking to the north, you see a final locked door.  Is there more to come?",
     0,
     0,
-    4
+    4,
+    Object.keys(DIRECTIONS) as Direction[]
   ),
 };
 

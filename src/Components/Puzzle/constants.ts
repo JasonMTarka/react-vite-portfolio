@@ -33,7 +33,7 @@ export const RESOURCES: Record<Resource, Resource> = {
 };
 
 export const STARTING_RESOURCES: Record<Resource, number> = {
-  steps: 70,
+  steps: 50,
   gems: 0,
   keys: 0,
 };

@@ -1,5 +1,5 @@
 import type { Blueprint } from "./types";
-import { arrowDisplay } from "./puzzleUtil";
+import { arrowDisplay, removePlural } from "./puzzleUtil";
 
 const ChoiceBox = ({
   blueprint,
@@ -18,6 +18,63 @@ const ChoiceBox = ({
     handleClick(blueprint);
   };
 
+  const showTitle = () => {
+    if (!blueprint) {
+      return;
+    }
+    return (
+      <div className="blueprint-title">{blueprint ? blueprint.name : ""}</div>
+    );
+  };
+
+  const showCost = () => {
+    if (!blueprint?.cost) {
+      return "";
+    }
+    return <div className="gem-cost">{`Gem cost: ${blueprint.cost}`}</div>;
+  };
+
+  const showArrows = () => {
+    if (!blueprint) {
+      return;
+    }
+    return (
+      <div className="arrows">
+        {blueprint.directions.map((dir) => {
+          return arrowDisplay[dir];
+        })}
+      </div>
+    );
+  };
+
+  const showResources = () => {
+    if (!active) {
+      return "";
+    }
+    const { gems, keys } = blueprint;
+
+    return (
+      <div>
+        {gems ? (
+          <span className="blueprint-resources blueprint-gems">{`+${gems} ${removePlural(
+            "Gems",
+            gems
+          )} `}</span>
+        ) : (
+          ""
+        )}
+        {keys ? (
+          <span className="blueprint-resources blueprint-keys">{`+${keys} ${removePlural(
+            "Keys",
+            keys
+          )} `}</span>
+        ) : (
+          ""
+        )}
+      </div>
+    );
+  };
+
   return (
     <div
       className={"choice-cell " + (!active ? "inactive-choice-cell" : "")}
@@ -25,15 +82,10 @@ const ChoiceBox = ({
       onMouseEnter={highlightSurroundingRooms}
       onMouseLeave={removeArrows}
     >
-      <div className="blueprint-title">{blueprint ? blueprint.name : ""}</div>
-      <div className="gem-cost">
-        {blueprint?.cost ? "Gem cost: " + blueprint.cost : ""}
-      </div>
-      <div className="arrows">
-        {blueprint?.directions.map((dir) => {
-          return arrowDisplay[dir];
-        })}
-      </div>
+      {showTitle()}
+      {showCost()}
+      {showArrows()}
+      {showResources()}
     </div>
   );
 };
