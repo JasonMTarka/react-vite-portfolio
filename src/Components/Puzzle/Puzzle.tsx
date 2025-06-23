@@ -1,18 +1,18 @@
 import "../../CSS/Puzzle/Puzzle.css";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Room from "./Room";
 import manorData from "./manorData";
 import {
   STATUSES,
   ROOMS,
   LAYOUT,
-  STARTING_STEPS,
   RESOURCES,
   DIRECTIONS,
+  STARTING_RESOURCES,
 } from "./constants";
 import { getRandomBlueprints, resetBlueprints } from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
-import type { Blueprint, Direction, ManorData, Resource } from "./types";
+import type { Blueprint, Direction, ManorData } from "./types";
 import {
   getDay,
   getExtraResourcesMessage,
@@ -20,6 +20,7 @@ import {
   createRoomId,
   generateInventory,
   moveRooms,
+  reversedDirections,
 } from "./puzzleUtil";
 import ResourceDisplay from "./ResourceDisplay";
 import ResetButton from "./ResetButton";
@@ -28,20 +29,23 @@ import MessageDisplay from "./MessageDisplay";
 const startingState = JSON.stringify(manorData);
 
 const Puzzle: React.FC = () => {
-  const [message, setMessage] = useState(["Click an active room."]);
+  const [message, setMessage] = useState([
+    "Use the WASD or arrow keys to move to an active room.",
+  ]);
 
   const [manorState, setManorState] = useState<ManorData>({ ...manorData });
-  const [gems, setGems] = useState(0);
-  const [keys, setKeys] = useState(0);
-  const [steps, setSteps] = useState(STARTING_STEPS);
+  const [resources, setResources] = useState(STARTING_RESOURCES);
 
   const [choices, setChoices] = useState<Blueprint[]>([]);
   const [choicesActive, setChoicesActive] = useState(false);
-  const [currentRoom, setCurrentRoom] = useState(ROOMS.entrance_hall);
+  const [currentRoomId, setCurrentRoomId] = useState(ROOMS.entrance_hall);
   const [openingRoom, setOpeningRoom] = useState("");
+  const [draftingDir, setDraftingDir] = useState<Direction | undefined>(
+    undefined
+  );
   const [isFrozen, setIsFrozen] = useState(false);
   const [victory, setVictory] = useState(false);
-  const [resetActive, setResetActive] = useState(false);
+  const [resetActive, setResetBtnHighlight] = useState(false);
 
   const [day, setDay] = useState(getDay());
 
@@ -52,163 +56,170 @@ const Puzzle: React.FC = () => {
     }
   }, []);
 
-  const openRoom = (roomId: string) => {
-    const goToChoice = () => {
-      setIsFrozen(true);
-      setChoicesActive(true);
-      setOpeningRoom(roomId);
-      setChoices(getRandomBlueprints());
-    };
+  const activateSurroundingRooms = useCallback(
+    (roomId: string) => {
+      const newManorState = { ...manorState };
+      const directions = manorState[roomId].blueprint?.directions;
 
-    const status = manorState[roomId].status;
-
-    if (isFrozen && steps) {
-      setMessage(["You need to choose a blueprint first."]);
-      return;
-    }
-    if (isFrozen && !steps) {
-      return;
-    }
-    if (status === STATUSES.inactive || status === STATUSES.locked_hidden) {
-      setMessage(["That's an inactive room!"]);
-      return;
-    }
-    if (status === STATUSES.activated) {
-      setMessage(["You've already drafted that room."]);
-      return;
-    }
-    if (status === STATUSES.active && roomId === ROOMS.antechamber) {
-      updateRoomStatus(ROOMS.antechamber, STATUSES.activated);
-      return;
-    }
-    if (status === STATUSES.active) {
-      saveNewManorState(roomId, "status", STATUSES.current);
-      setMessage(["Select a room to place:"]);
-      goToChoice();
-      return;
-    }
-    if (status === STATUSES.locked) {
-      if (!keys) {
-        setMessage(["You don't have any keys!"]);
+      if (!directions) {
         return;
       }
-      setMessage([
-        "You used a key to unlock this room.",
-        "Select a room to place:",
-      ]);
-      updateResources(RESOURCES.keys, [-1]);
-      saveNewManorState(roomId, "status", STATUSES.current);
-      goToChoice();
-      return;
-    }
-  };
+      for (const direction of directions) {
+        const neighborId = newManorState[roomId][direction];
+        if (!neighborId) {
+          continue;
+        }
+        const neighborStatus = newManorState[neighborId].status;
+        if (neighborStatus === STATUSES.locked_hidden) {
+          newManorState[neighborId].status = STATUSES.locked;
+        } else if (neighborStatus === STATUSES.inactive) {
+          newManorState[neighborId].status = STATUSES.active;
+        }
+      }
+      newManorState[roomId].status = STATUSES.activated;
+      setManorState(newManorState);
+    },
+    [manorState]
+  );
+
+  const saveNewManorState = useCallback(
+    (
+      roomId: string,
+      property: string,
+      // eslint-disable-next-line
+      newVal: any
+    ) => {
+      const newManorState = { ...manorState };
+      // @ts-expect-error: Used to help avoid repetition when saving state
+      newManorState[roomId][property] = newVal;
+      setManorState(newManorState);
+    },
+    [manorState]
+  );
+
+  const updateRoomStatus = useCallback(
+    (roomId: string, newStatus: string) => {
+      saveNewManorState(roomId, "status", newStatus);
+      if (newStatus === STATUSES.activated) {
+        activateSurroundingRooms(roomId);
+      }
+      if (newStatus === STATUSES.activated && roomId === ROOMS.antechamber) {
+        setVictory(true);
+      }
+    },
+    [activateSurroundingRooms, saveNewManorState]
+  );
+
+  const openRoom = useCallback(
+    (roomId: string, direction: Direction) => {
+      const goToChoice = () => {
+        setIsFrozen(true);
+        setChoicesActive(true);
+        setDraftingDir(direction);
+        setOpeningRoom(roomId);
+        setChoices(getRandomBlueprints());
+      };
+
+      const status = manorState[roomId].status;
+
+      // Skip drafting when going to Antechamber
+      if (status === STATUSES.active && roomId === ROOMS.antechamber) {
+        updateRoomStatus(ROOMS.antechamber, STATUSES.activated);
+        return;
+      }
+
+      // Begin drafting if unlocked
+      if (status === STATUSES.active) {
+        saveNewManorState(roomId, "status", STATUSES.current);
+        setMessage(["Select a room to place:"]);
+        goToChoice();
+        return;
+      }
+
+      // Begin drafting if locked and have a key, or else reject if no keys
+      if (status === STATUSES.locked) {
+        if (!resources.keys) {
+          setMessage(["You don't have any keys!"]);
+          return;
+        }
+        setMessage([
+          "You used a key to unlock this room.",
+          "Select a room to place:",
+        ]);
+        setResources(() => {
+          const newResources = { ...resources };
+          newResources.keys -= 1;
+          return newResources;
+        });
+        saveNewManorState(roomId, "status", STATUSES.current);
+        goToChoice();
+        return;
+      }
+    },
+    [resources, manorState, saveNewManorState, updateRoomStatus]
+  );
 
   useEffect(() => {
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
-      if (choicesActive) {
-        let blueprint;
-        switch (event.key) {
-          case "ArrowUp":
-          case "w":
-            blueprint = choices[1];
-            break;
-
-          case "ArrowLeft":
-          case "a":
-            blueprint = choices[0];
-            break;
-          case "ArrowRight":
-          case "d":
-            blueprint = choices[2];
-            break;
-        }
-
-        if (!blueprint) {
-          return;
-        }
-        if (gems < blueprint.cost) {
-          setMessage(["You don't have enough gems for that room!"]);
-          return;
-        }
-
-        const newManorState = { ...manorState };
-        newManorState[openingRoom].blueprint = blueprint;
-        newManorState[openingRoom].blueprint.draftable = false;
-        setManorState(newManorState);
-        updateRoomStatus(openingRoom, STATUSES.activated);
-        setSteps(steps - 1);
-        setCurrentRoom(openingRoom);
-        removeArrows(openingRoom);
-
-        setChoices([]);
-        setIsFrozen(false);
-        setChoicesActive(false);
-        setSteps(steps - 1);
-
-        const message: string[] = [];
-        message.push(blueprint.message);
-        message.push("　");
-        [RESOURCES.keys, RESOURCES.gems].map((resource) => {
-          message.push(getFoundResourcesMessage(resource, blueprint));
-        });
-
-        const { genKeys, genGems } = generateInventory();
-        [
-          { type: RESOURCES.keys, count: genKeys },
-          { type: RESOURCES.gems, count: genGems },
-        ].map((resource) => {
-          message.push(getExtraResourcesMessage(resource.type, resource.count));
-        });
-        setMessage(message);
-
-        updateResources(RESOURCES.keys, [genKeys, blueprint.keys]);
-        updateResources(RESOURCES.gems, [
-          genGems,
-          blueprint.gems,
-          blueprint.cost * -1,
-        ]);
-
-        localStorage.setItem("manorState", JSON.stringify(manorState));
-
-        return;
-      }
-
+      // Prevent movement while frozen
       if (isFrozen) {
+        if (choicesActive) {
+          setMessage(["You need to choose a blueprint before you can move."]);
+        }
         return;
       }
 
-      const setNextRoom = (currentRoomId: string, direction: Direction) => {
+      // Check the next room to see if it's a valid movement
+      const checkNextRoom = (direction: Direction) => {
         const nextRoomId = moveRooms[direction](currentRoomId);
         if (nextRoomId === currentRoomId) {
           return;
         }
+        // Block movement if no door
+        if (
+          !manorState[currentRoomId].blueprint?.directions.includes(direction)
+        ) {
+          setMessage(["There's no door there!"]);
+          return;
+        }
+
+        // If valid movement
         switch (manorState[nextRoomId].status) {
+          // If existing room, move to and subtract a step
           case STATUSES.activated:
-            setCurrentRoom(nextRoomId);
-            setSteps(steps - 1);
+            setCurrentRoomId(nextRoomId);
+            setResources(() => {
+              const newResources = { ...resources };
+              newResources.steps -= 1;
+              return newResources;
+            });
+            setMessage([
+              "Use the WASD or arrow keys to move to an active room.",
+            ]);
             break;
+          // If opening new room
           case STATUSES.active:
           case STATUSES.locked:
-            openRoom(nextRoomId);
+            openRoom(nextRoomId, direction);
         }
       };
 
       switch (event.key) {
         case "ArrowUp":
         case "w":
-          setNextRoom(currentRoom, DIRECTIONS.up);
+          checkNextRoom(DIRECTIONS.up);
           break;
         case "ArrowDown":
         case "s":
-          setNextRoom(currentRoom, DIRECTIONS.down);
+          checkNextRoom(DIRECTIONS.down);
           break;
         case "ArrowLeft":
         case "a":
-          setNextRoom(currentRoom, DIRECTIONS.left);
+          checkNextRoom(DIRECTIONS.left);
           break;
         case "ArrowRight":
         case "d":
-          setNextRoom(currentRoom, DIRECTIONS.right);
+          checkNextRoom(DIRECTIONS.right);
           break;
       }
     };
@@ -218,7 +229,7 @@ const Puzzle: React.FC = () => {
     return () => {
       window.removeEventListener("keydown", handleGlobalKeyDown);
     };
-  }, [currentRoom, manorState, isFrozen, steps]); // Empty dependency array ensures it runs once on mount and cleans up on unmount
+  }, [currentRoomId, isFrozen, manorState, resources, openRoom, choicesActive]);
 
   useEffect(() => {
     if (victory) {
@@ -227,83 +238,22 @@ const Puzzle: React.FC = () => {
         "　",
         "Press the 'Reset Manor' button to play again.",
       ]);
-      setResetActive(true);
+      setResetBtnHighlight(true);
     }
   }, [victory]);
 
   useEffect(() => {
-    if (!steps) {
+    if (!resources.steps) {
       setMessage([
         "You ran out of steps!",
         "Press the clear button to try again.",
       ]);
       setIsFrozen(true);
-      setResetActive(true);
+      setResetBtnHighlight(true);
     }
-  }, [steps]);
+  }, [resources]);
 
-  const saveNewManorState = (
-    roomId: string,
-    property: string,
-    // eslint-disable-next-line
-    newVal: any
-  ) => {
-    const newManorState = { ...manorState };
-    // @ts-expect-error: Used to help avoid repetition when saving state
-    newManorState[roomId][property] = newVal;
-    setManorState(newManorState);
-  };
-
-  const updateResources = (
-    resource: Resource,
-    sources: (number | undefined)[]
-  ) => {
-    let sum = sources.reduce((prev, curr) => {
-      if (!curr) {
-        curr = 0;
-      }
-      if (!prev) {
-        prev = 0;
-      }
-      return prev + curr;
-    });
-
-    if (!sum) {
-      return;
-    }
-
-    if (resource === RESOURCES.gems) {
-      sum += gems;
-      setGems(sum);
-    } else if (resource === RESOURCES.keys) {
-      sum += keys;
-      setKeys(sum);
-    }
-  };
-
-  const activateSurroundingRooms = (roomId: string) => {
-    const newManorState = { ...manorState };
-    const directions = manorState[roomId].blueprint?.directions;
-
-    if (!directions) {
-      return;
-    }
-    for (const direction of directions) {
-      const neighborId = newManorState[roomId][direction];
-      if (!neighborId) {
-        continue;
-      }
-      const neighborStatus = newManorState[neighborId].status;
-      if (neighborStatus === STATUSES.locked_hidden) {
-        newManorState[neighborId].status = STATUSES.locked;
-      } else if (neighborStatus === STATUSES.inactive) {
-        newManorState[neighborId].status = STATUSES.active;
-      }
-    }
-    newManorState[roomId].status = STATUSES.activated;
-    setManorState(newManorState);
-  };
-
+  // Set arrow display on surrounding rooms when drafting
   const highlightSurroundingRooms = (
     roomId: string,
     choiceBlueprint: Blueprint
@@ -312,26 +262,28 @@ const Puzzle: React.FC = () => {
       return;
     }
     const newManorState = { ...manorState };
-    const currentRoomInfo = newManorState[roomId];
+    const currentRoomIdInfo = newManorState[roomId];
     const directions = choiceBlueprint.directions;
     if (directions) {
       directions.forEach((direction) => {
         if (!direction) {
           return;
         }
-        if (!currentRoomInfo[direction]) return;
-        const neighborStatus = newManorState[currentRoomInfo[direction]].status;
+        if (!currentRoomIdInfo[direction]) return;
+        const neighborStatus =
+          newManorState[currentRoomIdInfo[direction]].status;
         if (
           neighborStatus === STATUSES.inactive ||
           neighborStatus === STATUSES.locked_hidden
         ) {
-          newManorState[currentRoomInfo[direction]].arrow = direction;
+          newManorState[currentRoomIdInfo[direction]].arrow = direction;
         }
       });
     }
     setManorState(newManorState);
   };
 
+  // Remove arrow display when mouse off
   const removeArrows = (roomId: string) => {
     if (!roomId) {
       return;
@@ -342,66 +294,121 @@ const Puzzle: React.FC = () => {
       if (!neighborId || !newManorState[neighborId]) {
         continue;
       }
-      newManorState[neighborId].arrow = undefined;
+      delete newManorState[neighborId].arrow;
     }
     setManorState(newManorState);
   };
 
-  const updateRoomStatus = (roomId: string, newStatus: string) => {
-    saveNewManorState(roomId, "status", newStatus);
-    if (newStatus === STATUSES.activated) {
-      activateSurroundingRooms(roomId);
-    }
-    if (newStatus === STATUSES.activated && roomId === ROOMS.antechamber) {
-      setVictory(true);
-    }
-  };
-
   const handleChoiceClick = (blueprint: Blueprint) => {
+    const disableInvalidDoors = () => {
+      const dirsOfNeighborsToChange = Object.values(DIRECTIONS).filter(
+        (dir) => !nextRoom.blueprint?.directions.includes(dir)
+      );
+      dirsOfNeighborsToChange.forEach((neighborDir) => {
+        const neighborRoomId = nextRoom[neighborDir];
+        if (
+          !neighborRoomId ||
+          newManorState[neighborRoomId].status !== STATUSES.activated ||
+          neighborRoomId === currentRoomId
+        ) {
+          return;
+        }
+        const neighborDoors = manorState[neighborRoomId].blueprint?.directions;
+        const newNeighborDoors = neighborDoors?.filter(
+          (dir) => dir !== reversedDirections[neighborDir]
+        );
+        if (manorState[neighborRoomId].blueprint && newNeighborDoors) {
+          manorState[neighborRoomId].blueprint.directions = newNeighborDoors;
+        }
+      });
+    };
+
+    const removeInvalidDirections = () => {
+      nextRoom.blueprint?.directions.forEach((dir, i) => {
+        if (!nextRoom[dir]) {
+          return;
+        }
+        const neighborRoom = manorState[nextRoom[dir]];
+        if (
+          !neighborRoom.blueprint?.directions.includes(dir) &&
+          neighborRoom.status === STATUSES.activated
+        ) {
+          nextRoom.blueprint?.directions.splice(i, 1);
+        }
+      });
+    };
+
+    const updateMessage = () => {
+      const message: string[] = [];
+      message.push(blueprint.message);
+      message.push("　");
+      [RESOURCES.keys, RESOURCES.gems].forEach((resource) => {
+        message.push(getFoundResourcesMessage(resource, blueprint));
+      });
+
+      [
+        { type: RESOURCES.keys, count: genKeys },
+        { type: RESOURCES.gems, count: genGems },
+      ].forEach((resource) => {
+        message.push(getExtraResourcesMessage(resource.type, resource.count));
+      });
+      setMessage(message);
+    };
+
+    // Do nothing if clicking choice box while inactive
     if (!choicesActive) {
       return;
     }
-    if (gems < blueprint.cost) {
+
+    // If choice blueprint is too expensive
+    if (resources.gems < blueprint.cost) {
       setMessage(["You don't have enough gems for that room!"]);
       return;
     }
 
+    // If valid choice, update next room info
     const newManorState = { ...manorState };
-    newManorState[openingRoom].blueprint = blueprint;
-    newManorState[openingRoom].blueprint.draftable = false;
+    const nextRoom = newManorState[openingRoom];
+    // Set blueprint to next room
+    nextRoom.blueprint = blueprint;
+    // Remove the chosen blueprint from the pool
+    nextRoom.blueprint.draftable = false;
+
+    // Disable doors which lead into new room but that new room doesn't have
+    disableInvalidDoors();
+
+    // Remove direction from drafted blueprint where there exists a room already without opposite direction
+    removeInvalidDirections();
+
+    // Allow movement from previous room and prevent duplicate directions
+    if (draftingDir) {
+      const reversedDir = reversedDirections[draftingDir];
+      if (!nextRoom.blueprint.directions.includes(reversedDir)) {
+        nextRoom.blueprint.directions.push(reversedDirections[draftingDir]);
+      }
+    }
+
     setManorState(newManorState);
     updateRoomStatus(openingRoom, STATUSES.activated);
-    setSteps(steps - 1);
-    setCurrentRoom(openingRoom);
+    setCurrentRoomId(openingRoom);
     removeArrows(openingRoom);
 
     setChoices([]);
     setIsFrozen(false);
     setChoicesActive(false);
-    setSteps(steps - 1);
-
-    const message: string[] = [];
-    message.push(blueprint.message);
-    message.push("　");
-    [RESOURCES.keys, RESOURCES.gems].map((resource) => {
-      message.push(getFoundResourcesMessage(resource, blueprint));
-    });
 
     const { genKeys, genGems } = generateInventory();
-    [
-      { type: RESOURCES.keys, count: genKeys },
-      { type: RESOURCES.gems, count: genGems },
-    ].map((resource) => {
-      message.push(getExtraResourcesMessage(resource.type, resource.count));
-    });
-    setMessage(message);
 
-    updateResources(RESOURCES.keys, [genKeys, blueprint.keys]);
-    updateResources(RESOURCES.gems, [
-      genGems,
-      blueprint.gems,
-      blueprint.cost * -1,
-    ]);
+    updateMessage();
+
+    setResources(() => {
+      const newResources = { ...resources };
+      newResources.keys += genKeys + (blueprint.keys ? blueprint.keys : 0);
+      newResources.gems +=
+        genGems + (blueprint.gems ? blueprint.gems : 0) + blueprint.cost * -1;
+      newResources.steps -= 1;
+      return newResources;
+    });
 
     localStorage.setItem("manorState", JSON.stringify(manorState));
   };
@@ -409,16 +416,14 @@ const Puzzle: React.FC = () => {
   const reset = () => {
     setManorState(JSON.parse(startingState));
     setVictory(false);
-    setResetActive(false);
+    setResetBtnHighlight(false);
     setIsFrozen(false);
     setChoices([]);
     setChoicesActive(false);
-    setGems(0);
-    setKeys(0);
+    setResources(STARTING_RESOURCES);
     setDay(day + 1);
     setMessage(["Click an active room."]);
-    setSteps(STARTING_STEPS);
-    setCurrentRoom(ROOMS.entrance_hall);
+    setCurrentRoomId(ROOMS.entrance_hall);
     resetBlueprints();
     localStorage.setItem("manorState", "");
     localStorage.setItem("day", (day + 1).toString());
@@ -462,9 +467,9 @@ const Puzzle: React.FC = () => {
         <div className="room-grid">
           <div>
             {[
-              { type: RESOURCES.steps, count: steps },
-              { type: RESOURCES.keys, count: keys },
-              { type: RESOURCES.gems, count: gems },
+              { type: RESOURCES.steps, count: resources.steps },
+              { type: RESOURCES.keys, count: resources.keys },
+              { type: RESOURCES.gems, count: resources.gems },
             ].map((resource, idx) => {
               return (
                 <ResourceDisplay
@@ -485,7 +490,7 @@ const Puzzle: React.FC = () => {
                     roomId={roomId}
                     key={roomId}
                     state={manorState[roomId]}
-                    current={currentRoom === roomId}
+                    current={currentRoomId === roomId}
                   />
                 );
               })}

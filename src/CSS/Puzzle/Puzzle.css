@@ -4,6 +4,7 @@
   --gem-purple: #f15bff;
   --room-size: clamp(60px, 8vw, 90px);
   --blueprint-size: clamp(120px, 15vw, 160px);
+  --door-style: 8px solid #10002b !important;
 }
 
 .puzzle-explain {
@@ -50,6 +51,23 @@
   overflow: hidden;
 }
 
+/* Door styles - solid borders where doors are missing */
+.door-up {
+  border-top: var(--door-style);
+}
+
+.door-down {
+  border-bottom: var(--door-style);
+}
+
+.door-left {
+  border-left: var(--door-style);
+}
+
+.door-right {
+  border-right: var(--door-style);
+}
+
 .room:hover {
   background: rgb(112, 112, 112);
 }
@@ -90,9 +108,10 @@
 }
 
 .current-room {
-  border: 3px solid var(--blueprint-lightblue);
+  /* Remove border so door borders are visible */
   position: relative;
   z-index: 1;
+  box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
   animation: current-room-glow 1.2s linear infinite alternate;
 }
 
@@ -101,10 +120,11 @@
   position: absolute;
   inset: -4px;
   border-radius: 12px;
-  border: 3px solid var(--blueprint-lightblue);
+  /* Remove border, use only box-shadow for glow */
   pointer-events: none;
   z-index: -1;
   animation: border-glow 1.2s linear infinite alternate;
+  box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
 }
 
 @keyframes current-room-glow {
@@ -348,6 +368,20 @@
   pointer-events: none;
   user-select: none;
 }
+
+/* 
+.door-up {
+  border-top: var(--door-style);
+}
+.door-down {
+  border-bottom: var(--door-style);
+}
+.door-left {
+  border-left: var(--door-style);
+}
+.door-right {
+  border-right: var(--door-style);
+} */
 
 /* TODO
 @media (prefers-color-scheme: light) {

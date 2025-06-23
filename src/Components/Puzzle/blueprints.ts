@@ -31,7 +31,7 @@ const addRoomProperties = (
   message: string,
   keys = 0,
   gems = 0,
-  doors = 1
+  doors = 0
 ) => {
   // Returns a random array of unique arrow directions up to the number of doors (max 4),
   // but the final array is always sorted as ["left", "up", "down", "right"]
@@ -74,7 +74,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find a cozy parlor with three locked chests and a wind-up key.",
     0,
     3,
-    2
+    1
   ),
   security: addRoomProperties(
     "Security",
@@ -84,7 +84,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find a security room with a vast array of monitors.",
     0,
     0,
-    3
+    2
   ),
   hallway: addRoomProperties(
     "Hallway",
@@ -94,7 +94,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a non-descript hallway.",
     1,
     0,
-    3
+    2
   ),
   aquarium: addRoomProperties(
     "Aquarium",
@@ -104,7 +104,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter an aquarium with elaborately decorated tanks filled with colorful fish.",
     0,
     0,
-    3
+    2
   ),
   bedroom: addRoomProperties(
     "Bedroom",
@@ -114,7 +114,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find a quiet bedroom with a soft bed and a postcard from a town called 'Reddington' on a desk.",
     0,
     0,
-    2
+    1
   ),
   billiard_room: addRoomProperties(
     "Billiard Room",
@@ -124,7 +124,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You stumble upon a billiard room with an odd-looking dartboard in the corner.",
     2,
     0,
-    2
+    1
   ),
   boudoir: addRoomProperties(
     "Boudoir",
@@ -134,7 +134,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a soothing boudoir with an out-of-place large, locked safe.",
     1,
     0,
-    2
+    1
   ),
   chapel: addRoomProperties(
     "Chapel",
@@ -144,7 +144,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find yourself in a chapel with large stained glass windows of unfamiliar angels.",
     0,
     0,
-    3
+    2
   ),
   closet: addRoomProperties(
     "Closet",
@@ -154,7 +154,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You open a closet stuffed with coats and boxes full of miscellaneous items on the ground.",
     1,
     1,
-    1
+    0
   ),
   coat_check: addRoomProperties(
     "Coat Check",
@@ -164,7 +164,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find yourself at a coat check, though peeking behind the counter you suspect that more than coats being kept here.",
     0,
     0,
-    1
+    0
   ),
   commissary: addRoomProperties(
     "Commissary",
@@ -174,7 +174,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You're surprised to find that the manor has it's own commissary for the staff.  Where are they anyway?",
     0,
     0,
-    2
+    1
   ),
   corridor: addRoomProperties(
     "Corridor",
@@ -184,7 +184,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A long, narrow corridor.",
     0,
     0,
-    2
+    1
   ),
   courtyard: addRoomProperties(
     "Courtyard",
@@ -194,7 +194,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You open the door to an open courtyard with two trees and piles of dirt on the ground.",
     0,
     0,
-    3
+    2
   ),
   darkroom: addRoomProperties(
     "Darkroom",
@@ -204,7 +204,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "As you enter the room, the red lights flicker out and you find yourself in utter darkness.",
     0,
     0,
-    3
+    2
   ),
   den: addRoomProperties(
     "Den",
@@ -214,7 +214,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You feel relaxed as you enter a cozy den arrayed with clocks of all shapes and sizes with a lit fireplace. But who's keeping the fire lit?",
     0,
     1,
-    3
+    2
   ),
   dining_room: addRoomProperties(
     "Dining Room",
@@ -224,7 +224,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a room with a sturdy dining room table.",
     0,
     0,
-    3
+    2
   ),
   drawing_room: addRoomProperties(
     "Drawing Room",
@@ -234,7 +234,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a room with a high-vaulted ceiling with walls covered in drawings.  An easel stands in the middle carrying the portrait of an grandfatherly-man.",
     0,
     0,
-    3
+    2
   ),
   greenhouse: addRoomProperties(
     "Greenhouse",
@@ -244,7 +244,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You feel a rush of warm, humid air as you enter a lush greenhouse full of plants and mysterious flowers that sprout gems.",
     0,
     2,
-    1
+    0
   ),
   guest_bedroom: addRoomProperties(
     "Guest Bedroom",
@@ -264,7 +264,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A kitchen with modern appliances.",
     0,
     0,
-    2
+    1
   ),
   laboratory: addRoomProperties(
     "Laboratory",
@@ -274,7 +274,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A laboratory with bubbling potions.",
     0,
     0,
-    2
+    1
   ),
   lavatory: addRoomProperties(
     "Lavatory",
@@ -284,7 +284,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A small lavatory.",
     0,
     0,
-    1
+    0
   ),
   nook: addRoomProperties(
     "Nook",
@@ -294,7 +294,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A reading nook with a comfy chair.",
     1,
     0,
-    2
+    1
   ),
   nursery: addRoomProperties(
     "Nursery",
@@ -304,7 +304,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A nursery with toys and a crib.",
     0,
     0,
-    1
+    0
   ),
   observatory: addRoomProperties(
     "Observatory",
@@ -314,7 +314,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A room with a telescope for stargazing.",
     0,
     0,
-    2
+    1
   ),
   office: addRoomProperties(
     "Office",
@@ -324,7 +324,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A quiet office with a large desk.",
     0,
     0,
-    2
+    1
   ),
   pantry: addRoomProperties(
     "Pantry",
@@ -334,7 +334,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A pantry full of food supplies.",
     0,
     0,
-    2
+    1
   ),
   passageway: addRoomProperties(
     "Passageway",
@@ -344,7 +344,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find yourself at a small room with a single bookcase and several conspicously brightly colored books.  Pulling one of them reveals a hidden door behind the bookcase, painted the same color as the book you chose.",
     0,
     0,
-    4
+    3
   ),
   patio: addRoomProperties(
     "Patio",
@@ -354,7 +354,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find a sunny patio with a grill and a small table with a gem on top.",
     0,
     1,
-    2
+    1
   ),
   rumpus_room: addRoomProperties(
     "Rumpus Room",
@@ -364,7 +364,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a colorful room full of toys, games, and a mysterious fortune-telling machine named 'Alzara'.",
     0,
     0,
-    2
+    1
   ),
   spare_room: addRoomProperties(
     "Spare Room",
@@ -374,7 +374,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You smell paint as you enter the spare room.  It looks like they haven't decided which color to paint the walls yet.",
     0,
     0,
-    2
+    1
   ),
   storeroom: addRoomProperties(
     "Storeroom",
@@ -384,7 +384,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You open the door and find a storeroom with a variety of odds-and-ends, including old paintings and a multitiude of boxes.  And also a shiny gem and a key.",
     1,
     1,
-    1
+    0
   ),
   terrace: addRoomProperties(
     "Terrace",
@@ -394,7 +394,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You open the door and find yourself at a terrace overlooking the exterior of the manor.",
     0,
     0,
-    2
+    1
   ),
   the_pool: addRoomProperties(
     "The Pool",
@@ -404,7 +404,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find a room with a small pool inside.  Are those coins at the bottom?",
     0,
     0,
-    3
+    2
   ),
   utility_closet: addRoomProperties(
     "Utility Closet",
@@ -414,7 +414,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You find a small room with a single breaker box.  Opening it, you find switches for the Darkroom, the Garage, the Gymnasium.",
     0,
     0,
-    1
+    0
   ),
   walk_in_closet: addRoomProperties(
     "Walk-in Closet",
@@ -424,7 +424,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a walk-in closet that looks frozen in time, a deep layer of dust coating a set of keys and gems on a desk.",
     2,
     2,
-    1
+    0
   ),
   east_wing_hall: addRoomProperties(
     "East Wing Hall",
@@ -434,7 +434,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a brightly-lit hall along the east side of the house.",
     0,
     0,
-    3
+    2
   ),
   west_wing_hall: addRoomProperties(
     "West Wing Hall",
@@ -444,7 +444,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "You enter a musky hall along the western side of the manor.  It seems like no one has been here for years.",
     0,
     0,
-    3
+    2
   ),
   entrance_hall: addRoomProperties(
     "Entrance Hall",

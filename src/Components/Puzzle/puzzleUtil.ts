@@ -6,8 +6,8 @@ export const getDay = () => {
   return storedRuns ? parseInt(storedRuns, 10) : 1;
 };
 
-export const addPlural = (count: number) => {
-  return count > 1 ? "s" : "";
+export const removePlural = (string: string, count: number) => {
+  return count > 1 ? string : string.slice(0, -1);
 };
 
 export const getExtraResourcesMessage = (
@@ -15,7 +15,7 @@ export const getExtraResourcesMessage = (
   count: number | undefined
 ) => {
   return count
-    ? `\nYou found ${count} extra ${resource}${addPlural(count)}!`
+    ? `\nYou found ${count} extra ${removePlural(resource, count)}!`
     : "";
 };
 
@@ -30,7 +30,8 @@ export const getFoundResourcesMessage = (
       ? blueprint.gems
       : 0;
   return count
-    ? `\nThere ${count > 1 ? "were" : "was"} ${count} ${resource}${addPlural(
+    ? `\nThere ${count > 1 ? "were" : "was"} ${count} ${removePlural(
+        resource,
         count
       )} inside the ${blueprint.name}.`
     : "";
@@ -96,6 +97,13 @@ export const moveRooms = {
     const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.right);
     return createRoomId(newCol, newRow);
   },
+};
+
+export const reversedDirections: Record<Direction, Direction> = {
+  up: "down",
+  down: "up",
+  left: "right",
+  right: "left",
 };
 
 export const arrowDisplay = {
