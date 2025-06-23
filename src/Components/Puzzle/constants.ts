@@ -48,7 +48,7 @@ export const LAYOUT = {
 };
 
 export const STARTING_RESOURCES: Record<Resource, number> = {
-  steps: 5,
+  steps: 50,
   gems: 0,
   keys: 0,
 };
