@@ -9,10 +9,11 @@ import {
   RESOURCES,
   DIRECTIONS,
   STARTING_RESOURCES,
+  REVERSED_DIRECTIONS,
 } from "./constants";
 import { getRandomBlueprints, resetBlueprints } from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
-import type { Blueprint, Direction, ManorData } from "./types";
+import type { Blueprint, Direction, ManorData, RoomId } from "./types";
 import {
   getDay,
   getExtraResourcesMessage,
@@ -20,29 +21,29 @@ import {
   createRoomId,
   generateInventory,
   moveRooms,
-  reversedDirections,
 } from "./puzzleUtil";
 import ResourceDisplay from "./ResourceDisplay";
 import ResetButton from "./ResetButton";
 import MessageDisplay from "./MessageDisplay";
+import MESSAGES from "./messages";
 
 const startingState = JSON.stringify(manorData);
 
 const Puzzle: React.FC = () => {
-  const [message, setMessage] = useState([
-    "Use the WASD or arrow keys to move to an active room.",
-  ]);
+  const [message, setMessage] = useState([MESSAGES.explainMovement]);
 
   const [manorState, setManorState] = useState<ManorData>({ ...manorData });
   const [resources, setResources] = useState(STARTING_RESOURCES);
 
   const [choices, setChoices] = useState<Blueprint[]>([]);
   const [choicesActive, setChoicesActive] = useState(false);
-  const [currentRoomId, setCurrentRoomId] = useState(ROOMS.entrance_hall);
-  const [openingRoom, setOpeningRoom] = useState("");
-  const [draftingDir, setDraftingDir] = useState<Direction | undefined>(
-    undefined
+  const [currentRoomId, setCurrentRoomId] = useState<RoomId>(
+    ROOMS.entrance_hall
   );
+  // Set openingRoom to Entrance Hall as placeholder (no intended effect)
+  const [openingRoom, setOpeningRoom] = useState<RoomId>(ROOMS.entrance_hall);
+  // Set draftingDir to 'up' as placeholder (no intended effect)
+  const [draftingDir, setDraftingDir] = useState<Direction>(DIRECTIONS.up);
   const [isFrozen, setIsFrozen] = useState(false);
   const [victory, setVictory] = useState(false);
   const [resetActive, setResetBtnHighlight] = useState(false);
@@ -57,7 +58,7 @@ const Puzzle: React.FC = () => {
   }, []);
 
   const activateSurroundingRooms = useCallback(
-    (roomId: string) => {
+    (roomId: RoomId) => {
       const newManorState = { ...manorState };
       const directions = manorState[roomId].blueprint?.directions;
 
@@ -98,7 +99,7 @@ const Puzzle: React.FC = () => {
   );
 
   const updateRoomStatus = useCallback(
-    (roomId: string, newStatus: string) => {
+    (roomId: RoomId, newStatus: string) => {
       saveNewManorState(roomId, "status", newStatus);
       if (newStatus === STATUSES.activated) {
         activateSurroundingRooms(roomId);
@@ -111,7 +112,7 @@ const Puzzle: React.FC = () => {
   );
 
   const openRoom = useCallback(
-    (roomId: string, direction: Direction) => {
+    (roomId: RoomId, direction: Direction) => {
       const goToChoice = () => {
         setIsFrozen(true);
         setChoicesActive(true);
@@ -131,7 +132,7 @@ const Puzzle: React.FC = () => {
       // Begin drafting if unlocked
       if (status === STATUSES.active) {
         saveNewManorState(roomId, "status", STATUSES.current);
-        setMessage(["Select a room to place:"]);
+        setMessage([MESSAGES.selectRoom]);
         goToChoice();
         return;
       }
@@ -139,13 +140,10 @@ const Puzzle: React.FC = () => {
       // Begin drafting if locked and have a key, or else reject if no keys
       if (status === STATUSES.locked) {
         if (!resources.keys) {
-          setMessage(["You don't have any keys!"]);
+          setMessage([MESSAGES.noKeys]);
           return;
         }
-        setMessage([
-          "You used a key to unlock this room.",
-          "Select a room to place:",
-        ]);
+        setMessage([MESSAGES.unlockedRoom, MESSAGES.selectRoom]);
         setResources(() => {
           const newResources = { ...resources };
           newResources.keys -= 1;
@@ -164,7 +162,7 @@ const Puzzle: React.FC = () => {
       // Prevent movement while frozen
       if (isFrozen) {
         if (choicesActive) {
-          setMessage(["You need to choose a blueprint before you can move."]);
+          setMessage([MESSAGES.chooseBeforeMove]);
         }
         return;
       }
@@ -179,7 +177,7 @@ const Puzzle: React.FC = () => {
         if (
           !manorState[currentRoomId].blueprint?.directions.includes(direction)
         ) {
-          setMessage(["There's no door there!"]);
+          setMessage([MESSAGES.noDoor]);
           return;
         }
 
@@ -193,9 +191,7 @@ const Puzzle: React.FC = () => {
               newResources.steps -= 1;
               return newResources;
             });
-            setMessage([
-              "Use the WASD or arrow keys to move to an active room.",
-            ]);
+            setMessage([MESSAGES.explainMovement]);
             break;
           // If opening new room
           case STATUSES.active:
@@ -234,9 +230,9 @@ const Puzzle: React.FC = () => {
   useEffect(() => {
     if (victory) {
       setMessage([
-        "You've reached the fabled Antechamber, a room with stark marble walls and featureless barring a single pedastal in the center with a letter: you've inherited the manor!  But looking to the north, you see a final locked door.  Is there more to come?",
-        "　",
-        "Press the 'Reset Manor' button to play again.",
+        MESSAGES.reachedAntechamber,
+        MESSAGES.spacer,
+        MESSAGES.explainReset,
       ]);
       setResetBtnHighlight(true);
     }
@@ -244,10 +240,7 @@ const Puzzle: React.FC = () => {
 
   useEffect(() => {
     if (!resources.steps) {
-      setMessage([
-        "You ran out of steps!",
-        "Press the clear button to try again.",
-      ]);
+      setMessage([MESSAGES.outOfSteps, MESSAGES.explainReset]);
       setIsFrozen(true);
       setResetBtnHighlight(true);
     }
@@ -255,7 +248,7 @@ const Puzzle: React.FC = () => {
 
   // Set arrow display on surrounding rooms when drafting
   const highlightSurroundingRooms = (
-    roomId: string,
+    roomId: RoomId,
     choiceBlueprint: Blueprint
   ) => {
     if (!choiceBlueprint) {
@@ -284,7 +277,7 @@ const Puzzle: React.FC = () => {
   };
 
   // Remove arrow display when mouse off
-  const removeArrows = (roomId: string) => {
+  const removeArrows = (roomId: RoomId) => {
     if (!roomId) {
       return;
     }
@@ -315,7 +308,7 @@ const Puzzle: React.FC = () => {
         }
         const neighborDoors = manorState[neighborRoomId].blueprint?.directions;
         const newNeighborDoors = neighborDoors?.filter(
-          (dir) => dir !== reversedDirections[neighborDir]
+          (dir) => dir !== REVERSED_DIRECTIONS[neighborDir]
         );
         if (manorState[neighborRoomId].blueprint && newNeighborDoors) {
           manorState[neighborRoomId].blueprint.directions = newNeighborDoors;
@@ -362,7 +355,7 @@ const Puzzle: React.FC = () => {
 
     // If choice blueprint is too expensive
     if (resources.gems < blueprint.cost) {
-      setMessage(["You don't have enough gems for that room!"]);
+      setMessage([MESSAGES.noGems]);
       return;
     }
 
@@ -377,15 +370,13 @@ const Puzzle: React.FC = () => {
     // Disable doors which lead into new room but that new room doesn't have
     disableInvalidDoors();
 
-    // Remove direction from drafted blueprint where there exists a room already without opposite direction
+    // Remove direction from drafted blueprint where there's an existing room without opposite direction
     removeInvalidDirections();
 
     // Allow movement from previous room and prevent duplicate directions
-    if (draftingDir) {
-      const reversedDir = reversedDirections[draftingDir];
-      if (!nextRoom.blueprint.directions.includes(reversedDir)) {
-        nextRoom.blueprint.directions.push(reversedDirections[draftingDir]);
-      }
+    const reversedDir = REVERSED_DIRECTIONS[draftingDir];
+    if (!nextRoom.blueprint.directions.includes(reversedDir)) {
+      nextRoom.blueprint.directions.push(REVERSED_DIRECTIONS[draftingDir]);
     }
 
     setManorState(newManorState);
@@ -422,7 +413,7 @@ const Puzzle: React.FC = () => {
     setChoicesActive(false);
     setResources(STARTING_RESOURCES);
     setDay(day + 1);
-    setMessage(["Click an active room."]);
+    setMessage([MESSAGES.explainMovement]);
     setCurrentRoomId(ROOMS.entrance_hall);
     resetBlueprints();
     localStorage.setItem("manorState", "");

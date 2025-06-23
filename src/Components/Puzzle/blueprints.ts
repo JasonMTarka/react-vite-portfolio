@@ -23,7 +23,7 @@ export const getRandomBlueprints = (): Blueprint[] => {
   return [selectedZero, ...rest.slice(0, 2)];
 };
 
-const addRoomProperties = (
+const addBlueprintProperties = (
   name: string,
   cost: number,
   draftable: boolean,
@@ -38,16 +38,31 @@ const addRoomProperties = (
   function getArrowDirections(doors: number): Direction[] {
     const allDirections: Direction[] = [
       DIRECTIONS.left,
+      DIRECTIONS.left,
+      DIRECTIONS.up,
+      DIRECTIONS.up,
       DIRECTIONS.up,
       DIRECTIONS.down,
+      DIRECTIONS.right,
       DIRECTIONS.right,
     ];
     const count = Math.min(doors, 4);
     // Shuffle and pick random directions
     const shuffled = allDirections.slice().sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, count);
+    // Remove duplicates while preserving order
+    const selected: Direction[] = [];
+    for (const dir of shuffled) {
+      if (!selected.includes(dir) && selected.length < count) {
+        selected.push(dir);
+      }
+    }
     // Sort the selected directions in the required order
-    return allDirections.filter((dir) => selected.includes(dir));
+    return [
+      DIRECTIONS.left,
+      DIRECTIONS.up,
+      DIRECTIONS.down,
+      DIRECTIONS.right,
+    ].filter((dir) => selected.includes(dir));
   }
 
   const directions = getArrowDirections(doors);
@@ -66,7 +81,7 @@ const addRoomProperties = (
 };
 
 export const BLUEPRINTS: Record<string, Blueprint> = {
-  parlor: addRoomProperties(
+  parlor: addBlueprintProperties(
     "Parlor",
     0,
     true,
@@ -76,7 +91,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     3,
     1
   ),
-  security: addRoomProperties(
+  security: addBlueprintProperties(
     "Security",
     1,
     true,
@@ -86,7 +101,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  hallway: addRoomProperties(
+  hallway: addBlueprintProperties(
     "Hallway",
     0,
     true,
@@ -96,7 +111,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  aquarium: addRoomProperties(
+  aquarium: addBlueprintProperties(
     "Aquarium",
     1,
     true,
@@ -106,7 +121,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  bedroom: addRoomProperties(
+  bedroom: addBlueprintProperties(
     "Bedroom",
     0,
     true,
@@ -116,7 +131,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  billiard_room: addRoomProperties(
+  billiard_room: addBlueprintProperties(
     "Billiard Room",
     0,
     true,
@@ -126,7 +141,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  boudoir: addRoomProperties(
+  boudoir: addBlueprintProperties(
     "Boudoir",
     0,
     true,
@@ -136,7 +151,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  chapel: addRoomProperties(
+  chapel: addBlueprintProperties(
     "Chapel",
     0,
     true,
@@ -146,7 +161,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  closet: addRoomProperties(
+  closet: addBlueprintProperties(
     "Closet",
     0,
     true,
@@ -156,7 +171,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     1,
     0
   ),
-  coat_check: addRoomProperties(
+  coat_check: addBlueprintProperties(
     "Coat Check",
     0,
     true,
@@ -166,7 +181,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     0
   ),
-  commissary: addRoomProperties(
+  commissary: addBlueprintProperties(
     "Commissary",
     1,
     true,
@@ -176,7 +191,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  corridor: addRoomProperties(
+  corridor: addBlueprintProperties(
     "Corridor",
     0,
     true,
@@ -186,7 +201,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  courtyard: addRoomProperties(
+  courtyard: addBlueprintProperties(
     "Courtyard",
     1,
     true,
@@ -196,7 +211,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  darkroom: addRoomProperties(
+  darkroom: addBlueprintProperties(
     "Darkroom",
     0,
     true,
@@ -206,7 +221,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  den: addRoomProperties(
+  den: addBlueprintProperties(
     "Den",
     0,
     true,
@@ -216,7 +231,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     1,
     2
   ),
-  dining_room: addRoomProperties(
+  dining_room: addBlueprintProperties(
     "Dining Room",
     1,
     true,
@@ -226,7 +241,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  drawing_room: addRoomProperties(
+  drawing_room: addBlueprintProperties(
     "Drawing Room",
     1,
     true,
@@ -236,7 +251,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  greenhouse: addRoomProperties(
+  greenhouse: addBlueprintProperties(
     "Greenhouse",
     1,
     true,
@@ -246,7 +261,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     2,
     0
   ),
-  guest_bedroom: addRoomProperties(
+  guest_bedroom: addBlueprintProperties(
     "Guest Bedroom",
     0,
     true,
@@ -254,9 +269,9 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     "A bedroom for guests.",
     0,
     0,
-    1
+    0
   ),
-  kitchen: addRoomProperties(
+  kitchen: addBlueprintProperties(
     "Kitchen",
     1,
     true,
@@ -266,7 +281,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  laboratory: addRoomProperties(
+  laboratory: addBlueprintProperties(
     "Laboratory",
     1,
     true,
@@ -276,7 +291,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  lavatory: addRoomProperties(
+  lavatory: addBlueprintProperties(
     "Lavatory",
     0,
     true,
@@ -286,7 +301,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     0
   ),
-  nook: addRoomProperties(
+  nook: addBlueprintProperties(
     "Nook",
     0,
     true,
@@ -296,7 +311,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  nursery: addRoomProperties(
+  nursery: addBlueprintProperties(
     "Nursery",
     1,
     true,
@@ -306,7 +321,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     0
   ),
-  observatory: addRoomProperties(
+  observatory: addBlueprintProperties(
     "Observatory",
     1,
     true,
@@ -316,7 +331,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  office: addRoomProperties(
+  office: addBlueprintProperties(
     "Office",
     2,
     true,
@@ -326,7 +341,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  pantry: addRoomProperties(
+  pantry: addBlueprintProperties(
     "Pantry",
     0,
     true,
@@ -336,7 +351,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  passageway: addRoomProperties(
+  passageway: addBlueprintProperties(
     "Passageway",
     2,
     true,
@@ -346,7 +361,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     3
   ),
-  patio: addRoomProperties(
+  patio: addBlueprintProperties(
     "Patio",
     1,
     true,
@@ -356,7 +371,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     1,
     1
   ),
-  rumpus_room: addRoomProperties(
+  rumpus_room: addBlueprintProperties(
     "Rumpus Room",
     1,
     true,
@@ -366,7 +381,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  spare_room: addRoomProperties(
+  spare_room: addBlueprintProperties(
     "Spare Room",
     0,
     true,
@@ -376,7 +391,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  storeroom: addRoomProperties(
+  storeroom: addBlueprintProperties(
     "Storeroom",
     0,
     true,
@@ -386,7 +401,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     1,
     0
   ),
-  terrace: addRoomProperties(
+  terrace: addBlueprintProperties(
     "Terrace",
     1,
     true,
@@ -396,7 +411,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     1
   ),
-  the_pool: addRoomProperties(
+  the_pool: addBlueprintProperties(
     "The Pool",
     1,
     true,
@@ -406,7 +421,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  utility_closet: addRoomProperties(
+  utility_closet: addBlueprintProperties(
     "Utility Closet",
     0,
     true,
@@ -416,7 +431,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     0
   ),
-  walk_in_closet: addRoomProperties(
+  walk_in_closet: addBlueprintProperties(
     "Walk-in Closet",
     1,
     true,
@@ -426,7 +441,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     2,
     0
   ),
-  east_wing_hall: addRoomProperties(
+  east_wing_hall: addBlueprintProperties(
     "East Wing Hall",
     0,
     false,
@@ -436,7 +451,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  west_wing_hall: addRoomProperties(
+  west_wing_hall: addBlueprintProperties(
     "West Wing Hall",
     0,
     false,
@@ -446,7 +461,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     2
   ),
-  entrance_hall: addRoomProperties(
+  entrance_hall: addBlueprintProperties(
     "Entrance Hall",
     0,
     false,
@@ -456,7 +471,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     0,
     4
   ),
-  antechamber: addRoomProperties(
+  antechamber: addBlueprintProperties(
     "Antechamber",
     0,
     false,

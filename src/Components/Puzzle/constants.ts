@@ -1,4 +1,11 @@
-import type { Resource, Operation, Color, Direction, Status } from "./types";
+import type {
+  Resource,
+  Operation,
+  Color,
+  Direction,
+  Status,
+  RoomId,
+} from "./types";
 
 export const STATUSES: Record<Status, Status> = {
   inactive: "inactive",
@@ -25,12 +32,18 @@ export const RESOURCES: Record<Resource, Resource> = {
   keys: "keys",
 };
 
+export const STARTING_RESOURCES: Record<Resource, number> = {
+  steps: 70,
+  gems: 0,
+  keys: 0,
+};
+
 export const OPERATIONS: Record<Operation, Operation> = {
   add: "add",
   subtract: "subtract",
 };
 
-export const ROOMS = {
+export const ROOMS: Record<string, RoomId> = {
   antechamber: "room_20",
   entrance_hall: "room_28",
 };
@@ -42,13 +55,14 @@ export const DIRECTIONS: Record<Direction, Direction> = {
   right: "right",
 };
 
+export const REVERSED_DIRECTIONS: Record<Direction, Direction> = {
+  up: "down",
+  down: "up",
+  left: "right",
+  right: "left",
+};
+
 export const LAYOUT = {
   rows: 9,
   cols: 5,
-};
-
-export const STARTING_RESOURCES: Record<Resource, number> = {
-  steps: 50,
-  gems: 0,
-  keys: 0,
 };

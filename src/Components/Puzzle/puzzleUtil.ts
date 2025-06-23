@@ -1,4 +1,4 @@
-import type { Resource, Blueprint, Direction } from "./types";
+import type { Resource, Blueprint, Direction, RoomId } from "./types";
 import { DIRECTIONS, RESOURCES } from "./constants";
 
 export const getDay = () => {
@@ -37,10 +37,11 @@ export const getFoundResourcesMessage = (
     : "";
 };
 
-export const createRoomId = (col: number, row: number) => {
-  return "room_" + col.toString() + row.toString();
+export const createRoomId = (col: number, row: number): RoomId => {
+  return ("room_" + col.toString() + row.toString()) as RoomId;
 };
 
+// Returns the arrow [col, row]
 export const deconstructRoomId = (roomId: string) => {
   return roomId
     .replace("room_", "")
@@ -61,7 +62,7 @@ export const generateInventory = () => {
   return { genKeys: weightedRandom(), genGems: weightedRandom() };
 };
 
-const _calcColRows = (roomId: string, direction: Direction) => {
+const _calcColRows = (roomId: RoomId, direction: Direction) => {
   const [originCol, originRow] = deconstructRoomId(roomId);
   let newCol = originCol;
   let newRow = originRow;
@@ -81,29 +82,22 @@ const _calcColRows = (roomId: string, direction: Direction) => {
 };
 
 export const moveRooms = {
-  up: (currentRoom: string) => {
+  up: (currentRoom: RoomId) => {
     const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.up);
     return createRoomId(newCol, newRow);
   },
-  down: (currentRoom: string) => {
+  down: (currentRoom: RoomId) => {
     const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.down);
     return createRoomId(newCol, newRow);
   },
-  left: (currentRoom: string) => {
+  left: (currentRoom: RoomId) => {
     const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.left);
     return createRoomId(newCol, newRow);
   },
-  right: (currentRoom: string) => {
+  right: (currentRoom: RoomId) => {
     const [newCol, newRow] = _calcColRows(currentRoom, DIRECTIONS.right);
     return createRoomId(newCol, newRow);
   },
-};
-
-export const reversedDirections: Record<Direction, Direction> = {
-  up: "down",
-  down: "up",
-  left: "right",
-  right: "left",
 };
 
 export const arrowDisplay = {

@@ -1,5 +1,6 @@
 export type Resource = "steps" | "gems" | "keys";
 export type Operation = "add" | "subtract";
+export type RoomId = `room_${number}`;
 export type Color =
   | "blue"
   | "green"
@@ -26,17 +27,17 @@ export interface Effect {
 }
 
 export interface ManorData {
-  [key: string]: RoomData;
+  [key: RoomId]: RoomData;
 }
 
 export interface RoomData {
   status: Status;
   blueprint?: Blueprint;
   arrow?: Direction;
-  up?: string;
-  down?: string;
-  left?: string;
-  right?: string;
+  up?: RoomId;
+  down?: RoomId;
+  left?: RoomId;
+  right?: RoomId;
 }
 
 export interface Blueprint {
