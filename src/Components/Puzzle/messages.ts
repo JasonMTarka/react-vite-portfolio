@@ -10,7 +10,7 @@ const MESSAGES = {
   noDoor: "There's no door there!",
   explainMovement: "Use the WASD or arrow keys to move to an available room.",
   reachedAntechamber:
-    "You've reached the fabled Antechamber, a room with stark and featureless marble walls, with only a single pedastal in the center with a letter: you've inherited the manor!  But looking to the north, you see a final locked door.  Is there more to come?",
+    "You've reached the fabled Antechamber, a room with stark and featureless marble walls, with only a single pedestal in the center with a letter: you've inherited the manor!  But looking to the north, you see a final locked door.  Is there more to come?",
   explainReset: "Press the 'Reset Manor' button to play again.",
   outOfSteps: "You ran out of steps!",
   tutorialChoice:
