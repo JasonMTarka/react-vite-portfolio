@@ -305,11 +305,8 @@
   margin-right: 0;
 }
 
-.choice-cell:hover {
-  background: #30405f;
-}
-
 .active-choice-cell:hover {
+  background: #30405f;
   cursor: pointer;
 }
 
@@ -348,7 +345,7 @@
 
 .blueprint-resources {
   font-weight: 500;
-  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  font-size: 1rem;
 }
 
 .blueprint-keys {
