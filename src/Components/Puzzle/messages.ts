@@ -15,6 +15,7 @@ const MESSAGES = {
   outOfSteps: "You ran out of steps!",
   tutorialChoice:
     "Blueprints are randomly selected from your blueprint deck. Once you draft a blueprint, it won't appear again.",
+  shopNotEnoughCoins: "You don't have enough coins for that.",
 };
 
 export default MESSAGES;

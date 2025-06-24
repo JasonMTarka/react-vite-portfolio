@@ -34,6 +34,8 @@ export const getFoundResourcesMessage = (
       ? blueprint.keys
       : resource === RESOURCES.gems
       ? blueprint.gems
+      : resource === RESOURCES.coins
+      ? blueprint.coins
       : 0;
   return count
     ? `\nThere ${count > 1 ? "were" : "was"} ${count} ${removePlural(
@@ -65,7 +67,22 @@ export const generateInventory = () => {
     if (r < 0.95) return 1;
     return 2;
   };
-  return { genKeys: weightedRandom(), genGems: weightedRandom() };
+
+  const weightedRandomCoins = () => {
+    const r = Math.random();
+    if (r < 0.5) return 0;
+    if (r < 0.6) return 1;
+    if (r < 0.7) return 2;
+    if (r < 0.8) return 3;
+    if (r < 0.9) return 4;
+    if (r < 0.95) return 5;
+    return 6;
+  };
+  return {
+    genKeys: weightedRandom(),
+    genGems: weightedRandom(),
+    genCoins: weightedRandomCoins(),
+  };
 };
 
 const _calcColRows = (roomId: RoomId, direction: Direction) => {
@@ -126,4 +143,8 @@ export const saveProgress = (
       currentRoomId: currentRoomId,
     })
   );
+};
+
+export const capitalizeFirstLetter = (val: string) => {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 };

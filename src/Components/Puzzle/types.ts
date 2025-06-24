@@ -1,4 +1,4 @@
-export type Resource = "steps" | "gems" | "keys";
+export type Resource = "steps" | "gems" | "keys" | "coins";
 export type Operation = "add" | "subtract";
 export type RoomId = `room_${number}`;
 export type Color =
@@ -47,8 +47,16 @@ export interface Blueprint {
   color: Color;
   keys?: number;
   gems?: number;
+  coins?: number;
   effect?: Effect;
   message: string;
   doors: number;
   directions: Direction[];
+}
+
+export interface ShopOption {
+  resource: Resource;
+  name: string;
+  cost: number;
+  amount: number;
 }

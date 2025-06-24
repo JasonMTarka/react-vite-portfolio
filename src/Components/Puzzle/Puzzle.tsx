@@ -10,6 +10,7 @@ import {
   DIRECTIONS,
   STARTING_RESOURCES,
   REVERSED_DIRECTIONS,
+  COLORS,
 } from "./constants";
 import {
   getDoorDirections,
@@ -17,7 +18,14 @@ import {
   resetBlueprints,
 } from "./blueprints";
 import ChoiceBox from "./ChoiceBox";
-import type { Blueprint, Direction, ManorData, RoomId } from "./types";
+import type {
+  Blueprint,
+  Direction,
+  ManorData,
+  RoomData,
+  RoomId,
+  Resource,
+} from "./types";
 import {
   getDay,
   getExtraResourcesMessage,
@@ -31,6 +39,7 @@ import ResourceDisplay from "./ResourceDisplay";
 import ResetButton from "./ResetButton";
 import MessageDisplay from "./MessageDisplay";
 import MESSAGES from "./messages";
+import Shop from "./Shop";
 
 const startingState = JSON.stringify(manorData);
 
@@ -46,6 +55,7 @@ const Puzzle: React.FC = () => {
 
   const [choices, setChoices] = useState<Blueprint[]>([]);
   const [choicesActive, setChoicesActive] = useState(false);
+  const [shopActive, setShopActive] = useState(false);
   const [currentRoomId, setCurrentRoomId] = useState<RoomId>(
     ROOMS.entrance_hall
   );
@@ -54,7 +64,7 @@ const Puzzle: React.FC = () => {
   // Set draftingDir to 'up' as placeholder (no intended effect)
   const [draftingDir, setDraftingDir] = useState<Direction>(DIRECTIONS.up);
   const [isFrozen, setIsFrozen] = useState(false);
-  const [victory, setVictory] = useState(false);
+  const [isVictory, setIsVictory] = useState(false);
   const [resetActive, setResetBtnHighlight] = useState(false);
   const [isTutorial, setIsTutorial] = useState(true);
 
@@ -120,7 +130,7 @@ const Puzzle: React.FC = () => {
         activateSurroundingRooms(roomId);
       }
       if (newStatus === STATUSES.activated && roomId === ROOMS.antechamber) {
-        setVictory(true);
+        setIsVictory(true);
       }
     },
     [activateSurroundingRooms, saveNewManorState]
@@ -131,6 +141,7 @@ const Puzzle: React.FC = () => {
       const goToChoice = () => {
         setIsFrozen(true);
         setChoicesActive(true);
+        setShopActive(false);
         setDraftingDir(direction);
         setOpeningRoom(roomId);
         const randomBlueprints = getRandomBlueprints();
@@ -221,6 +232,7 @@ const Puzzle: React.FC = () => {
               newResources.steps -= 1;
               return newResources;
             });
+            updateShop(manorState[nextRoomId]);
             setMessage([MESSAGES.explainMovement]);
             break;
           // If opening new room
@@ -257,8 +269,19 @@ const Puzzle: React.FC = () => {
     };
   }, [currentRoomId, isFrozen, manorState, resources, openRoom, choicesActive]);
 
+  const buyFromShop = (resource: Resource, cost: number, amount: number) => {
+    const newResources = { ...resources };
+    newResources[RESOURCES.coins] -= cost;
+    newResources[resource] += amount;
+    if (newResources[RESOURCES.coins] < 0) {
+      setMessage([MESSAGES.shopNotEnoughCoins]);
+      return;
+    }
+    setResources(newResources);
+  };
+
   useEffect(() => {
-    if (victory) {
+    if (isVictory) {
       setMessage([
         MESSAGES.reachedAntechamber,
         MESSAGES.spacer,
@@ -266,7 +289,7 @@ const Puzzle: React.FC = () => {
       ]);
       setResetBtnHighlight(true);
     }
-  }, [victory]);
+  }, [isVictory]);
 
   useEffect(() => {
     if (!resources.steps) {
@@ -365,13 +388,14 @@ const Puzzle: React.FC = () => {
       const message: string[] = [];
       message.push(blueprint.message);
       message.push("　");
-      [RESOURCES.keys, RESOURCES.gems].forEach((resource) => {
+      [RESOURCES.keys, RESOURCES.gems, RESOURCES.coins].forEach((resource) => {
         message.push(getFoundResourcesMessage(resource, blueprint));
       });
 
       [
         { type: RESOURCES.keys, count: genKeys },
         { type: RESOURCES.gems, count: genGems },
+        { type: RESOURCES.coins, count: genCoins },
       ].forEach((resource) => {
         message.push(getExtraResourcesMessage(resource.type, resource.count));
       });
@@ -417,8 +441,9 @@ const Puzzle: React.FC = () => {
     setChoices([]);
     setIsFrozen(false);
     setChoicesActive(false);
+    updateShop(newManorState[openingRoom]);
 
-    const { genKeys, genGems } = generateInventory();
+    const { genKeys, genGems, genCoins } = generateInventory();
 
     updateMessage();
 
@@ -427,12 +452,21 @@ const Puzzle: React.FC = () => {
       newResources.keys += genKeys + (blueprint.keys ? blueprint.keys : 0);
       newResources.gems +=
         genGems + (blueprint.gems ? blueprint.gems : 0) + blueprint.cost * -1;
+      newResources.coins += genCoins + (blueprint.coins ? blueprint.coins : 0);
       newResources.steps -= 1;
 
       saveProgress(newManorState, newResources, openingRoom);
 
       return newResources;
     });
+  };
+
+  const updateShop = (room: RoomData) => {
+    if (room.blueprint?.color === COLORS.yellow) {
+      setShopActive(true);
+    } else {
+      setShopActive(false);
+    }
   };
 
   useEffect(() => {
@@ -457,11 +491,12 @@ const Puzzle: React.FC = () => {
 
   const reset = () => {
     setManorState(JSON.parse(startingState));
-    setVictory(false);
+    setIsVictory(false);
     setResetBtnHighlight(false);
     setIsFrozen(false);
     setChoices([]);
     setChoicesActive(false);
+    setShopActive(false);
     setResources(STARTING_RESOURCES);
     setDay(day + 1);
     setMessage([MESSAGES.start, MESSAGES.spacer, MESSAGES.explainMovement]);
@@ -505,6 +540,11 @@ const Puzzle: React.FC = () => {
               );
             })}
           </div>
+          {shopActive ? (
+            <Shop room={manorState[currentRoomId]} buyCallback={buyFromShop} />
+          ) : (
+            ""
+          )}
         </div>
         <div className="room-grid">
           <div>
@@ -512,6 +552,7 @@ const Puzzle: React.FC = () => {
               { type: RESOURCES.steps, count: resources.steps },
               { type: RESOURCES.keys, count: resources.keys },
               { type: RESOURCES.gems, count: resources.gems },
+              { type: RESOURCES.coins, count: resources.coins },
             ].map((resource, idx) => {
               return (
                 <ResourceDisplay

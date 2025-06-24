@@ -1,5 +1,10 @@
-import type { Blueprint } from "./types";
-import { arrowDisplay, removePlural } from "./puzzleUtil";
+import type { Blueprint, Resource } from "./types";
+import {
+  arrowDisplay,
+  removePlural,
+  capitalizeFirstLetter,
+} from "./puzzleUtil";
+import { RESOURCES } from "./constants";
 
 const ChoiceBox = ({
   blueprint,
@@ -48,29 +53,33 @@ const ChoiceBox = ({
   };
 
   const showResources = () => {
+    const resourceText = (resource: Resource, count: number | undefined) => {
+      if (!count) {
+        return "";
+      }
+      return (
+        <span
+          className={`blueprint-resources blueprint-${resource}`}
+          key={resource}
+        >{`+${count} ${capitalizeFirstLetter(
+          removePlural(resource, count)
+        )} `}</span>
+      );
+    };
+
     if (!active) {
       return "";
     }
-    const { gems, keys } = blueprint;
 
     return (
       <div>
-        {gems ? (
-          <span className="blueprint-resources blueprint-gems">{`+${gems} ${removePlural(
-            "Gems",
-            gems
-          )} `}</span>
-        ) : (
-          ""
-        )}
-        {keys ? (
-          <span className="blueprint-resources blueprint-keys">{`+${keys} ${removePlural(
-            "Keys",
-            keys
-          )} `}</span>
-        ) : (
-          ""
-        )}
+        {[
+          { resource: RESOURCES.gems, count: blueprint.gems },
+          { resource: RESOURCES.keys, count: blueprint.keys },
+          { resource: RESOURCES.coins, count: blueprint.coins },
+        ].map((resource) => {
+          return resourceText(resource.resource, resource.count);
+        })}
       </div>
     );
   };

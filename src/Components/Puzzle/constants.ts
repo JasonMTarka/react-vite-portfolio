@@ -30,12 +30,14 @@ export const RESOURCES: Record<Resource, Resource> = {
   steps: "steps",
   gems: "gems",
   keys: "keys",
+  coins: "coins",
 };
 
 export const STARTING_RESOURCES: Record<Resource, number> = {
   steps: 50,
   gems: 0,
   keys: 0,
+  coins: 0,
 };
 
 export const OPERATIONS: Record<Operation, Operation> = {
