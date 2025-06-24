@@ -17,7 +17,7 @@ const NavBar = ({ updatePage }: { updatePage: (newPage: string) => void }) => {
           updatePage("puzzle");
         }}
       >
-        Manor Puzzle
+        Manor Game
       </button>
       <button className="navbar-btn">Coming Soon</button>
     </nav>
