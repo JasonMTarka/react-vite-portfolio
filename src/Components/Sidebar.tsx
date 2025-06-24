@@ -1,27 +1,15 @@
-import React from "react";
-import "../CSS/App.css"; // Import the CSS file for styling
+import SideBarLink from "./SideBarLink";
 
-const Sidebar: React.FC = () => {
+const SideBar = () => {
   return (
     <div className="sidebar">
-      <a
-        href="https://github.com/JasonMTarka/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="sidebar-link"
-      >
-        GitHub
-      </a>
-      <a
-        href="https://www.linkedin.com/in/jason-t-342b371a6/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="sidebar-link"
-      >
-        LinkedIn
-      </a>
+      <SideBarLink link="https://github.com/JasonMTarka/" text="GitHub" />
+      <SideBarLink
+        link="https://www.linkedin.com/in/jason-t-342b371a6/"
+        text="LinkedIn"
+      />
     </div>
   );
 };
 
-export default Sidebar;
+export default SideBar;

@@ -34,7 +34,11 @@ import MESSAGES from "./messages";
 const startingState = JSON.stringify(manorData);
 
 const Puzzle: React.FC = () => {
-  const [message, setMessage] = useState([MESSAGES.explainMovement]);
+  const [message, setMessage] = useState([
+    MESSAGES.start,
+    MESSAGES.spacer,
+    MESSAGES.explainMovement,
+  ]);
 
   const [manorState, setManorState] = useState<ManorData>({ ...manorData });
   const [resources, setResources] = useState(STARTING_RESOURCES);
@@ -51,6 +55,7 @@ const Puzzle: React.FC = () => {
   const [isFrozen, setIsFrozen] = useState(false);
   const [victory, setVictory] = useState(false);
   const [resetActive, setResetBtnHighlight] = useState(false);
+  const [isTutorial, setIsTutorial] = useState(true);
 
   const [day, setDay] = useState(getDay());
 
@@ -102,6 +107,18 @@ const Puzzle: React.FC = () => {
     [manorState]
   );
 
+  const addTutorialMessage = useCallback(
+    (messages: string[]): string[] => {
+      if (isTutorial) {
+        setIsTutorial(false);
+        messages.push(MESSAGES.spacer);
+        return messages;
+      }
+      return [];
+    },
+    [isTutorial]
+  );
+
   const updateRoomStatus = useCallback(
     (roomId: RoomId, newStatus: string) => {
       saveNewManorState(roomId, "status", newStatus);
@@ -140,7 +157,12 @@ const Puzzle: React.FC = () => {
       // Begin drafting if unlocked
       if (status === STATUSES.active) {
         saveNewManorState(roomId, "status", STATUSES.current);
-        setMessage([MESSAGES.selectRoom]);
+
+        setMessage([
+          ...addTutorialMessage([MESSAGES.tutorialChoice]),
+          MESSAGES.selectRoom,
+        ]);
+
         goToChoice();
         return;
       }
@@ -162,7 +184,13 @@ const Puzzle: React.FC = () => {
         return;
       }
     },
-    [resources, manorState, saveNewManorState, updateRoomStatus]
+    [
+      resources,
+      manorState,
+      saveNewManorState,
+      updateRoomStatus,
+      addTutorialMessage,
+    ]
   );
 
   useEffect(() => {
@@ -421,7 +449,7 @@ const Puzzle: React.FC = () => {
     setChoicesActive(false);
     setResources(STARTING_RESOURCES);
     setDay(day + 1);
-    setMessage([MESSAGES.explainMovement]);
+    setMessage([MESSAGES.start, MESSAGES.spacer, MESSAGES.explainMovement]);
     setCurrentRoomId(ROOMS.entrance_hall);
     resetBlueprints();
     localStorage.setItem("manorState", "");
