@@ -1,4 +1,10 @@
-import type { Resource, Blueprint, Direction, RoomId } from "./types";
+import type {
+  Resource,
+  Blueprint,
+  Direction,
+  RoomId,
+  ManorData,
+} from "./types";
 import { DIRECTIONS, RESOURCES } from "./constants";
 
 export const getDay = () => {
@@ -105,4 +111,19 @@ export const arrowDisplay = {
   down: "↓",
   left: "←",
   right: "→",
+};
+
+export const saveProgress = (
+  manorState: ManorData,
+  resources: Record<Resource, number>,
+  currentRoomId: RoomId
+) => {
+  localStorage.setItem(
+    "manorState",
+    JSON.stringify({
+      manor: manorState,
+      resources: resources,
+      currentRoomId: currentRoomId,
+    })
+  );
 };

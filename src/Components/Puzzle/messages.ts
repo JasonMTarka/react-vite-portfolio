@@ -3,7 +3,7 @@ const MESSAGES = {
   start:
     "You begin your journey in Entrance Hall in the southern part of the manor.",
   noKeys: "You don't have any keys!",
-  noGems: "You don't have enough gems for that room!",
+  noGems: "You don't have enough gems for that blueprint!",
   unlockedRoom: "You used a key to unlock this room.",
   selectRoom: "Select a room to place:",
   chooseBeforeMove: "You need to choose a blueprint before you can move.",
@@ -14,7 +14,7 @@ const MESSAGES = {
   explainReset: "Press the 'Reset Manor' button to play again.",
   outOfSteps: "You ran out of steps!",
   tutorialChoice:
-    "Blueprints are randomly selected from your blueprint deck. Once you choose a blueprint, it won't appear again.",
+    "Blueprints are randomly selected from your blueprint deck. Once you draft a blueprint, it won't appear again.",
 };
 
 export default MESSAGES;

@@ -25,6 +25,7 @@ import {
   createRoomId,
   generateInventory,
   moveRooms,
+  saveProgress,
 } from "./puzzleUtil";
 import ResourceDisplay from "./ResourceDisplay";
 import ResetButton from "./ResetButton";
@@ -58,13 +59,6 @@ const Puzzle: React.FC = () => {
   const [isTutorial, setIsTutorial] = useState(true);
 
   const [day, setDay] = useState(getDay());
-
-  useEffect(() => {
-    const savedData = localStorage.getItem("manorState");
-    if (savedData) {
-      setManorState(JSON.parse(savedData));
-    }
-  }, []);
 
   const activateSurroundingRooms = useCallback(
     (roomId: RoomId) => {
@@ -314,7 +308,7 @@ const Puzzle: React.FC = () => {
 
   // Remove arrow display when mouse off
   const removeArrows = (roomId: RoomId) => {
-    if (!roomId) {
+    if (!roomId || !choicesActive) {
       return;
     }
     const newManorState = { ...manorState };
@@ -434,11 +428,32 @@ const Puzzle: React.FC = () => {
       newResources.gems +=
         genGems + (blueprint.gems ? blueprint.gems : 0) + blueprint.cost * -1;
       newResources.steps -= 1;
+
+      saveProgress(newManorState, newResources, openingRoom);
+
       return newResources;
     });
-
-    localStorage.setItem("manorState", JSON.stringify(manorState));
   };
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("manorState");
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+
+        // If previous data then reset
+        if (!parsedData.manor) {
+          localStorage.setItem("manorState", "");
+        }
+
+        setManorState(parsedData.manor);
+        setResources(parsedData.resources);
+        setCurrentRoomId(parsedData.currentRoomId);
+      } catch {
+        localStorage.setItem("manorState", "");
+      }
+    }
+  }, []);
 
   const reset = () => {
     setManorState(JSON.parse(startingState));
