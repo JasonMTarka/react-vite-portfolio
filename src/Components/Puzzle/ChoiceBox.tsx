@@ -77,7 +77,10 @@ const ChoiceBox = ({
 
   return (
     <div
-      className={"choice-cell " + (!active ? "inactive-choice-cell" : "")}
+      className={
+        "choice-cell " +
+        (active ? "active-choice-cell" : "inactive-choice-cell")
+      }
       onClick={onClick}
       onMouseEnter={highlightSurroundingRooms}
       onMouseLeave={removeArrows}

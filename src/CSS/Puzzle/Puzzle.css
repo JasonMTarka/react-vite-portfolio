@@ -26,6 +26,7 @@
   margin: 2rem auto;
   margin-top: 0rem;
   width: fit-content;
+  cursor: default;
 }
 
 .room-row {
@@ -301,6 +302,10 @@
   background: #30405f;
 }
 
+.active-choice-cell:hover {
+  cursor: pointer;
+}
+
 .blueprint-title {
   position: absolute;
   top: 0;
@@ -372,6 +377,7 @@
   box-shadow: 0 4px 16px rgba(60, 60, 100, 0.13);
   border: 1px solid var(--blueprint-lightblue);
   align-self: flex-start;
+  cursor: default;
 }
 
 .room-arrow {
