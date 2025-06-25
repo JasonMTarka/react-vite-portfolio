@@ -55,91 +55,79 @@
   overflow: hidden;
 }
 
-/* Door styles - solid borders where doors are missing */
-.door-up {
-  border-top: var(--wall-style);
-}
-
-.door-down {
-  border-bottom: var(--wall-style);
-}
-
-.door-left {
-  border-left: var(--wall-style);
-}
-
-.door-right {
-  border-right: var(--wall-style);
-}
-
 .room:hover {
-  background: rgb(112, 112, 112);
+  background: rgb(255, 255, 255);
 }
 
-.active-room {
+.room.active {
   background: #00c431;
   color: #004912;
 }
 
-.active-room:hover {
+.room.active:hover {
   background: #16e74b;
 }
 
-.inactive-room {
+.room.inactive {
   background: var(--blueprint-blue);
 }
 
-.inactive-room:hover {
+.room.inactive:hover {
   background: #374869;
 }
 
-.activated-room {
+.room.activated {
   background: #847bff;
   color: #2b2186;
 }
 
-.activated-room:hover {
+.room.activated:hover {
   background: #928aff;
 }
 
-.locked-room {
+.room.locked {
   background: #b83838;
   color: #470000;
 }
 
-.locked-room:hover {
+.room.locked:hover {
   background: #c44646;
 }
 
-.current-room {
+.room.current {
   /* Remove border so door borders are visible */
   position: relative;
   z-index: 1;
   box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
-  animation: current-room-glow 1.2s linear infinite alternate;
+  animation: border-glow 1.2s linear infinite alternate;
 }
 
-.current-room::after {
+.room.current::after {
   content: "";
   position: absolute;
   inset: -4px;
   border-radius: 12px;
-  /* Remove border, use only box-shadow for glow */
   pointer-events: none;
   z-index: -1;
   animation: border-glow 1.2s linear infinite alternate;
   box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
 }
 
-@keyframes current-room-glow {
-  0% {
-    box-shadow: 0 0 0 0 var(--blueprint-lightblue);
-    opacity: 0.7;
-  }
-  100% {
-    box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
-    opacity: 1;
-  }
+/* Wall styles - solid borders */
+.wall-up {
+  border-top: var(--wall-style);
+}
+
+.wall-down {
+  border-bottom: var(--wall-style);
+}
+
+.wall-left {
+  border-left: var(--wall-style);
+}
+
+.wall-right {
+  border-right: var(--wall-style);
 }
 
 /* Antechamber */
@@ -194,17 +182,6 @@
   animation: border-glow 1.2s linear infinite alternate;
 }
 
-@keyframes border-glow {
-  0% {
-    box-shadow: 0 0 0 0 var(--blueprint-lightblue);
-    opacity: 0.7;
-  }
-  100% {
-    box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
-    opacity: 1;
-  }
-}
-
 .resource-display {
   display: inline-block;
   margin: 1rem;
@@ -216,19 +193,19 @@
   font-size: 1.1rem;
 }
 
-.steps-display {
+.resource-display.steps {
   color: #dfdfdf;
 }
 
-.keys-display {
+.resource-display.keys {
   color: var(--blueprint-lightblue);
 }
 
-.gems-display {
+.resource-display.gems {
   color: var(--gem-purple);
 }
 
-.coins-display {
+.resource-display.coins {
   color: var(--coin-gold);
 }
 
@@ -348,15 +325,15 @@
   font-size: 1rem;
 }
 
-.blueprint-keys {
+.blueprint-resources.keys {
   color: var(--blueprint-lightblue);
 }
 
-.blueprint-gems {
+.blueprint-resources.gems {
   color: var(--gem-purple);
 }
 
-.blueprint-coins {
+.blueprint-resources.coins {
   color: var(--coin-gold);
 }
 
@@ -444,6 +421,53 @@
   background: #ffd700;
   color: #16003b;
   box-shadow: 0 4px 16px rgba(60, 60, 100, 0.22);
+}
+
+.puzzle-main-flex {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .puzzle-main-flex {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .message-display {
+    width: 95vw;
+    min-width: 0;
+    max-width: 99vw;
+    font-size: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .puzzle-main-flex {
+    gap: 0.7rem;
+  }
+  .message-display {
+    width: 99vw;
+    min-width: 0;
+    max-width: 100vw;
+    font-size: 0.98rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@keyframes border-glow {
+  0% {
+    box-shadow: 0 0 0 0 var(--blueprint-lightblue);
+    opacity: 0.7;
+  }
+  100% {
+    box-shadow: 0 0 16px 4px var(--blueprint-lightblue);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 1200px) {

@@ -19,20 +19,20 @@ const Room = ({
       status === STATUSES.inactive ||
       status === STATUSES.locked_hidden
     ) {
-      return "inactive-room";
+      return "inactive";
     } else if (status === STATUSES.active) {
-      return "active-room";
+      return "active";
     } else if (status === STATUSES.activated) {
-      return "activated-room";
+      return "activated";
     } else if (status === STATUSES.locked) {
-      return "locked-room";
+      return "locked";
     } else if (status === STATUSES.current) {
-      return "current-room";
+      return "current";
     }
   };
 
   const setCurrentClass = () => {
-    return current ? " current-room" : "";
+    return current ? " current" : "";
   };
 
   const doorClasses = () => {
@@ -43,7 +43,7 @@ const Room = ({
     const presentDirections = state.blueprint?.directions || [];
     return allDirections
       .filter((dir) => !presentDirections.includes(dir))
-      .map((dir) => `door-${dir}`)
+      .map((dir) => `wall-${dir}`)
       .join(" ");
   };
 
@@ -59,8 +59,11 @@ const Room = ({
         return <div key={index}>{line}</div>;
       })}
       <div>
-        {state.status === STATUSES.locked ? "Locked" : ""}
-        {state.status === STATUSES.active ? "Available" : ""}
+        {state.status === STATUSES.locked
+          ? "Locked"
+          : state.status === STATUSES.active
+          ? "Available"
+          : ""}
       </div>
       {state.arrow ? (
         <div className="room-arrow">{arrowDisplay[state.arrow]}</div>

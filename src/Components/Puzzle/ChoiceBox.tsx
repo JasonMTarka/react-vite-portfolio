@@ -59,7 +59,7 @@ const ChoiceBox = ({
       }
       return (
         <span
-          className={`blueprint-resources blueprint-${resource}`}
+          className={`blueprint-resources ${resource}`}
           key={resource}
         >{`+${count} ${capitalizeFirstLetter(
           removePlural(resource, count)

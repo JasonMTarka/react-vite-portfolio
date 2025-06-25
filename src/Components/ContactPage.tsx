@@ -2,7 +2,8 @@ const ContactPage = () => {
   return (
     <>
       <div>
-        You can reach me at either my email or LinkedIn.
+        <h2>You can reach me at either my email or LinkedIn.</h2>
+
         {/* obfuscated email */}
         <div>
           <a href="mailto&#58;&#106;%61%&#55;3onm%74&#37;6&#49;%7&#50;k%6&#49;&#64;&#37;67mail&#37;&#50;E%6&#51;%6Fm">

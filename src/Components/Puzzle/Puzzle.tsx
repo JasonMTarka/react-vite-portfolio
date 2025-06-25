@@ -370,6 +370,8 @@ const Puzzle: React.FC = () => {
     };
 
     const removeInvalidDirections = () => {
+      // possible bug; when going down it's possible to move into
+      // rooms where should be impossible *sometimes*
       nextRoom.blueprint?.directions.forEach((dir, i) => {
         if (!nextRoom[dir]) {
           return;
@@ -516,13 +518,7 @@ const Puzzle: React.FC = () => {
       ) : (
         ""
       )}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-        }}
-      >
+      <div className="puzzle-main-flex">
         <div className="choice-row-container">
           <div className="day-display">Day {day}</div>
           <MessageDisplay message={message} />
