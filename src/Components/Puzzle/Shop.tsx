@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import type { RoomData, Resource, ShopOption } from "./types";
-import { RESOURCES } from "./constants";
+import type { RoomData, Resource, ShopOption } from "./puzzleTypes";
+import { RESOURCES } from "./puzzleConstants";
 
 const Shop = ({
   room,

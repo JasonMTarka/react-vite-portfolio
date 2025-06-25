@@ -1,25 +1,15 @@
 import "../CSS/NavBar.css";
+import { PAGES } from "./constants";
+import NavBarButton from "./NavBarButton";
+import type { Page } from "./types";
 
-const NavBar = ({ updatePage }: { updatePage: (newPage: string) => void }) => {
+const NavBar = ({ updatePage }: { updatePage: (newPage: Page) => void }) => {
   return (
     <nav className="navbar">
-      <button
-        className="navbar-btn"
-        onClick={() => {
-          updatePage("home");
-        }}
-      >
-        Home
-      </button>
-      <button
-        className="navbar-btn"
-        onClick={() => {
-          updatePage("puzzle");
-        }}
-      >
-        Manor Game
-      </button>
-      <button className="navbar-btn">Coming Soon</button>
+      <NavBarButton updatePage={updatePage} page={PAGES.home} />
+      <NavBarButton updatePage={updatePage} page={PAGES.puzzle} />
+      <NavBarButton updatePage={updatePage} page={PAGES.coming_soon} />
+      <NavBarButton updatePage={updatePage} page={PAGES.contact} />
     </nav>
   );
 };

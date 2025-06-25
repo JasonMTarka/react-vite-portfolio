@@ -4,8 +4,8 @@
   --gem-purple: #f15bff;
   --coin-gold: gold;
   --room-size: clamp(60px, 8vw, 90px);
-  --blueprint-size: clamp(160px, 16vw, 210px);
-  --door-style: 8px solid #16003b !important;
+  --blueprint-size: clamp(180px, 16vw, 210px);
+  --wall-style: 8px solid #16003b !important;
 }
 
 .puzzle-explain {
@@ -57,19 +57,19 @@
 
 /* Door styles - solid borders where doors are missing */
 .door-up {
-  border-top: var(--door-style);
+  border-top: var(--wall-style);
 }
 
 .door-down {
-  border-bottom: var(--door-style);
+  border-bottom: var(--wall-style);
 }
 
 .door-left {
-  border-left: var(--door-style);
+  border-left: var(--wall-style);
 }
 
 .door-right {
-  border-right: var(--door-style);
+  border-right: var(--wall-style);
 }
 
 .room:hover {
@@ -444,6 +444,29 @@
   background: #ffd700;
   color: #16003b;
   box-shadow: 0 4px 16px rgba(60, 60, 100, 0.22);
+}
+
+@media (max-width: 1200px) {
+  .choice-row {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: auto;
+    gap: 1.2rem;
+  }
+  .choice-cell {
+    margin-right: 0;
+    margin-bottom: 1.2rem;
+    width: min(90vw, 200px);
+    height: min(90vw, 200px);
+    min-width: 120px;
+    min-height: 120px;
+    max-width: 200px;
+    max-height: 200px;
+  }
+  .choice-cell:last-child {
+    margin-bottom: 0;
+  }
 }
 
 /* TODO

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { RESOURCES } from "./constants";
-import type { Resource } from "./types";
+import { RESOURCES } from "./puzzleConstants";
+import type { Resource } from "./puzzleTypes";
 
 const ResourceDisplay = ({
   resource,

@@ -1,7 +1,6 @@
 import "../../CSS/Puzzle/Puzzle.css";
 import React, { useCallback, useEffect, useState } from "react";
 import Room from "./Room";
-import manorData from "./manorData";
 import {
   STATUSES,
   ROOMS,
@@ -11,7 +10,7 @@ import {
   STARTING_RESOURCES,
   REVERSED_DIRECTIONS,
   COLORS,
-} from "./constants";
+} from "./puzzleConstants";
 import {
   getDoorDirections,
   getRandomBlueprints,
@@ -25,7 +24,7 @@ import type {
   RoomData,
   RoomId,
   Resource,
-} from "./types";
+} from "./puzzleTypes";
 import {
   getDay,
   getExtraResourcesMessage,
@@ -40,8 +39,7 @@ import ResetButton from "./ResetButton";
 import MessageDisplay from "./MessageDisplay";
 import MESSAGES from "./messages";
 import Shop from "./Shop";
-
-const startingState = JSON.stringify(manorData);
+import startingManor from "./manorData";
 
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState([
@@ -50,7 +48,9 @@ const Puzzle: React.FC = () => {
     MESSAGES.explainMovement,
   ]);
 
-  const [manorState, setManorState] = useState<ManorData>({ ...manorData });
+  const [manorState, setManorState] = useState<ManorData>(
+    JSON.parse(startingManor)
+  );
   const [resources, setResources] = useState(STARTING_RESOURCES);
 
   const [choices, setChoices] = useState<Blueprint[]>([]);
@@ -490,7 +490,7 @@ const Puzzle: React.FC = () => {
   }, []);
 
   const reset = () => {
-    setManorState(JSON.parse(startingState));
+    setManorState(JSON.parse(startingManor));
     setIsVictory(false);
     setResetBtnHighlight(false);
     setIsFrozen(false);
@@ -508,10 +508,14 @@ const Puzzle: React.FC = () => {
 
   return (
     <>
-      <div className="puzzle-explain">
-        Your uncle bestowed upon you his manor in his will, but only if you can
-        reach the Antechamber. Can you make your way through the manor?
-      </div>
+      {isTutorial ? (
+        <div className="puzzle-explain">
+          Your uncle bestowed upon you his manor in his will, but only if you
+          can reach the Antechamber. Can you make your way through the manor?
+        </div>
+      ) : (
+        ""
+      )}
       <div
         style={{
           display: "flex",

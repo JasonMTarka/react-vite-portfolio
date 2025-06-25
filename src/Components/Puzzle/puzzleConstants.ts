@@ -5,7 +5,7 @@ import type {
   Direction,
   Status,
   RoomId,
-} from "./types";
+} from "./puzzleTypes";
 
 export const STATUSES: Record<Status, Status> = {
   inactive: "inactive",

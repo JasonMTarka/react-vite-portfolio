@@ -4,8 +4,8 @@ import type {
   Direction,
   RoomId,
   ManorData,
-} from "./types";
-import { DIRECTIONS, RESOURCES } from "./constants";
+} from "./puzzleTypes";
+import { DIRECTIONS, RESOURCES } from "./puzzleConstants";
 
 export const getDay = () => {
   const storedRuns = localStorage.getItem("day");

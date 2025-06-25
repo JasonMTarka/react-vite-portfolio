@@ -1,5 +1,5 @@
-import { COLORS, DIRECTIONS, REVERSED_DIRECTIONS } from "./constants";
-import type { Blueprint, Direction } from "./types";
+import { COLORS, DIRECTIONS, REVERSED_DIRECTIONS } from "./puzzleConstants";
+import type { Blueprint, Direction } from "./puzzleTypes";
 
 export const getRandomBlueprints = (): Blueprint[] => {
   // Only include draftable blueprints

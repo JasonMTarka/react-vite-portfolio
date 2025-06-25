@@ -20,7 +20,16 @@ const Home: React.FC = () => {
           <h2>About Me</h2>
           <p>
             Hi, thanks for stopping by! I'm an American software developer who's
-            been living in Tokyo for the past 8 years. Time flies doesn't it?
+            been living in Tokyo for the past seven years. Time flies doesn't
+            it?
+          </p>
+          <p>
+            I have been working as a developer for four years, with a wide range
+            of experience from working on a large-scale React application
+            interfacing with AWS S3, RDS, Lambda on the backend. I also have
+            extensive experience developing on the ServiceNow platform, writing
+            business logic and transforming data with Javascript and ServiceNow
+            APIs.
           </p>
           <p>
             This is a new portfolio website I started on June 15th, 2025. My
@@ -30,12 +39,13 @@ const Home: React.FC = () => {
             myself with the latest build tools.
           </p>
           <p>
-            One of my other goals for this site is to experiment and gain
+            One of my main goals for this site is to experiment and gain
             experience using AI as a coding assistant, primarily with Copilot in
             agent mode. However, all the ideas you see are my own. Delegating
             tasks like initializing components and CSS styles has made creating
             this site much faster and more fun than ever before.
           </p>
+          <br />
           <h2>The Manor Game</h2>
           <p>
             For my new portfolio, I tried to recreate the 2025 video game Blue

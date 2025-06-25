@@ -1,6 +1,6 @@
-import { ROOMS, STATUSES } from "./constants";
+import { ROOMS, STATUSES } from "./puzzleConstants";
 import { BLUEPRINTS } from "./blueprints";
-import type { ManorData, RoomId } from "./types";
+import type { ManorData, RoomId } from "./puzzleTypes";
 
 const setStatus = (roomId: RoomId) => {
   // Bottom 3 rows (rows 6, 7, 8) are always inactive
@@ -92,6 +92,6 @@ const createManorData = () => {
   return manorData;
 };
 
-const manorData = createManorData();
+const startingManor = JSON.stringify(createManorData());
 
-export default manorData;
+export default startingManor;

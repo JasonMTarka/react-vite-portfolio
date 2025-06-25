@@ -1,6 +1,6 @@
 import "../../CSS/Puzzle/Puzzle.css";
-import { STATUSES, ROOMS } from "./constants";
-import type { RoomData, Direction } from "./types";
+import { STATUSES, ROOMS } from "./puzzleConstants";
+import type { RoomData, Direction } from "./puzzleTypes";
 import { arrowDisplay } from "./puzzleUtil";
 
 const Room = ({

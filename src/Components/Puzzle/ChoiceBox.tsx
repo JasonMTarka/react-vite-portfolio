@@ -1,10 +1,10 @@
-import type { Blueprint, Resource } from "./types";
+import type { Blueprint, Resource } from "./puzzleTypes";
 import {
   arrowDisplay,
   removePlural,
   capitalizeFirstLetter,
 } from "./puzzleUtil";
-import { RESOURCES } from "./constants";
+import { RESOURCES } from "./puzzleConstants";
 
 const ChoiceBox = ({
   blueprint,
