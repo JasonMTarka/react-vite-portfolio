@@ -490,16 +490,29 @@
 }
 
 @media (max-width: 600px) {
-  .puzzle-main-flex {
-    gap: 0.7rem;
+  .modal-content {
+    width: 90vw !important;
+    max-width: 90vw !important;
+    min-width: 0 !important;
+    height: 100vh !important;
+    min-height: 0 !important;
+    padding: 1rem !important;
+    border-radius: 0 !important;
+    font-size: 0.95rem;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    margin-right: 1.5rem !important;
+    margin-left: 0.5rem !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
   }
-  .message-display {
-    width: 99vw;
-    min-width: 0;
-    max-width: 100vw;
-    font-size: 0.98rem;
-    margin-left: auto;
-    margin-right: auto;
+  .modal-content p {
+    font-size: 0.97rem;
+    padding: 8px 12px 8px 12px;
   }
 }
 
