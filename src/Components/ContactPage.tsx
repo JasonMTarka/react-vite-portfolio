@@ -10,6 +10,9 @@ const ContactPage = () => {
             jas&#111;nmta&#114;ka&#64;&#103;mail&#46;co&#109;
           </a>
         </div>
+        <div>
+          <a href="https://www.linkedin.com/in/jason-t-342b371a6/">LinkedIn</a>
+        </div>
       </div>
     </>
   );
