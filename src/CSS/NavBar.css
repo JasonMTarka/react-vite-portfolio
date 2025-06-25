@@ -147,4 +147,10 @@
     width: auto;
     padding: 0;
   }
+  .navbar-btn {
+    margin-right: 1.2rem;
+  }
+  .navbar-btn:last-child {
+    margin-right: 0;
+  }
 }

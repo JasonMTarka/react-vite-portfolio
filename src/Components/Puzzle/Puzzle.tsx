@@ -39,6 +39,7 @@ import ResetButton from "./ResetButton";
 import MessageDisplay from "./MessageDisplay";
 import MESSAGES from "./messages";
 import Shop from "./Shop";
+import TutorialModal from "./TutorialModal";
 import startingManor from "./manorData";
 
 const Puzzle: React.FC = () => {
@@ -67,8 +68,25 @@ const Puzzle: React.FC = () => {
   const [isVictory, setIsVictory] = useState(false);
   const [resetActive, setResetBtnHighlight] = useState(false);
   const [isTutorial, setIsTutorial] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const [day, setDay] = useState(getDay());
+
+  useEffect(() => {
+    if (localStorage.getItem("tutorialFinished")) {
+      return;
+    }
+    setShowModal(true);
+  }, []);
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    localStorage.setItem("tutorialFinished", "true");
+    setShowModal(false);
+  };
 
   const activateSurroundingRooms = useCallback(
     (roomId: RoomId) => {
@@ -510,17 +528,13 @@ const Puzzle: React.FC = () => {
 
   return (
     <>
-      {isTutorial ? (
-        <div className="puzzle-explain">
-          Your uncle bestowed upon you his manor in his will, but only if you
-          can reach the Antechamber. Can you make your way through the manor?
-        </div>
-      ) : (
-        ""
-      )}
+      <TutorialModal show={showModal} onClose={handleCloseModal} />
       <div className="puzzle-main-flex">
         <div className="choice-row-container">
           <div className="day-display">Day {day}</div>
+          <button className="rule-button" onClick={handleOpenModal}>
+            Rules
+          </button>
           <MessageDisplay message={message} />
           <div className="choice-row">
             {Array.from({ length: 3 }).map((_, index) => {

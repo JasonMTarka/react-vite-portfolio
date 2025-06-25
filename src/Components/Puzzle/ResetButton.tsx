@@ -8,7 +8,7 @@ const ResetButton = ({
   return (
     <>
       <button
-        className={`reset-btn ${resetActive ? "reset-btn-active" : ""}`}
+        className={`btn reset ${resetActive ? "active" : ""}`}
         onClick={onClick}
       >
         Reset Manor
