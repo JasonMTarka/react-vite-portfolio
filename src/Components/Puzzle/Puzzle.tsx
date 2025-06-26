@@ -203,10 +203,7 @@ const Puzzle: React.FC = () => {
   );
 
   // Set arrow display on surrounding rooms when drafting
-  const highlightSurroundingRooms = (
-    roomId: RoomId,
-    choiceBlueprint: Blueprint
-  ) => {
+  const handleRoomHighlight = (roomId: RoomId, choiceBlueprint: Blueprint) => {
     if (!choiceBlueprint) {
       return;
     }
@@ -590,8 +587,8 @@ const Puzzle: React.FC = () => {
               blueprint={choices[index]}
               handleClick={handleChoiceClick}
               active={choicesActive}
-              highlightSurroundingRooms={() => {
-                highlightSurroundingRooms(openingRoom, choices[index]);
+              handleRoomHighlight={() => {
+                handleRoomHighlight(openingRoom, choices[index]);
               }}
               removeArrows={() => {
                 removeArrows(openingRoom);
