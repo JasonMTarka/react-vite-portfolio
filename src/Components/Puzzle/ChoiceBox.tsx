@@ -24,54 +24,43 @@ const ChoiceBox = ({
   };
 
   const renderTitle = () => {
-    if (!blueprint) {
-      return;
-    }
-    return (
+    return blueprint ? (
       <div className="blueprint-title">{blueprint ? blueprint.name : ""}</div>
-    );
+    ) : null;
   };
 
   const renderCost = () => {
-    if (!blueprint?.cost) {
-      return "";
-    }
-    return <div className="gem-cost">{`Gem cost: ${blueprint.cost}`}</div>;
+    return blueprint?.cost ? (
+      <div className="gem-cost">{`Gem cost: ${blueprint.cost}`}</div>
+    ) : null;
   };
 
   const renderArrows = () => {
-    if (!blueprint) {
-      return;
-    }
-    return (
+    return blueprint ? (
       <div className="arrows">
         {blueprint.directions.map((dir) => {
           return arrowDisplay[dir];
         })}
       </div>
-    );
+    ) : null;
   };
 
   const renderResources = () => {
-    const resourceText = (resource: Resource, count: number | undefined) => {
-      if (!count) {
-        return "";
-      }
-      return (
+    const resourceText = (
+      resource: Resource,
+      count: number | undefined = 0
+    ) => {
+      return count ? (
         <span
           className={`blueprint-resources ${resource}`}
           key={resource}
         >{`+${count} ${capitalizeFirstLetter(
           removePlural(resource, count)
         )} `}</span>
-      );
+      ) : null;
     };
 
-    if (!active) {
-      return "";
-    }
-
-    return (
+    return active ? (
       <div>
         {[
           { resource: RESOURCES.gems, count: blueprint.gems },
@@ -81,7 +70,7 @@ const ChoiceBox = ({
           return resourceText(resource.resource, resource.count);
         })}
       </div>
-    );
+    ) : null;
   };
 
   return (

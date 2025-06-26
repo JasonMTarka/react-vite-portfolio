@@ -16,10 +16,7 @@ export const removePlural = (string: string, count: number) => {
   return count > 1 ? string : string.slice(0, -1);
 };
 
-export const getExtraResourcesMessage = (
-  resource: Resource,
-  count: number | undefined
-) => {
+export const getExtraResourcesMessage = (resource: Resource, count: number) => {
   return count
     ? `\nYou found ${count} extra ${removePlural(resource, count)}!`
     : "";

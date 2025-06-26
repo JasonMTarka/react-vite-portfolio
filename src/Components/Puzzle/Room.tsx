@@ -1,6 +1,6 @@
 import "../../CSS/Puzzle/Puzzle.css";
-import { STATUSES, ROOMS } from "./puzzleConstants";
-import type { RoomData, Direction } from "./puzzleTypes";
+import { STATUSES, ROOMS, DIRECTIONS } from "./puzzleConstants";
+import type { RoomData, RoomId, Status } from "./puzzleTypes";
 import { arrowDisplay } from "./puzzleUtil";
 
 const Room = ({
@@ -8,11 +8,11 @@ const Room = ({
   state,
   current,
 }: {
-  roomId: string;
+  roomId: RoomId;
   state: RoomData;
   current: boolean;
 }) => {
-  const setBaseClass = (status: string, roomId: string) => {
+  const setBaseClass = (status: Status, roomId: RoomId) => {
     if (roomId === ROOMS.antechamber) {
       return "antechamber";
     } else if (
@@ -29,6 +29,7 @@ const Room = ({
     } else if (status === STATUSES.current) {
       return "current";
     }
+    return "";
   };
 
   const setCurrentClass = () => {
@@ -39,7 +40,7 @@ const Room = ({
     if (state.status !== STATUSES.activated) {
       return "";
     }
-    const allDirections: Direction[] = ["up", "down", "left", "right"];
+    const allDirections = Object.values(DIRECTIONS);
     const presentDirections = state.blueprint?.directions || [];
     return allDirections
       .filter((dir) => !presentDirections.includes(dir))
@@ -67,9 +68,7 @@ const Room = ({
       </div>
       {state.arrow ? (
         <div className="room-arrow">{arrowDisplay[state.arrow]}</div>
-      ) : (
-        ""
-      )}
+      ) : null}
     </div>
   );
 };

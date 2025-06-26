@@ -202,77 +202,6 @@ const Puzzle: React.FC = () => {
     ]
   );
 
-  useEffect(() => {
-    const handleGlobalKeyDown = (event: KeyboardEvent) => {
-      // Prevent movement while frozen
-      if (isFrozen) {
-        if (choicesActive) {
-          setMessage([MESSAGES.chooseBeforeMove]);
-        }
-        return;
-      }
-
-      // Check the next room to see if it's a valid movement
-      const checkNextRoom = (direction: Direction) => {
-        const nextRoomId = moveRooms[direction](currentRoomId);
-        if (nextRoomId === currentRoomId) {
-          return;
-        }
-        // Block movement if no door
-        if (
-          !manorState[currentRoomId].blueprint?.directions.includes(direction)
-        ) {
-          setMessage([MESSAGES.noDoor]);
-          return;
-        }
-
-        // If valid movement
-        switch (manorState[nextRoomId].status) {
-          // If existing room, move to and subtract a step
-          case STATUSES.activated:
-            setCurrentRoomId(nextRoomId);
-            setResources(() => {
-              const newResources = { ...resources };
-              newResources.steps -= 1;
-              return newResources;
-            });
-            updateShop(manorState[nextRoomId]);
-            setMessage([MESSAGES.explainMovement]);
-            break;
-          // If opening new room
-          case STATUSES.active:
-          case STATUSES.locked:
-            openRoom(nextRoomId, direction);
-        }
-      };
-
-      switch (event.key) {
-        case "ArrowUp":
-        case "w":
-          checkNextRoom(DIRECTIONS.up);
-          break;
-        case "ArrowDown":
-        case "s":
-          checkNextRoom(DIRECTIONS.down);
-          break;
-        case "ArrowLeft":
-        case "a":
-          checkNextRoom(DIRECTIONS.left);
-          break;
-        case "ArrowRight":
-        case "d":
-          checkNextRoom(DIRECTIONS.right);
-          break;
-      }
-    };
-    window.addEventListener("keydown", handleGlobalKeyDown);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("keydown", handleGlobalKeyDown);
-    };
-  }, [currentRoomId, isFrozen, manorState, resources, openRoom, choicesActive]);
-
   // Set arrow display on surrounding rooms when drafting
   const highlightSurroundingRooms = (
     roomId: RoomId,
@@ -495,6 +424,77 @@ const Puzzle: React.FC = () => {
   };
 
   useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      // Prevent movement while frozen
+      if (isFrozen) {
+        if (choicesActive) {
+          setMessage([MESSAGES.chooseBeforeMove]);
+        }
+        return;
+      }
+
+      // Check the next room to see if it's a valid movement
+      const checkNextRoom = (direction: Direction) => {
+        const nextRoomId = moveRooms[direction](currentRoomId);
+        if (nextRoomId === currentRoomId) {
+          return;
+        }
+        // Block movement if no door
+        if (
+          !manorState[currentRoomId].blueprint?.directions.includes(direction)
+        ) {
+          setMessage([MESSAGES.noDoor]);
+          return;
+        }
+
+        // If valid movement
+        switch (manorState[nextRoomId].status) {
+          // If existing room, move to and subtract a step
+          case STATUSES.activated:
+            setCurrentRoomId(nextRoomId);
+            setResources(() => {
+              const newResources = { ...resources };
+              newResources.steps -= 1;
+              return newResources;
+            });
+            updateShop(manorState[nextRoomId]);
+            setMessage([MESSAGES.explainMovement]);
+            break;
+          // If opening new room
+          case STATUSES.active:
+          case STATUSES.locked:
+            openRoom(nextRoomId, direction);
+        }
+      };
+
+      switch (event.key) {
+        case "ArrowUp":
+        case "w":
+          checkNextRoom(DIRECTIONS.up);
+          break;
+        case "ArrowDown":
+        case "s":
+          checkNextRoom(DIRECTIONS.down);
+          break;
+        case "ArrowLeft":
+        case "a":
+          checkNextRoom(DIRECTIONS.left);
+          break;
+        case "ArrowRight":
+        case "d":
+          checkNextRoom(DIRECTIONS.right);
+          break;
+      }
+    };
+    window.addEventListener("keydown", handleGlobalKeyDown);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleGlobalKeyDown);
+    };
+  }, [currentRoomId, isFrozen, manorState, resources, openRoom, choicesActive]);
+
+  useEffect(() => {
     // Show tutorial modal on page open if first time
     if (localStorage.getItem("tutorialFinished")) {
       return;
@@ -607,7 +607,7 @@ const Puzzle: React.FC = () => {
 
   return (
     <>
-      <TutorialModal show={showModal} onClose={handleCloseModal} />
+      {showModal ? <TutorialModal onClose={handleCloseModal} /> : null}
       <div className="puzzle-main-flex">
         <div className="choice-row-container">
           <div className="day-display">Day {day}</div>

@@ -1,14 +1,4 @@
-const TutorialModal = ({
-  show,
-  onClose,
-}: {
-  show: boolean;
-  onClose: () => void;
-}) => {
-  if (!show) {
-    return null; // Don't render if 'show' is false
-  }
-
+const TutorialModal = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
