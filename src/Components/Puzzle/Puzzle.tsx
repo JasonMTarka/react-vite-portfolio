@@ -544,8 +544,12 @@ const Puzzle: React.FC = () => {
     }
   }, [resources]);
 
+  const renderTutorialModal = () => {
+    return showModal ? <TutorialModal onClose={handleCloseModal} /> : null;
+  };
+
   const renderResourceDisplay = () => {
-    const resourceKeys = Object.keys(RESOURCES) as Resource[];
+    const resourceKeys = Object.values(RESOURCES);
     return (
       <div>
         {resourceKeys.map((resource, idx) => {
@@ -607,7 +611,7 @@ const Puzzle: React.FC = () => {
 
   return (
     <>
-      {showModal ? <TutorialModal onClose={handleCloseModal} /> : null}
+      {renderTutorialModal()}
       <div className="puzzle-main-flex">
         <div className="choice-row-container">
           <div className="day-display">Day {day}</div>

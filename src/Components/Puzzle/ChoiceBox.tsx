@@ -62,12 +62,8 @@ const ChoiceBox = ({
 
     return active ? (
       <div>
-        {[
-          { resource: RESOURCES.gems, count: blueprint.gems },
-          { resource: RESOURCES.keys, count: blueprint.keys },
-          { resource: RESOURCES.coins, count: blueprint.coins },
-        ].map((resource) => {
-          return resourceText(resource.resource, resource.count);
+        {Object.values(RESOURCES).map((resource) => {
+          return resourceText(resource, blueprint[resource]);
         })}
       </div>
     ) : null;

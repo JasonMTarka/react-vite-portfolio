@@ -564,7 +564,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     keys: 0,
     gems: 0,
     doors: 4,
-    directions: Object.keys(DIRECTIONS) as Direction[],
+    directions: Object.values(DIRECTIONS),
     coins: 0,
   },
   antechamber: {
@@ -577,7 +577,7 @@ export const BLUEPRINTS: Record<string, Blueprint> = {
     keys: 0,
     gems: 0,
     doors: 4,
-    directions: Object.keys(DIRECTIONS) as Direction[],
+    directions: Object.values(DIRECTIONS),
     coins: 0,
   },
 };

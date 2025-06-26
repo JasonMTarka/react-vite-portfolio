@@ -52,6 +52,7 @@ export interface Blueprint {
   message: string;
   doors: number;
   directions: Direction[];
+  steps?: number;
 }
 
 export interface ShopOption {
