@@ -1,6 +1,6 @@
 import "../../CSS/Puzzle/Puzzle.css";
 import React, { useCallback, useEffect, useState } from "react";
-import Room from "./Room";
+import RoomRow from "./RoomRow";
 import {
   STATUSES,
   ROOMS,
@@ -29,7 +29,6 @@ import {
   getDay,
   getExtraResourcesMessage,
   getFoundResourcesMessage,
-  createRoomId,
   generateInventory,
   moveRooms,
   saveProgress,
@@ -526,6 +525,66 @@ const Puzzle: React.FC = () => {
     localStorage.setItem("day", (day + 1).toString());
   };
 
+  const renderResourceDisplay = () => {
+    const resourceKeys = Object.keys(RESOURCES) as Resource[];
+    return (
+      <div>
+        {resourceKeys.map((resource, idx) => {
+          return (
+            <ResourceDisplay
+              key={idx}
+              resource={resource}
+              count={resources[resource]}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderManorGrid = () => {
+    return (
+      <>
+        {Array.from({ length: LAYOUT.rows }).map((_, rowIdx) => (
+          <RoomRow
+            rowIdx={rowIdx}
+            manorState={manorState}
+            currentRoomId={currentRoomId}
+          />
+        ))}
+      </>
+    );
+  };
+
+  const renderChoices = () => {
+    return (
+      <div className="choice-row">
+        {Array.from({ length: 3 }).map((_, index) => {
+          return (
+            <ChoiceBox
+              key={index}
+              blueprint={choices[index]}
+              handleClick={handleChoiceClick}
+              active={choicesActive}
+              highlightSurroundingRooms={() => {
+                highlightSurroundingRooms(openingRoom, choices[index]);
+              }}
+              removeArrows={() => {
+                removeArrows(openingRoom);
+              }}
+            ></ChoiceBox>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderShop = () => {
+    return shopActive ? (
+      <Shop room={manorState[currentRoomId]} buyCallback={buyFromShop} />
+    ) : null;
+  };
+
   return (
     <>
       <TutorialModal show={showModal} onClose={handleCloseModal} />
@@ -536,63 +595,13 @@ const Puzzle: React.FC = () => {
             Rules
           </button>
           <MessageDisplay message={message} />
-          <div className="choice-row">
-            {Array.from({ length: 3 }).map((_, index) => {
-              return (
-                <ChoiceBox
-                  key={"choice_" + index}
-                  blueprint={choices[index]}
-                  handleClick={handleChoiceClick}
-                  active={choicesActive}
-                  highlightSurroundingRooms={() => {
-                    highlightSurroundingRooms(openingRoom, choices[index]);
-                  }}
-                  removeArrows={() => {
-                    removeArrows(openingRoom);
-                  }}
-                ></ChoiceBox>
-              );
-            })}
-          </div>
-          {shopActive ? (
-            <Shop room={manorState[currentRoomId]} buyCallback={buyFromShop} />
-          ) : (
-            ""
-          )}
+          {renderChoices()}
+          {renderShop()}
         </div>
         <div className="room-grid">
-          <div>
-            {[
-              { type: RESOURCES.steps, count: resources.steps },
-              { type: RESOURCES.keys, count: resources.keys },
-              { type: RESOURCES.gems, count: resources.gems },
-              { type: RESOURCES.coins, count: resources.coins },
-            ].map((resource, idx) => {
-              return (
-                <ResourceDisplay
-                  key={idx}
-                  resource={resource.type}
-                  count={resource.count}
-                />
-              );
-            })}
-          </div>
+          {renderResourceDisplay()}
           <ResetButton resetActive={resetActive} onClick={reset} />
-          {Array.from({ length: LAYOUT.rows }).map((_, rowIdx) => (
-            <div className="room-row" key={rowIdx}>
-              {Array.from({ length: LAYOUT.cols }).map((_, colIdx) => {
-                const roomId = createRoomId(colIdx, rowIdx);
-                return (
-                  <Room
-                    roomId={roomId}
-                    key={roomId}
-                    state={manorState[roomId]}
-                    current={currentRoomId === roomId}
-                  />
-                );
-              })}
-            </div>
-          ))}
+          {renderManorGrid()}
         </div>
       </div>
     </>

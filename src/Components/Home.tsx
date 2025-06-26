@@ -18,14 +18,18 @@ const Home: React.FC = () => {
             it?
           </p>
           <p>
-            I have been working as a developer for four years, with a wide range
-            of experience from working on a large-scale React application
-            interfacing with AWS S3, RDS, Lambda on the backend.
+            I have four years of experience as a developer, with a wide range of
+            experience from working on a large-scale React application
+            interfacing with AWS S3, RDS, and Lambda. I also have extensive
+            experience developing on the ServiceNow platform, writing business
+            logic and transforming data with Javascript and ServiceNow APIs.
           </p>
           <p>
-            I also have extensive experience developing on the ServiceNow
-            platform, writing business logic and transforming data with
-            Javascript and ServiceNow APIs.
+            In my free time you can find me at the bouldering gym or cycling
+            around Tokyo. I also enjoy supporting the Tokyo community,
+            supporting local and international atheletes by volunteering at
+            sporting events including Yamathon, Spartan Race, and Tokyo
+            Marathon.
           </p>
           <br />
           <h2>About this Site</h2>
@@ -38,12 +42,11 @@ const Home: React.FC = () => {
           <p>
             One of my main goals for this site is to experiment and gain
             experience using AI as a coding assistant, primarily with Copilot in
-            agent mode. However, all ideas are my own.
+            agent mode. However, all ideas are my own. Delegating tasks like
+            initializing components and CSS styles has made creating this site
+            much faster and more fun than ever before.
           </p>
-          <p>
-            Delegating tasks like initializing components and CSS styles has
-            made creating this site much faster and more fun than ever before.
-          </p>
+          <p></p>
         </div>
         <SideBar />
       </div>
