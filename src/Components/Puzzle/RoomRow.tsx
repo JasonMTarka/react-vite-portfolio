@@ -12,21 +12,21 @@ const RoomRow = ({
   manorState: ManorData;
   currentRoomId: RoomId;
 }) => {
-  return (
-    <div className="room-row" key={rowIdx}>
-      {Array.from({ length: LAYOUT.cols }).map((_, colIdx) => {
-        const roomId = createRoomId(colIdx, rowIdx);
-        return (
-          <Room
-            roomId={roomId}
-            key={roomId}
-            state={manorState[roomId]}
-            current={currentRoomId === roomId}
-          />
-        );
-      })}
-    </div>
-  );
+  const renderRooms = () => {
+    return Array.from({ length: LAYOUT.cols }).map((_, colIdx) => {
+      const roomId = createRoomId(colIdx, rowIdx);
+      return (
+        <Room
+          roomId={roomId}
+          key={roomId}
+          state={manorState[roomId]}
+          current={currentRoomId === roomId}
+        />
+      );
+    });
+  };
+
+  return <div className="room-row">{renderRooms()}</div>;
 };
 
 export default RoomRow;

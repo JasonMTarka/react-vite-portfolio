@@ -23,7 +23,7 @@ const ChoiceBox = ({
     handleClick(blueprint);
   };
 
-  const showTitle = () => {
+  const renderTitle = () => {
     if (!blueprint) {
       return;
     }
@@ -32,14 +32,14 @@ const ChoiceBox = ({
     );
   };
 
-  const showCost = () => {
+  const renderCost = () => {
     if (!blueprint?.cost) {
       return "";
     }
     return <div className="gem-cost">{`Gem cost: ${blueprint.cost}`}</div>;
   };
 
-  const showArrows = () => {
+  const renderArrows = () => {
     if (!blueprint) {
       return;
     }
@@ -52,7 +52,7 @@ const ChoiceBox = ({
     );
   };
 
-  const showResources = () => {
+  const renderResources = () => {
     const resourceText = (resource: Resource, count: number | undefined) => {
       if (!count) {
         return "";
@@ -86,18 +86,15 @@ const ChoiceBox = ({
 
   return (
     <div
-      className={
-        "choice-cell " +
-        (active ? "active-choice-cell" : "inactive-choice-cell")
-      }
+      className={"choice-cell " + (active ? "active" : "inactive")}
       onClick={onClick}
       onMouseEnter={highlightSurroundingRooms}
       onMouseLeave={removeArrows}
     >
-      {showTitle()}
-      {showCost()}
-      {showArrows()}
-      {showResources()}
+      {renderTitle()}
+      {renderCost()}
+      {renderArrows()}
+      {renderResources()}
     </div>
   );
 };

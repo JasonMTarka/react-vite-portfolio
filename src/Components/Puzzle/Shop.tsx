@@ -33,7 +33,7 @@ const Shop = ({
     }
   }, [room]);
 
-  const returnButtons = () => {
+  const renderButtons = () => {
     return options.map((item, i) => {
       const buyThis = () => {
         return buyCallback(item.resource, item.cost, item.amount);
@@ -54,7 +54,7 @@ const Shop = ({
   return (
     <div className="shop">
       <div className="shop-title">{`Welcome to the ${room.blueprint?.name}!`}</div>
-      {returnButtons()}
+      {renderButtons()}
     </div>
   );
 };

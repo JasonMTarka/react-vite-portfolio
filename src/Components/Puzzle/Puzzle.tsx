@@ -1,6 +1,5 @@
 import "../../CSS/Puzzle/Puzzle.css";
 import React, { useCallback, useEffect, useState } from "react";
-import RoomRow from "./RoomRow";
 import {
   STATUSES,
   ROOMS,
@@ -11,12 +10,7 @@ import {
   REVERSED_DIRECTIONS,
   COLORS,
 } from "./puzzleConstants";
-import {
-  getDoorDirections,
-  getRandomBlueprints,
-  resetBlueprints,
-} from "./blueprints";
-import ChoiceBox from "./ChoiceBox";
+
 import type {
   Blueprint,
   Direction,
@@ -24,6 +18,7 @@ import type {
   RoomData,
   RoomId,
   Resource,
+  Status,
 } from "./puzzleTypes";
 import {
   getDay,
@@ -32,14 +27,22 @@ import {
   generateInventory,
   moveRooms,
   saveProgress,
+  removePlural,
 } from "./puzzleUtil";
+import {
+  getDoorDirections,
+  getRandomBlueprints,
+  resetBlueprints,
+} from "./blueprints";
+import startingManor from "./manorData";
+import MESSAGES from "./messages";
 import ResourceDisplay from "./ResourceDisplay";
 import ResetButton from "./ResetButton";
 import MessageDisplay from "./MessageDisplay";
-import MESSAGES from "./messages";
+import ChoiceBox from "./ChoiceBox";
 import Shop from "./Shop";
 import TutorialModal from "./TutorialModal";
-import startingManor from "./manorData";
+import RoomRow from "./RoomRow";
 
 const Puzzle: React.FC = () => {
   const [message, setMessage] = useState([
@@ -70,22 +73,6 @@ const Puzzle: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
 
   const [day, setDay] = useState(getDay());
-
-  useEffect(() => {
-    if (localStorage.getItem("tutorialFinished")) {
-      return;
-    }
-    setShowModal(true);
-  }, []);
-
-  const handleOpenModal = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    localStorage.setItem("tutorialFinished", "true");
-    setShowModal(false);
-  };
 
   const activateSurroundingRooms = useCallback(
     (roomId: RoomId) => {
@@ -141,7 +128,7 @@ const Puzzle: React.FC = () => {
   );
 
   const updateRoomStatus = useCallback(
-    (roomId: RoomId, newStatus: string) => {
+    (roomId: RoomId, newStatus: Status) => {
       saveNewManorState(roomId, "status", newStatus);
       if (newStatus === STATUSES.activated) {
         activateSurroundingRooms(roomId);
@@ -286,36 +273,6 @@ const Puzzle: React.FC = () => {
     };
   }, [currentRoomId, isFrozen, manorState, resources, openRoom, choicesActive]);
 
-  const buyFromShop = (resource: Resource, cost: number, amount: number) => {
-    const newResources = { ...resources };
-    newResources[RESOURCES.coins] -= cost;
-    newResources[resource] += amount;
-    if (newResources[RESOURCES.coins] < 0) {
-      setMessage([MESSAGES.shopNotEnoughCoins]);
-      return;
-    }
-    setResources(newResources);
-  };
-
-  useEffect(() => {
-    if (isVictory) {
-      setMessage([
-        MESSAGES.reachedAntechamber,
-        MESSAGES.spacer,
-        MESSAGES.explainReset,
-      ]);
-      setResetBtnHighlight(true);
-    }
-  }, [isVictory]);
-
-  useEffect(() => {
-    if (!resources.steps) {
-      setMessage([MESSAGES.outOfSteps, MESSAGES.explainReset]);
-      setIsFrozen(true);
-      setResetBtnHighlight(true);
-    }
-  }, [resources]);
-
   // Set arrow display on surrounding rooms when drafting
   const highlightSurroundingRooms = (
     roomId: RoomId,
@@ -360,6 +317,23 @@ const Puzzle: React.FC = () => {
       delete newManorState[neighborId].arrow;
     }
     setManorState(newManorState);
+  };
+
+  const updateShop = (room: RoomData) => {
+    if (room.blueprint?.color === COLORS.yellow) {
+      setShopActive(true);
+    } else {
+      setShopActive(false);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    localStorage.setItem("tutorialFinished", "true");
+    setShowModal(false);
   };
 
   const handleChoiceClick = (blueprint: Blueprint) => {
@@ -480,15 +454,56 @@ const Puzzle: React.FC = () => {
     });
   };
 
-  const updateShop = (room: RoomData) => {
-    if (room.blueprint?.color === COLORS.yellow) {
-      setShopActive(true);
-    } else {
-      setShopActive(false);
+  const handleBuy = (resource: Resource, cost: number, amount: number) => {
+    const newResources = { ...resources };
+    newResources[RESOURCES.coins] -= cost;
+    newResources[resource] += amount;
+    if (newResources[RESOURCES.coins] < 0) {
+      setMessage([
+        MESSAGES.shopNotEnoughCoins,
+        MESSAGES.spacer,
+        MESSAGES.explainMovement,
+      ]);
+      return;
     }
+    setMessage([
+      `You bought ${amount} more ${removePlural(
+        resource,
+        amount
+      )} for ${cost} coins!`,
+      MESSAGES.spacer,
+      MESSAGES.explainMovement,
+    ]);
+    setResources(newResources);
+  };
+
+  const handleReset = () => {
+    setManorState(JSON.parse(startingManor));
+    setIsVictory(false);
+    setResetBtnHighlight(false);
+    setIsFrozen(false);
+    setChoices([]);
+    setChoicesActive(false);
+    setShopActive(false);
+    setResources(STARTING_RESOURCES);
+    setDay(day + 1);
+    setMessage([MESSAGES.start, MESSAGES.spacer, MESSAGES.explainMovement]);
+    setCurrentRoomId(ROOMS.entrance_hall);
+    resetBlueprints();
+    localStorage.setItem("manorState", "");
+    localStorage.setItem("day", (day + 1).toString());
   };
 
   useEffect(() => {
+    // Show tutorial modal on page open if first time
+    if (localStorage.getItem("tutorialFinished")) {
+      return;
+    }
+    setShowModal(true);
+  }, []);
+
+  useEffect(() => {
+    // Get saved manor state
     const savedData = localStorage.getItem("manorState");
     if (savedData) {
       try {
@@ -508,22 +523,26 @@ const Puzzle: React.FC = () => {
     }
   }, []);
 
-  const reset = () => {
-    setManorState(JSON.parse(startingManor));
-    setIsVictory(false);
-    setResetBtnHighlight(false);
-    setIsFrozen(false);
-    setChoices([]);
-    setChoicesActive(false);
-    setShopActive(false);
-    setResources(STARTING_RESOURCES);
-    setDay(day + 1);
-    setMessage([MESSAGES.start, MESSAGES.spacer, MESSAGES.explainMovement]);
-    setCurrentRoomId(ROOMS.entrance_hall);
-    resetBlueprints();
-    localStorage.setItem("manorState", "");
-    localStorage.setItem("day", (day + 1).toString());
-  };
+  useEffect(() => {
+    // Listen for victory
+    if (isVictory) {
+      setMessage([
+        MESSAGES.reachedAntechamber,
+        MESSAGES.spacer,
+        MESSAGES.explainReset,
+      ]);
+      setResetBtnHighlight(true);
+    }
+  }, [isVictory]);
+
+  useEffect(() => {
+    // Listen for running out of steps
+    if (!resources.steps) {
+      setMessage([MESSAGES.outOfSteps, MESSAGES.explainReset]);
+      setIsFrozen(true);
+      setResetBtnHighlight(true);
+    }
+  }, [resources]);
 
   const renderResourceDisplay = () => {
     const resourceKeys = Object.keys(RESOURCES) as Resource[];
@@ -547,6 +566,7 @@ const Puzzle: React.FC = () => {
       <>
         {Array.from({ length: LAYOUT.rows }).map((_, rowIdx) => (
           <RoomRow
+            key={rowIdx}
             rowIdx={rowIdx}
             manorState={manorState}
             currentRoomId={currentRoomId}
@@ -581,7 +601,7 @@ const Puzzle: React.FC = () => {
 
   const renderShop = () => {
     return shopActive ? (
-      <Shop room={manorState[currentRoomId]} buyCallback={buyFromShop} />
+      <Shop room={manorState[currentRoomId]} buyCallback={handleBuy} />
     ) : null;
   };
 
@@ -600,7 +620,7 @@ const Puzzle: React.FC = () => {
         </div>
         <div className="room-grid">
           {renderResourceDisplay()}
-          <ResetButton resetActive={resetActive} onClick={reset} />
+          <ResetButton resetActive={resetActive} onClick={handleReset} />
           {renderManorGrid()}
         </div>
       </div>

@@ -1,11 +1,11 @@
 const MessageDisplay = ({ message }: { message: string[] }) => {
-  return (
-    <div className="message-display">
-      {message.map((val, i) => {
-        return <div key={i}>{val}</div>;
-      })}
-    </div>
-  );
+  const renderMessages = () => {
+    return message.map((val, i) => {
+      return <div key={i}>{val}</div>;
+    });
+  };
+
+  return <div className="message-display">{renderMessages()}</div>;
 };
 
 export default MessageDisplay;
