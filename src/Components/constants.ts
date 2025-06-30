@@ -5,4 +5,5 @@ export const PAGES: Record<Page, Page> = {
   puzzle: "puzzle",
   contact: "contact",
   coming_soon: "coming_soon",
+  events: "events",
 };

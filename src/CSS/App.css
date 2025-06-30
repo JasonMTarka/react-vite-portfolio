@@ -1,3 +1,19 @@
+:root {
+  --blueprint-lightblue: #7cb9ff;
+  --blueprint-blue: #27334b;
+  --event-bg: #222b3a;
+  --event-card-bg: #27334b;
+  --event-card-border: #7cb9ff;
+  --event-title: #7cb9ff;
+  --event-text: #eaf3ff;
+  --event-link: #ffd700;
+  --event-link-hover: #fff;
+  --blueprint-lightblue: #7cb9ff;
+  --blueprint-blue: #27334b;
+  --gem-purple: #f15bff;
+  --coin-gold: gold;
+}
+
 #root {
   max-width: 1600px;
   margin: 0 auto;

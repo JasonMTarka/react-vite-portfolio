@@ -1,0 +1,95 @@
+/* Event.css */
+
+.event-lists-wrapper {
+  max-width: 1200px;
+  margin: 2.5rem auto;
+  margin-top: 2.5rem;
+  padding: 0 1.2rem;
+  border-radius: 14px;
+}
+
+.event-list {
+  margin-bottom: 0;
+  background: var(--event-bg);
+  padding: 0;
+  border-radius: 14px;
+}
+
+.event-list:not(:first-child) {
+  margin-top: 0;
+}
+
+.event-list-title {
+  font-size: 3rem;
+  color: var(--event-title);
+  margin-bottom: 2rem;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.event-card {
+  background: var(--event-card-bg);
+  border: 1.5px solid var(--event-card-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(60, 60, 100, 0.13);
+  margin-bottom: 2.2rem;
+  padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+.event-card:hover {
+  box-shadow: 0 4px 24px rgba(60, 60, 100, 0.18);
+  border: 1.5px solid var(--blueprint-lightblue);
+}
+
+.event-card h2 {
+  font-size: 1.3rem;
+  color: var(--event-title);
+  margin-bottom: 0.7rem;
+  margin-top: 0;
+}
+
+.event-card .event-dates {
+  font-size: 1.05rem;
+  color: var(--blueprint-lightblue);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.event-card p {
+  font-size: 1.08rem;
+  color: var(--event-text);
+  margin-bottom: 0.7rem;
+  margin-top: 0;
+  line-height: 1.6;
+}
+
+.event-card a {
+  color: var(--event-link);
+  text-decoration: underline;
+  font-weight: 500;
+  word-break: break-all;
+  transition: color 0.18s;
+}
+.event-card a:hover {
+  color: var(--event-link-hover);
+}
+
+@media (max-width: 600px) {
+  .event-lists-wrapper {
+    padding: 0 0.2rem;
+    border-radius: 8px;
+  }
+  .event-card {
+    padding: 1rem 0.5rem 0.8rem 0.5rem;
+    border-radius: 8px;
+  }
+  .event-card h2 {
+    font-size: 1.08rem;
+  }
+  .event-card p {
+    font-size: 0.98rem;
+  }
+  .event-card .event-dates {
+    font-size: 0.95rem;
+  }
+}

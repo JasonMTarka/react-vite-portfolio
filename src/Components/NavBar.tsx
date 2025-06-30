@@ -30,7 +30,7 @@ const NavBar = ({ updatePage }: { updatePage: (newPage: Page) => void }) => {
       <div id="navbar-menu" className={`navbar-menu${menuOpen ? " show" : ""}`}>
         <NavBarButton updatePage={handleNavClick} page={PAGES.home} />
         <NavBarButton updatePage={handleNavClick} page={PAGES.puzzle} />
-        <NavBarButton updatePage={handleNavClick} page={PAGES.coming_soon} />
+        <NavBarButton updatePage={handleNavClick} page={PAGES.events} />
         <NavBarButton updatePage={handleNavClick} page={PAGES.contact} />
       </div>
     </nav>

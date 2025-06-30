@@ -3,6 +3,7 @@ import Home from "./Home";
 import { PAGES } from "./constants";
 import ContactPage from "./ContactPage";
 import Placeholder from "./Placeholder";
+import Events from "./Tokyo_Events/Events";
 
 export default function Body({ currentPage }: { currentPage: string }) {
   const displayPage = () => {
@@ -13,6 +14,8 @@ export default function Body({ currentPage }: { currentPage: string }) {
         return <Puzzle />;
       case PAGES.contact:
         return <ContactPage />;
+      case PAGES.events:
+        return <Events />;
     }
     return <Placeholder />;
   };

@@ -18,6 +18,8 @@ const NavBarButton = ({
         return "Contact";
       case PAGES.coming_soon:
         return "Coming Soon";
+      case PAGES.events:
+        return "Tokyo Events";
     }
   };
 
