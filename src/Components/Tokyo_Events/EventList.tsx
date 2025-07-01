@@ -1,6 +1,9 @@
+import { useState } from "react";
 import type { VenueData } from "./eventTypes";
 
 const EventList = ({ venue }: { venue: VenueData }) => {
+  const [collapsed, setCollapsed] = useState(false);
+
   const renderEvents = () => {
     return venue.data.map((event, idx) => {
       return (
@@ -20,8 +23,13 @@ const EventList = ({ venue }: { venue: VenueData }) => {
 
   return (
     <div className="event-list">
-      <div className="event-list-title">{venue.name}</div>
-      {renderEvents()}
+      <div
+        className="venue-banner"
+        onClick={() => setCollapsed((collapsed) => !collapsed)}
+      >
+        <span className="venue-title">{venue.name}</span>
+      </div>
+      {!collapsed ? renderEvents() : null}
     </div>
   );
 };
