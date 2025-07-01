@@ -43,4 +43,11 @@ export interface EventDisplayData {
   url: string;
 }
 
+export interface VenueData {
+  name: string;
+  data: EventDisplayData[];
+}
+
+export type EventDataList = VenueData[];
+
 export type ValidAPI = "Sumida" | "BigSight";
