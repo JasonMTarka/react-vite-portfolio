@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { VenueData } from "./eventTypes";
 
 const EventList = ({ venue }: { venue: VenueData }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const renderEvents = () => {
     return venue.data.map((event, idx) => {

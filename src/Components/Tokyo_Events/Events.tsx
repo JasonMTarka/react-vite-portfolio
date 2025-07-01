@@ -67,12 +67,12 @@ const Events = () => {
       const venues = [
         {
           url: `https://service.api.metro.tokyo.lg.jp/api/t131075d0000000136-d97c9fdbf7d4a3ad38c0cac25c78beb3-0/json?limit=${LIMIT}`,
-          name: "Sumida Events",
+          name: "Sumida Ward",
           api: VALID_APIS.Sumida,
         },
         {
           url: `https://service.api.metro.tokyo.lg.jp/api/t001001d0000000001-1db9fd22025886d3d5c9607d5c24fdf0-0/json?limit=${LIMIT}`,
-          name: "Big Sight Events",
+          name: "Tokyo Big Sight",
           api: VALID_APIS.BigSight,
         },
       ];
@@ -129,7 +129,25 @@ const Events = () => {
     );
   };
 
-  return isLoading ? <h2>Loading...</h2> : renderEventLists();
+  return (
+    <>
+      <div>
+        <h1>Events in Tokyo</h1>
+        <p>
+          Below are lists of events which are listed on Tokyo Open Data and
+          accessed through their public APIs.
+        </p>
+        <a
+          href="https://portal.data.metro.tokyo.lg.jp/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {"https://portal.data.metro.tokyo.lg.jp/"}
+        </a>
+      </div>
+      {isLoading ? <h2>Loading...</h2> : renderEventLists()}
+    </>
+  );
 };
 
 export default Events;

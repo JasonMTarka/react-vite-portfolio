@@ -35,6 +35,13 @@ export interface BigSightAPIResponse extends TokyoPublicAPIResponse {
   hits: BigSightEvent[];
 }
 
+export type EventDataList = VenueData[];
+
+export interface VenueData {
+  name: string;
+  data: EventDisplayData[];
+}
+
 export interface EventDisplayData {
   name: string;
   explanation: string;
@@ -42,12 +49,5 @@ export interface EventDisplayData {
   endDate: string;
   url: string;
 }
-
-export interface VenueData {
-  name: string;
-  data: EventDisplayData[];
-}
-
-export type EventDataList = VenueData[];
 
 export type ValidAPI = "Sumida" | "BigSight";
