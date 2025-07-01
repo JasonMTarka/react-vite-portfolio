@@ -184,9 +184,7 @@ const Puzzle: React.FC = () => {
         }
         setMessage([MESSAGES.unlockedRoom, MESSAGES.selectRoom]);
         setResources(() => {
-          const newResources = { ...resources };
-          newResources.keys -= 1;
-          return newResources;
+          return { ...resources, keys: resources.keys - 1 };
         });
         saveNewManorState(roomId, "status", STATUSES.current);
         goToChoice();
@@ -539,7 +537,7 @@ const Puzzle: React.FC = () => {
       setIsFrozen(true);
       setResetBtnHighlight(true);
     }
-  }, [resources]);
+  }, [resources.steps]);
 
   const renderTutorialModal = () => {
     return showModal ? <TutorialModal onClose={handleCloseModal} /> : null;
