@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { RESOURCES } from "./puzzleConstants";
 import type { Resource } from "./puzzleTypes";
+import ResourceIcon from "./ResourceIcon";
 
 const ResourceDisplay = ({
   resource,
@@ -9,29 +8,12 @@ const ResourceDisplay = ({
   resource: Resource;
   count: number;
 }) => {
-  const [className, setClassName] = useState("");
-  const [text, setText] = useState("");
-
-  useEffect(() => {
-    let text = "";
-    switch (resource) {
-      case RESOURCES.steps:
-        text = "Steps";
-        break;
-      case RESOURCES.gems:
-        text = "Gems";
-        break;
-      case RESOURCES.keys:
-        text = "Keys";
-        break;
-      case RESOURCES.coins:
-        text = "Coins";
-    }
-    setClassName(`resource-display ${resource}`);
-    setText(`${text}: ${count}`);
-  }, [className, text, count, resource]);
-
-  return <span className={className}>{text}</span>;
+  return (
+    <span className={`resource-display ${resource}`}>
+      <ResourceIcon resource={resource} />
+      {count}
+    </span>
+  );
 };
 
 export default ResourceDisplay;

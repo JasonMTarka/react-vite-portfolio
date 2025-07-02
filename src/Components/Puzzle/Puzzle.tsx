@@ -1,5 +1,6 @@
 import "../../CSS/Puzzle/Puzzle.css";
 import React, { useCallback, useEffect, useState } from "react";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 import {
   STATUSES,
   ROOMS,
@@ -449,6 +450,7 @@ const Puzzle: React.FC = () => {
             setCurrentRoomId(nextRoomId);
             setResources(() => {
               const newResources = { ...resources };
+              // fix so that box doesn't constantly resize affecting whole page
               newResources.steps -= 1;
               return newResources;
             });
@@ -611,6 +613,9 @@ const Puzzle: React.FC = () => {
         <div className="choice-row-container">
           <div className="day-display">Day {day}</div>
           <button className="rule-button" onClick={handleOpenModal}>
+            <span>
+              <IoMdInformationCircleOutline />
+            </span>
             Rules
           </button>
           <MessageDisplay message={message} />

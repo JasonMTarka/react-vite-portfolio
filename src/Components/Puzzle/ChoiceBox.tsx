@@ -1,10 +1,7 @@
 import type { Blueprint, Resource } from "./puzzleTypes";
-import {
-  arrowDisplay,
-  removePlural,
-  capitalizeFirstLetter,
-} from "./puzzleUtil";
+import { arrowDisplay } from "./puzzleUtil";
 import { RESOURCES } from "./puzzleConstants";
+import ResourceIcon from "./ResourceIcon";
 
 const ChoiceBox = ({
   blueprint,
@@ -31,7 +28,10 @@ const ChoiceBox = ({
 
   const renderCost = () => {
     return blueprint?.cost ? (
-      <div className="gem-cost">{`Gem cost: ${blueprint.cost}`}</div>
+      <div className="gem-cost">
+        {`Cost: ${blueprint.cost}`}
+        <ResourceIcon resource={RESOURCES.gems} />
+      </div>
     ) : null;
   };
 
@@ -51,12 +51,10 @@ const ChoiceBox = ({
       count: number | undefined = 0
     ) => {
       return count ? (
-        <span
-          className={`blueprint-resources ${resource}`}
-          key={resource}
-        >{`+${count} ${capitalizeFirstLetter(
-          removePlural(resource, count)
-        )} `}</span>
+        <span className={`blueprint-resources ${resource}`} key={resource}>
+          {`+${count}`}
+          <ResourceIcon resource={resource} />
+        </span>
       ) : null;
     };
 
