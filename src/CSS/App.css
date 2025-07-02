@@ -1,24 +1,10 @@
 :root {
   --blueprint-lightblue: #7cb9ff;
   --blueprint-blue: #27334b;
-  --event-bg: #222b3a;
-  --event-card-bg: #27334b;
-  --event-card-border: #7cb9ff;
-  --event-title: #7cb9ff;
-  --venue-title: rgb(253, 253, 255);
-  --event-text: #eaf3ff;
-  --event-link: #ffd700;
-  --event-link-hover: #fff;
-  --blueprint-lightblue: #7cb9ff;
-  --blueprint-blue: #27334b;
-  --gem-purple: #f15bff;
-  --coin-gold: gold;
 }
 
 #root {
-  max-width: 1600px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
   min-height: 100vh;
   display: flex;
@@ -40,7 +26,12 @@ body {
 
 .home-container {
   max-width: 1600px;
+  margin: 0 auto;
   text-align: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .home-flex {
@@ -132,8 +123,8 @@ body {
   }
   .home-info {
     margin-left: 0;
-    width: 100%;
-    padding: 0 1rem;
+    width: 90%;
+    padding: 0 0rem;
   }
   .sidebar {
     margin-top: 1.5rem;

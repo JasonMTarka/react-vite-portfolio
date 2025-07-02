@@ -2,6 +2,19 @@
   --room-size: clamp(60px, 8vw, 90px);
   --blueprint-size: clamp(180px, 16vw, 210px);
   --wall-style: 8px solid #16003b !important;
+  --blueprint-lightblue: #7cb9ff;
+  --blueprint-blue: #27334b;
+  --gem-purple: #f15bff;
+  --coin-gold: gold;
+}
+
+.puzzle-main-flex {
+  max-width: 1600px;
+  margin: 0 auto;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .modal-overlay {
@@ -448,12 +461,6 @@
   background: #ffd700;
   color: #16003b;
   box-shadow: 0 4px 16px rgba(60, 60, 100, 0.22);
-}
-
-.puzzle-main-flex {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
 }
 
 @keyframes border-glow {

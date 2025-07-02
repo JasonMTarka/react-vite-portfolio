@@ -1,5 +1,14 @@
 /* Event.css */
-
+:root {
+  --event-bg: #222b3a;
+  --event-card-bg: #27334b;
+  --event-card-border: #7cb9ff;
+  --event-title: #7cb9ff;
+  --venue-title: rgb(253, 253, 255);
+  --event-text: #eaf3ff;
+  --event-link: #ffd700;
+  --event-link-hover: #fff;
+}
 .event-lists-wrapper {
   max-width: 1200px;
   margin: 2.5rem auto;
