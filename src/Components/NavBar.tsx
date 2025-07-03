@@ -31,7 +31,7 @@ const NavBar = ({ updatePage }: { updatePage: (newPage: Page) => void }) => {
         <NavBarButton updatePage={handleNavClick} page={PAGES.home} />
         <NavBarButton updatePage={handleNavClick} page={PAGES.puzzle} />
         <NavBarButton updatePage={handleNavClick} page={PAGES.events} />
-        <NavBarButton updatePage={handleNavClick} page={PAGES.contact} />
+        {/* <NavBarButton updatePage={handleNavClick} page={PAGES.contact} /> */}
       </div>
     </nav>
   );

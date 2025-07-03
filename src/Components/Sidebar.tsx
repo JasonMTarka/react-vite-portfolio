@@ -4,7 +4,7 @@ import { IoMdDownload } from "react-icons/io";
 
 const SideBar = () => {
   return (
-    <div className="sidebar">
+    <div className="sidebar ">
       <SideBarLink
         link="https://github.com/JasonMTarka/"
         text="GitHub"
