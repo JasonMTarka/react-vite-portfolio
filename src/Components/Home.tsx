@@ -53,9 +53,10 @@ const Home: React.FC = () => {
               <MyList
                 title="Professional Skills"
                 contents={[
+                  "Native English and Fluent (JLPT N1) Japanese",
+                  "Design and Test Document Creation (Japanese)",
                   "Agile Development",
                   "Project Management (Jira)",
-                  "Native English and Fluent (JLPT N1) Japanese",
                 ]}
               />
             </div>
